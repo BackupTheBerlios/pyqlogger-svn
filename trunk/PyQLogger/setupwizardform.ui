@@ -1,0 +1,361 @@
+<!DOCTYPE UI><UI version="3.3" stdsetdef="1">
+<class>SetupWizardForm</class>
+<comment>Python:## This file is part of PyQLogger.
+Python:## 
+Python:## Copyright (c) 2004 Eli Yukelzon a.k.a Reflog 		
+Python:##
+Python:## PyQLogger is free software; you can redistribute it and/or modify
+Python:## it under the terms of the GNU General Public License as published by
+Python:## the Free Software Foundation; either version 2 of the License, or
+Python:## (at your option) any later version.
+Python:## 
+Python:## PyQLogger is distributed in the hope that it will be useful,
+Python:## but WITHOUT ANY WARRANTY; without even the implied warranty of
+Python:## MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+Python:## GNU General Public License for more details.
+Python:## 
+Python:## You should have received a copy of the GNU General Public License
+Python:## along with PyQLogger; if not, write to the Free Software
+Python:## Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+</comment>
+<widget class="QWizard">
+    <property name="name">
+        <cstring>SetupWizardForm</cstring>
+    </property>
+    <property name="geometry">
+        <rect>
+            <x>0</x>
+            <y>0</y>
+            <width>480</width>
+            <height>302</height>
+        </rect>
+    </property>
+    <property name="caption">
+        <string>Blog Setup Wizard</string>
+    </property>
+    <property name="modal">
+        <bool>true</bool>
+    </property>
+    <widget class="QWidget">
+        <property name="name">
+            <cstring>WizardPage</cstring>
+        </property>
+        <attribute name="title">
+            <string>Introduction</string>
+        </attribute>
+        <grid>
+            <property name="name">
+                <cstring>unnamed</cstring>
+            </property>
+            <property name="margin">
+                <number>0</number>
+            </property>
+            <property name="spacing">
+                <number>14</number>
+            </property>
+            <widget class="QLabel" row="0" column="0">
+                <property name="name">
+                    <cstring>pixmapLabel1</cstring>
+                </property>
+                <property name="pixmap">
+                    <pixmap>image0</pixmap>
+                </property>
+                <property name="scaledContents">
+                    <bool>true</bool>
+                </property>
+            </widget>
+            <widget class="QLabel" row="1" column="0">
+                <property name="name">
+                    <cstring>textLabel1</cstring>
+                </property>
+                <property name="text">
+                    <string>&lt;font size="+2"&gt;&lt;b&gt;Welcome to Blog Setup Wizard&lt;/b&gt;&lt;/font&gt;&lt;br&gt;
+&lt;p&gt;You'll be asked to enter your login information for your &lt;b&gt;Blogger &lt;/b&gt;account and select the &lt;b&gt;Blog&lt;/b&gt; you're going to post to.&lt;/p&gt;&lt;br&gt;
+&lt;font size="+1"&gt;&lt;tt&gt;Have fun!&lt;/tt&gt;&lt;/font&gt;</string>
+                </property>
+            </widget>
+        </grid>
+    </widget>
+    <widget class="QWidget">
+        <property name="name">
+            <cstring>LoginPage</cstring>
+        </property>
+        <attribute name="title">
+            <string>Login Details</string>
+        </attribute>
+        <grid>
+            <property name="name">
+                <cstring>unnamed</cstring>
+            </property>
+            <widget class="QLayoutWidget" row="0" column="0">
+                <property name="name">
+                    <cstring>layout2</cstring>
+                </property>
+                <hbox>
+                    <property name="name">
+                        <cstring>unnamed</cstring>
+                    </property>
+                    <widget class="QLabel">
+                        <property name="name">
+                            <cstring>textLabel2</cstring>
+                        </property>
+                        <property name="text">
+                            <string>Blogger.com login:</string>
+                        </property>
+                    </widget>
+                    <spacer>
+                        <property name="name">
+                            <cstring>spacer4</cstring>
+                        </property>
+                        <property name="orientation">
+                            <enum>Horizontal</enum>
+                        </property>
+                        <property name="sizeType">
+                            <enum>Expanding</enum>
+                        </property>
+                        <property name="sizeHint">
+                            <size>
+                                <width>121</width>
+                                <height>20</height>
+                            </size>
+                        </property>
+                    </spacer>
+                    <widget class="QLineEdit">
+                        <property name="name">
+                            <cstring>editLogin</cstring>
+                        </property>
+                    </widget>
+                </hbox>
+            </widget>
+            <widget class="QLayoutWidget" row="4" column="0">
+                <property name="name">
+                    <cstring>layout20</cstring>
+                </property>
+                <hbox>
+                    <property name="name">
+                        <cstring>unnamed</cstring>
+                    </property>
+                    <widget class="QLabel">
+                        <property name="name">
+                            <cstring>textLabel4</cstring>
+                        </property>
+                        <property name="text">
+                            <string>Select the blog:</string>
+                        </property>
+                    </widget>
+                    <widget class="QComboBox">
+                        <property name="name">
+                            <cstring>comboBlogs</cstring>
+                        </property>
+                        <property name="sizeLimit">
+                            <number>100</number>
+                        </property>
+                        <property name="duplicatesEnabled">
+                            <bool>false</bool>
+                        </property>
+                    </widget>
+                    <widget class="QPushButton">
+                        <property name="name">
+                            <cstring>btnFetchBlogs</cstring>
+                        </property>
+                        <property name="text">
+                            <string>Fetch the blogs</string>
+                        </property>
+                    </widget>
+                </hbox>
+            </widget>
+            <widget class="QLayoutWidget" row="1" column="0">
+                <property name="name">
+                    <cstring>layout3</cstring>
+                </property>
+                <hbox>
+                    <property name="name">
+                        <cstring>unnamed</cstring>
+                    </property>
+                    <widget class="QLabel">
+                        <property name="name">
+                            <cstring>textLabel3</cstring>
+                        </property>
+                        <property name="text">
+                            <string>Password:</string>
+                        </property>
+                    </widget>
+                    <spacer>
+                        <property name="name">
+                            <cstring>spacer3</cstring>
+                        </property>
+                        <property name="orientation">
+                            <enum>Horizontal</enum>
+                        </property>
+                        <property name="sizeType">
+                            <enum>Expanding</enum>
+                        </property>
+                        <property name="sizeHint">
+                            <size>
+                                <width>214</width>
+                                <height>20</height>
+                            </size>
+                        </property>
+                    </spacer>
+                    <widget class="QLineEdit">
+                        <property name="name">
+                            <cstring>editPassword</cstring>
+                        </property>
+                        <property name="echoMode">
+                            <enum>Password</enum>
+                        </property>
+                    </widget>
+                </hbox>
+            </widget>
+            <widget class="QCheckBox" row="2" column="0">
+                <property name="name">
+                    <cstring>checkSave</cstring>
+                </property>
+                <property name="text">
+                    <string>Save the password (otherwise, you'll be prompted every time)</string>
+                </property>
+            </widget>
+            <widget class="QLayoutWidget" row="3" column="0">
+                <property name="name">
+                    <cstring>layout20</cstring>
+                </property>
+                <hbox>
+                    <property name="name">
+                        <cstring>unnamed</cstring>
+                    </property>
+                    <widget class="QLabel">
+                        <property name="name">
+                            <cstring>textLabel2_2</cstring>
+                        </property>
+                        <property name="text">
+                            <string>Blog URL:</string>
+                        </property>
+                    </widget>
+                    <spacer>
+                        <property name="name">
+                            <cstring>spacer9</cstring>
+                        </property>
+                        <property name="orientation">
+                            <enum>Horizontal</enum>
+                        </property>
+                        <property name="sizeType">
+                            <enum>Expanding</enum>
+                        </property>
+                        <property name="sizeHint">
+                            <size>
+                                <width>121</width>
+                                <height>20</height>
+                            </size>
+                        </property>
+                    </spacer>
+                    <widget class="QLineEdit">
+                        <property name="name">
+                            <cstring>editURL</cstring>
+                        </property>
+                    </widget>
+                </hbox>
+            </widget>
+        </grid>
+    </widget>
+    <widget class="QWidget">
+        <property name="name">
+            <cstring>WizardPage</cstring>
+        </property>
+        <attribute name="title">
+            <string>Final</string>
+        </attribute>
+        <grid>
+            <property name="name">
+                <cstring>unnamed</cstring>
+            </property>
+            <property name="margin">
+                <number>1</number>
+            </property>
+            <property name="spacing">
+                <number>17</number>
+            </property>
+            <widget class="QLabel" row="0" column="0">
+                <property name="name">
+                    <cstring>pixmapLabel1_2</cstring>
+                </property>
+                <property name="pixmap">
+                    <pixmap>image0</pixmap>
+                </property>
+                <property name="scaledContents">
+                    <bool>true</bool>
+                </property>
+            </widget>
+            <widget class="QLabel" row="1" column="0">
+                <property name="name">
+                    <cstring>textLabel1_2</cstring>
+                </property>
+                <property name="text">
+                    <string>&lt;h1&gt;Congratulations!&lt;/h1&gt;
+
+&lt;p align="center"&gt;Now you're ready to start bloggin!&lt;/p&gt;&lt;br&gt;
+
+&lt;p align="right"&gt;Cheers, Sir Reflog&lt;/p&gt;</string>
+                </property>
+            </widget>
+        </grid>
+    </widget>
+</widget>
+<images>
+    <image name="image0">
+        <data format="XPM.GZ" length="25012">789ced9b5b53db381480dff91519fad6d9d9da966cd9b3b30fdc5a42a0d489e30b3bfb103b49a1053610a0a53bfbdf57e7c897045212a70ace45878bf3c532589fe4235949debdad859f4e6a6fdf6d0def3a7717492d39efdcd6de76efafae1efffafbcf7fb7b60963358bd42c5ad3b77fdbda7e534b6a6f344dd70901fc3d470ad81148886501c63932c06f88bca8c024471bb09ba303e8201ac414d8cbb103d84784ff1303fec83101fc9c6317f01c911266f500ef73ec035e209ac4661ae017448b380cebfb3547acef2522231d86f5bd42b449cc4cc0eb1cb1fa8f39627dff4174482270902356ff2147acef7bc40ee932acaf8d18931ec3fadee488f5fd8e98903ec31add21f6a86e63156e11fbd4b0f19c87803aafbf8d2769211ad4b4f11f314493da0eda3010139ad878923b808643a990e323c6665a38042489653a58f8032025d4b6509d87d8615a070bbb80a6c3920e16d6012ddbb663dcbb0bc898a953dcab0974688c1800da96d38fb1be14d0313b7182625b801d1ab304f746803149b84ac03d44db8c0dacbe09981849bf8b859b805dbd1bf7b03001ece93dd6c3bdfb88b145346c8536605feb73ef8007887dcbd2b00a1f05324d473c4cd131103f09b40941aca79850147b22909bc5263b1598f01a031e09ecb2185bff4c60cfea62273c16d837c5393752e48117ec1baea9dbeb7f3ebff8f2f5f2eafa9fc1dc71733bac246e6fe63fe70971ddebbc46c8957f578d7a883b89ee79dcaf9afc870add73fb0f52ed7f592df9d5ba5f45fb12e557ec7e05338f3cf995bb976e7fe1a3ae34f937559b87903ce7f9b622f21f2a9a638ec7addcb4bfe8c4234bfef7aabd8bf82e55fe205909f9cbd1f157adeb4b92bf241d5f76d77f5c09f94bd2f179d7972a7ff0a332f93bbb7bfb072fc4fedeee8e28f9be6ae745bc972affa22af91ff65e322f62ef03165d9aac233bef5c56247f6706f7dc3ef6fd25b8c1ca42f28d5645f27767717f70b00b659726e54b4ffa15c99fa9e3f3ae0f65ab363e1a72e52f7489e1e7f25f1c6b8bd857f217207f36f707074afea2e51fd6d350f25f5b7efda891c5f1c94725ff35e59f3646e3f89392ff7af2c7dd3fb39fc977d3ddcd96374cb9ed2bf9bf26bfde781a4713e507458120634fc9ff35f947cfe437ea53e4a37425ffd7e51f3e77df38fd997cdee5c326df4692e58761c87f0dc5cf06c94fb3ce9998694ec83b4fe40f7d282159be101fc2f726caaf8fe6a0b397e40f27c8f734bdd0e6eb3a1f8843cf40325c8deff2bd746c7683c04d7d7bfc792f08fc5c3e7e6da2fc539cded78f059d4ce9f9cd31f95a1b8e21694b5080962e72d350877dcd90cf8cd031294ac2e15123db31dce4b4f32cce3e4e96ef43ced747e5e723b197bbe74a1b0d7398cf4fdbe26209db2986423e62a4e43f8ffa04f969d08cbdf44a68d316f4e8941a2605ad201f7a3a09489aa9a0dd284d85677f4c9bee5bc92fe447fea87c2ab6609f67730dad5b1e6c180ba1610c66405b086a310607188ca178a607fc61a928d95653c296da94d797f7cea27b7e7b34ed98226d83d9403485ce15b551be2b74b308e5c311ae78d213f24b7a5f7af9d800e7df16239fdb35600beb0a99fc34c1a45b53986526cac76398d88a26689a66533c29ae8df5933f183cde2f4abe4830741ef966f1c7d75a3eeffd4e29f9a7f94af2e1d114f99ed03c513e9b269ff77c8870bde50f069fcbc81f59cea94f91af8dcb6f8a690ee47cca584be475d644b5ba7812c758f1dbcd25aeb77cfcec45c9e50588b397e51b30718c0af9a0db174da28b3ece87585fa8858b84706104e5eb62df66c807fb732dac614cbac9223c63e09d9196b18ef7514d17ee64f9a412a7938dc06da66aa1708437b25c3ece385baea7457403e4f3cc33d7923244beb8362a3f0b626437afe9188ba1819b625405b5230771d2b2c7ed4d903f70e67931652ceb4c924f601500d30facf218a96f8a6ec4128299aa359a585ea49da22dda6b3fe0425ccff1322246b1b496c90fcd345aba386f9ff2c7b89e1306514bf353398616b5f442adde8a346c1e245fa36614b87057cb8fd6d75bfea0fc0be84fdccffa02fa1345e3fd3a972f21d64cfee85b47308e465f472c29dfd0e11248273dbce3f304934f7a94fc97df34057138b66b36f956e6a6181ab454bb8848c95fd8db057337f96c07269e234de129f90b7ba36cee26ca674440d9e4b23dd7d8babef2a5be45dc2ae4f85ec023ebe886a77172cb2edaafbbfc321f8e985a07796e37437e998f0529f992e597f9409c922f5b7e898f822af9d2e5cf1e4afe5ca1e42bf94abe92afe42bf9e542c99f2b947c255fc957f2957c25bf5c28f973c5f67f7f6cfd0f4acecb03</data>
+    </image>
+</images>
+<connections>
+    <connection>
+        <sender>editLogin</sender>
+        <signal>textChanged(const QString&amp;)</signal>
+        <receiver>SetupWizardForm</receiver>
+        <slot>editLogin_textChanged(const QString&amp;)</slot>
+    </connection>
+    <connection>
+        <sender>editPassword</sender>
+        <signal>textChanged(const QString&amp;)</signal>
+        <receiver>SetupWizardForm</receiver>
+        <slot>editLogin_textChanged(const QString&amp;)</slot>
+    </connection>
+    <connection>
+        <sender>comboBlogs</sender>
+        <signal>activated(int)</signal>
+        <receiver>SetupWizardForm</receiver>
+        <slot>comboBlogs_activated(int)</slot>
+    </connection>
+    <connection>
+        <sender>btnFetchBlogs</sender>
+        <signal>clicked()</signal>
+        <receiver>SetupWizardForm</receiver>
+        <slot>btnFetchBlogs_clicked()</slot>
+    </connection>
+    <connection>
+        <sender>SetupWizardForm</sender>
+        <signal>selected(const QString&amp;)</signal>
+        <receiver>SetupWizardForm</receiver>
+        <slot>SetupWizardForm_selected(const QString&amp;)</slot>
+    </connection>
+    <connection>
+        <sender>editURL</sender>
+        <signal>textChanged(const QString&amp;)</signal>
+        <receiver>SetupWizardForm</receiver>
+        <slot>editLogin_textChanged(const QString&amp;)</slot>
+    </connection>
+</connections>
+<tabstops>
+    <tabstop>editLogin</tabstop>
+    <tabstop>editPassword</tabstop>
+    <tabstop>editURL</tabstop>
+    <tabstop>comboBlogs</tabstop>
+    <tabstop>btnFetchBlogs</tabstop>
+    <tabstop>checkSave</tabstop>
+</tabstops>
+<slots>
+    <slot>editLogin_textChanged( const QString &amp; )</slot>
+    <slot>comboBlogs_activated( int )</slot>
+    <slot>btnFetchBlogs_clicked()</slot>
+    <slot>SetupWizardForm_selected( const QString &amp; )</slot>
+</slots>
+<layoutdefaults spacing="6" margin="11"/>
+</UI>
