@@ -17,7 +17,7 @@
 ## Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 __revision__ = "$Id$"
-from qt import QPixmap, QFileDialog, QMessageBox,SIGNAL,QString
+from qt import QPixmap, QFileDialog, QMessageBox, SIGNAL, QString, QIntValidator
 from qtnetwork import QHttp,QHttpRequestHeader
 from imageform import ImageForm
 import urllib2, re, os
@@ -66,6 +66,12 @@ class ImageForm_Impl(ImageForm):
         self.http2 = QHttp()
         self.connect(self.http2, SIGNAL( "done(bool)" ), self.http2Done )
         self.connect(self.http2, SIGNAL( "dataSendProgress (int, int)"),self.httpProgress)
+        validatorBorder = QIntValidator(0, 99, self)
+        validatorHeight = QIntValidator(0, 9999, self)
+        validatorWidth = QIntValidator(0, 9999, self)
+        self.editBorder.setValidator(validatorBorder)
+        self.editHeight.setValidator(validatorHeight)
+        self.editWidth.setValidator(validatorWidth)
 
         for key in self.alignList.keys():
             self.comboAlign.insertItem(key)
@@ -153,31 +159,25 @@ class ImageForm_Impl(ImageForm):
         image = str(self.editUrl.text())
         thumb = str(self.editThumb.text())
         title = str(self.editTitle.text())
-        if str(self.editWidth.text()): 
-            width = int(str(self.editWidth.text())) 
-        else: 
-            width = None
-        if str(self.editBorder.text()): 
-            border = int(str(self.editBorder.text())) 
-        else: 
-            border = None
-        if str(self.editHeight.text()): 
-            height = int(str(self.editHeight.text()))
-        else: 
-            height = None
+        border = str(self.editBorder.text())
+        width = str(self.editBorder.text())
+        height = str(self.editHeight.text())
+
         if not image: 
             return None
         else:  
-            if thumb:
+            if thumb and title:
+                imagetag += "<a href='%s' title='%s'><img src='%s'" % (image, title, thumb)
+            elif thumb:
                 imagetag += "<a href='%s'><img src='%s'" % (image, thumb)
             else:
                 imagetag += '<img src=\'%s\'' % image
                 if width:
-                    imagetag += ' width=\'%d\'' % width
+                    imagetag += ' width=\'%s\'' % width
                 if height:
-                    imagetag += ' height=\'%d\'' % height
+                    imagetag += ' height=\'%s\'' % height
         if border:  
-            imagetag += ' border=\'%d\'' % border
+            imagetag += ' border=\'%s\'' % border
         if title:
             imagetag += ' alt=\'%s\'' % title
         if self.alignList.has_key('%s' % self.comboAlign.currentText()):
