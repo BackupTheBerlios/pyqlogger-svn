@@ -26,6 +26,12 @@ from xml.sax.saxutils import escape , unescape
 import feedparser, re
 from qtnetwork import QHttpRequestHeader
 
+def makeNonce():
+    """ Generate a random string 'Nonce' marked with timestamp """
+    private = base64.encodestring(str(random.random()))
+    timestamp = time.strftime('%Y-%m-%dT%H:%M:%SZ', time.gmtime())
+    return "%s %s" % (timestamp, sha.new("%s:%s" % (timestamp, private)).hexdigest())
+
 class AtomBlog:
     """ Implementation of Atom API for posting to Blogger
         Written by Reflog, based on code from http://www.daikini.com 
@@ -45,16 +51,9 @@ class AtomBlog:
         self.feedpath = ""
         self.postpath = ""
 
-        
-    def _getNonce(self):
-        """ Generate a random string 'Nonce' marked with timestamp """
-        private = base64.encodestring(str(random.random()))
-        timestamp = time.strftime('%Y-%m-%dT%H:%M:%SZ', time.gmtime())
-        return "%s %s" % (timestamp, sha.new("%s:%s" % (timestamp, private)).hexdigest())
-
     def _makeCommonHeaders(self, Req, date=None):
         """ Returns a dict with Nonce, Password Digest and other headers """
-        nonce = self._getNonce()
+        nonce = makeNonce()
         base64EncodedNonce = base64.encodestring(nonce).replace("\n", "")
         if not date:
             created = time.strftime('%Y-%m-%dT%H:%M:%SZ', time.gmtime())

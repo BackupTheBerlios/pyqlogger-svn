@@ -33,6 +33,7 @@ class bgOperation(QObject):
         self.notifier = notifier
         self.atomBlog = atomBlog
         self.control = sender
+        self.can_finish = False
         if sender:
             self.control.setEnabled(False)        
         self.http = QHttp(self)
@@ -40,33 +41,48 @@ class bgOperation(QObject):
         self.connect(self.http, SIGNAL( "dataSendProgress (int, int)"),self.httpProgress)
         self.connect(self.http, SIGNAL( "dataReadProgress (int, int)"),self.httpProgress)
         self.connect(self.http, SIGNAL( "requestFinished (int, bool)"),self.httpRequestFinished)
-
+        self.connect(self.http, SIGNAL( "requestStarted (int)"),self.httpRequestStarted)
+        self.connect(self.http, SIGNAL( "responseHeaderReceived (const QHttpResponseHeader &)"),self.httpResponse)
+        
+    def httpResponse ( self ,resp ):
+        if hasattr(self,"codes"):
+            if not resp.statusCode() in self.codes:
+                print "Unexpected HTTP Reponse code %d!"%resp.statusCode()
+                self.http.abort()
+            
+    def httpRequestStarted ( self, id ):
+        if id == self.myid:
+            self.notifier.status(self.statusmsg)
+        
     def httpRequestFinished ( self, id, error ):
         if error:
             self.notifier.error(self.errormsg)
-            print "Error occured: " + self.http.errorString()
-    
+            print "Error occured: " + str(self.http.errorString())
+        else:
+            self.can_finish = id == self.myid
+            
     def httpDone(self,error):
         result = unicode(QString(self.http.readAll()))
         if error:
             self.notifier.error(self.errormsg)
-            print "Error occured: " + self.http.errorString()
-        else:
+            print "Error occured: " + str(self.http.errorString())
+        elif self.can_finish:
             self.ui(result)
-            if self.control:
-                self.control.setEnabled(True)
         self.http.closeConnection()
+        if self.control:
+            self.control.setEnabled(True)
         
     def httpProgress(self,completed,total):
-        self.notifier.status(self.statusmsg)
+        if id == self.myid:
+            self.notifier.status(self.statusmsg)
 
     def begin(self):
         assert (self.req.isValid())
         self.http.setHost(self.atomBlog.host)
         if hasattr(self,"body"):
-            self.http.request(self.req,self.body)
+            self.myid = self.http.request(self.req,self.body)
         else:
-            self.http.request(self.req)
+            self.myid = self.http.request(self.req)
     
 class BlogFetcher(bgOperation):
     """ class for fetching list of blogs in background """
@@ -90,7 +106,6 @@ class BlogFetcher(bgOperation):
         self.notifier.info("%d Blogs fetched!" % len(blogs))
         
     def __call__(self):
-        self.disconnect( self.http , SIGNAL( "dataSendProgress (int, int)") , self.httpProgress)
         self.req = self.atomBlog.startGetBlogs()
         self.begin()
 
@@ -98,9 +113,9 @@ class PostFetcher(bgOperation):
     """ class for fetching list of posts in background """
     errormsg = "Couldn't fetch posts from blog!"
     statusmsg = "Fetching posts..."
+    codes = [ 200 ]
     def __call__(self):
             blogid = self.parent().settings.get("main", "selectedblog")
-            self.disconnect( self.http , SIGNAL( "dataSendProgress (int, int)") , self.httpProgress)
             self.req = self.atomBlog.startGetPosts(blogid)
             self.begin()
     
@@ -116,13 +131,13 @@ class PostFetcher(bgOperation):
 
 class PostEraser(bgOperation):
     """ class for deleting current post in background """
-    errormsg = "Couldn't fetch posts from blog!"
+    errormsg = "Couldn't delete post from blog!"
     statusmsg = "Deleting post..."
+    codes = [ 410 ]
     def __call__(self):
         p = self.parent()
         post = p.PublishedItems [ p.listPublishedPosts.selectedItem () ]
         blogid = p.settings.get("main", "selectedblog")
-        self.disconnect( self.http , SIGNAL( "dataReadProgress (int, int)") , self.httpProgress)
         self.req = self.atomBlog.deletePost(blogid, post["id"])
         self.begin()
         
@@ -172,7 +187,7 @@ class PostCreator(bgOperation):
 
 class PostEditor(bgOperation):
     """ class for posting new blog item (or reposting) in background """
-    errormsg = "Couldn't post to blog!"
+    errormsg = "Couldn't update post!"
     statusmsg = "Posting update to blog..."
     def __call__(self):
         p = self.parent()

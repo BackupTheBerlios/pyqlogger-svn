@@ -20,7 +20,8 @@
 __revision__ = "$Id$"
 from qt import QMessageBox
 from setupwizardform import SetupWizardForm
-from AtomBlog import MovableTypeClient, BloggerClient, GenericAtomClient
+from AtomBlog import makeNonce,BloggerClient,MovableTypeClient
+import httplib, sha,feedparser,time,base64,re
 
 class SetupWizardForm_Impl(SetupWizardForm):
 
@@ -116,22 +117,54 @@ class SetupWizardForm_Impl(SetupWizardForm):
         except Exception, inst:
             print "btnFetchUrl_clicked: %s" % inst
             QMessageBox.critical(self, "Error", "Couldn't fetch blog's URL!")
-    
+            
+    def _makeCommonHeaders(self, date=None):
+        """ Returns a dict with Nonce, Password Digest and other headers """
+        nonce = makeNonce()
+        base64EncodedNonce = base64.encodestring(nonce).replace("\n", "")
+        if not date:
+            created = time.strftime('%Y-%m-%dT%H:%M:%SZ', time.gmtime())
+        else:
+            created = date
+
+        passwordDigest = base64.encodestring(sha.new(nonce + created + self.password).digest()).replace("\n", "")
+        authorizationHeader = 'UsernameToken Username="%s", PasswordDigest="%s", Created="%s", Nonce="%s"' % (self.login, passwordDigest, created, base64EncodedNonce)
+        headers = {
+            "Authorization": 'WSSE profile="UsernameToken"',
+            "X-WSSE": authorizationHeader,
+            "UserAgent": "Reflog's Blogger"
+            }
+
+        return headers
+
+    def getBlogs(self):
+        """ Returns dict where key is blog's name, and value is blog's properties dict """
+        headers = self._makeCommonHeaders()
+        conn = httplib.HTTPConnection(self.host)
+        conn.request("GET", self.path, "", headers)
+        response = conn.getresponse()
+        xml = response.read()
+        conn.close()
+        ret = {}
+        id_re = re.compile(r'(\d+)$')
+        for blog in feedparser.parse(xml)['feed']['links']:
+            ret [ blog["title"] ] = {
+                'id'   : id_re.search(blog['href']).group(1),
+                'href' : blog['href'],
+                'rel'  : blog['rel'] ,
+                'type' : blog['type'],
+            }
+        return ret
+
+
+
     def btnFetchBlogs_clicked(self):
-        host = str(self.editHost.text())
-        login = str(self.editLogin.text())
-        password = str(self.editPassword.text())
-        endpoint = str(self.editEP.text())
-        feedpath = str(self.editFP.text())
-        postpath = str(self.editPassword.text())
-        if self.comboProviders.currentItem() == 0:
-            at = GenericAtomClient(host, login, password, endpoint, feedpath, postpath)
-        elif self.comboProviders.currentItem() == 1:
-            at = BloggerClient(host, login, password)
-        elif self.comboProviders.currentItem() == 2:
-            at = MovableTypeClient(host, login, password)
+        self.host = str(self.editHost.text())
+        self.login = str(self.editLogin.text())
+        self.password = str(self.editPassword.text())
+        self.path = str(self.editEP.text())
         try:
-            self.blogs = at.getBlogs()
+            self.blogs = self.getBlogs()
             self.comboBlogs.clear()
             for blog in self.blogs.keys():
                 self.comboBlogs.insertItem(blog)
