@@ -1,8 +1,10 @@
 <!DOCTYPE UI><UI version="3.3" stdsetdef="1">
 <class>SetupWizardForm</class>
 <comment>Python:## This file is part of PyQLogger.
+Python:## $Id$
 Python:## 
 Python:## Copyright (c) 2004 Eli Yukelzon a.k.a Reflog 		
+Python:##                    Xander Soldaat a.k.a. Mightor
 Python:##
 Python:## PyQLogger is free software; you can redistribute it and/or modify
 Python:## it under the terms of the GNU General Public License as published by
@@ -111,6 +113,23 @@ Python:## Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  
                             <cstring>comboProviders</cstring>
                         </property>
                     </widget>
+                    <spacer>
+                        <property name="name">
+                            <cstring>spacerx</cstring>
+                        </property>
+                        <property name="orientation">
+                            <enum>Horizontal</enum>
+                        </property>
+                        <property name="sizeType">
+                            <enum>Expanding</enum>
+                        </property>
+                        <property name="sizeHint">
+                            <size>
+                                <width>73</width>
+                                <height>20</height>
+                            </size>
+                        </property>
+                    </spacer>
                     <widget class="QComboBox">
                         <item>
                             <property name="text">
@@ -129,6 +148,12 @@ Python:## Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  
                         </item>
                         <property name="name">
                             <cstring>comboProviders</cstring>
+                        </property>
+                        <property name="minimumSize">
+                            <size>
+                                <width>222</width>
+                                <height>0</height>
+                            </size>
                         </property>
                     </widget>
                 </hbox>

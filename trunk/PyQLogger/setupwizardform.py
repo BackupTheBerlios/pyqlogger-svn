@@ -1,18 +1,19 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file '/home/reflog/py/PyQLogger/setupwizardform.ui'
+# Form implementation generated from reading ui file 'setupwizardform.ui'
 #
-# Created: Sun Oct 24 15:01:44 2004
-#      by: The PyQt User Interface Compiler (pyuic) 3.13
+# Created: Fri Dec 17 13:17:59 2004
+#      by: The PyQt User Interface Compiler (pyuic) 3.12
 #
 # WARNING! All changes made in this file will be lost!
 
 
-import sys
 from qt import *
 ## This file is part of PyQLogger.
+## $Id$
 ## 
 ## Copyright (c) 2004 Eli Yukelzon a.k.a Reflog 		
+##                    Xander Soldaat a.k.a. Mightor
 ##
 ## PyQLogger is free software; you can redistribute it and/or modify
 ## it under the terms of the GNU General Public License as published by
@@ -1851,8 +1852,11 @@ class SetupWizardForm(QWizard):
 
         self.textLabel1_3 = QLabel(self.LoginPage,"textLabel1_3")
         layout10.addWidget(self.textLabel1_3)
+        spacerx = QSpacerItem(73,20,QSizePolicy.Expanding,QSizePolicy.Minimum)
+        layout10.addItem(spacerx)
 
         self.comboProviders = QComboBox(0,self.LoginPage,"comboProviders")
+        self.comboProviders.setMinimumSize(QSize(222,0))
         layout10.addWidget(self.comboProviders)
         LoginPageLayout.addLayout(layout10)
 
@@ -2037,7 +2041,7 @@ class SetupWizardForm(QWizard):
 "\n"
 "<p align=\"center\">Now you're ready to start bloggin!</p><br>\n"
 "\n"
-"<p align=\"right\">Cheers, Sir Reflog and Mightor</p>"))
+"<p align=\"right\">Cheers, Sir Reflog</p>"))
         self.setTitle(self.WizardPage_2,self.__tr("Final"))
 
 
@@ -2061,11 +2065,3 @@ class SetupWizardForm(QWizard):
 
     def __tr(self,s,c = None):
         return qApp.translate("SetupWizardForm",s,c)
-
-if __name__ == "__main__":
-    a = QApplication(sys.argv)
-    QObject.connect(a,SIGNAL("lastWindowClosed()"),a,SLOT("quit()"))
-    w = SetupWizardForm()
-    a.setMainWidget(w)
-    w.show()
-    a.exec_loop()
