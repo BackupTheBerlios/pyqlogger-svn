@@ -1,9 +1,0 @@
-TODO:
-  
-  1. Plugins. Probably some sort of mixins or something
-  2. Test cases. Always wanted to do those, but really don't know how to start with
-     testing a gui application.
-  3. Make multiple blogs work as should. Right now all the blogs share the same list of posts
-  4. Provide a import/export code for posts (export completed)
-  5. Provide command line and
-  6. Think about implementing tray/panel item.
