@@ -8,8 +8,8 @@
         <rect>
             <x>0</x>
             <y>0</y>
-            <width>367</width>
-            <height>363</height>
+            <width>379</width>
+            <height>472</height>
         </rect>
     </property>
     <property name="caption">
@@ -32,12 +32,29 @@
                         <cstring>textLabel7</cstring>
                     </property>
                     <property name="text">
-                        <string>Account Name:</string>
+                        <string>Account &amp;Name:</string>
+                    </property>
+                    <property name="buddy" stdset="0">
+                        <cstring>edtName</cstring>
                     </property>
                 </widget>
                 <widget class="QLineEdit">
                     <property name="name">
                         <cstring>edtName</cstring>
+                    </property>
+                    <property name="sizePolicy">
+                        <sizepolicy>
+                            <hsizetype>0</hsizetype>
+                            <vsizetype>0</vsizetype>
+                            <horstretch>0</horstretch>
+                            <verstretch>0</verstretch>
+                        </sizepolicy>
+                    </property>
+                    <property name="minimumSize">
+                        <size>
+                            <width>222</width>
+                            <height>0</height>
+                        </size>
                     </property>
                 </widget>
             </hbox>
@@ -55,49 +72,23 @@
                         <cstring>textLabel3</cstring>
                     </property>
                     <property name="text">
-                        <string>Type:</string>
+                        <string>&amp;Type:</string>
+                    </property>
+                    <property name="buddy" stdset="0">
+                        <cstring>comboProviders</cstring>
                     </property>
                 </widget>
                 <widget class="QComboBox">
-                    <item>
-                        <property name="text">
-                            <string>MovableType Host</string>
-                        </property>
-                        <property name="pixmap">
-                            <pixmap>image0</pixmap>
-                        </property>
-                    </item>
-                    <item>
-                        <property name="text">
-                            <string>LiveJournal</string>
-                        </property>
-                        <property name="pixmap">
-                            <pixmap>image1</pixmap>
-                        </property>
-                    </item>
-                    <item>
-                        <property name="text">
-                            <string>Blogger</string>
-                        </property>
-                        <property name="pixmap">
-                            <pixmap>image2</pixmap>
-                        </property>
-                    </item>
-                    <item>
-                        <property name="text">
-                            <string>Atom API Server</string>
-                        </property>
-                        <property name="pixmap">
-                            <pixmap>image3</pixmap>
-                        </property>
-                    </item>
-                    <item>
-                        <property name="text">
-                            <string>MetaWeblog Server</string>
-                        </property>
-                    </item>
                     <property name="name">
                         <cstring>comboProviders</cstring>
+                    </property>
+                    <property name="sizePolicy">
+                        <sizepolicy>
+                            <hsizetype>0</hsizetype>
+                            <vsizetype>0</vsizetype>
+                            <horstretch>0</horstretch>
+                            <verstretch>0</verstretch>
+                        </sizepolicy>
                     </property>
                     <property name="minimumSize">
                         <size>
@@ -110,7 +101,7 @@
         </widget>
         <widget class="QButtonGroup">
             <property name="name">
-                <cstring>buttonGroup2</cstring>
+                <cstring>grpCommon</cstring>
             </property>
             <property name="title">
                 <string>Common Settings</string>
@@ -146,7 +137,10 @@
                                 </size>
                             </property>
                             <property name="text">
-                                <string>Host:</string>
+                                <string>&amp;Host:</string>
+                            </property>
+                            <property name="buddy" stdset="0">
+                                <cstring>edtHost</cstring>
                             </property>
                         </widget>
                         <widget class="QLineEdit">
@@ -166,7 +160,7 @@
                         </property>
                         <widget class="QLabel">
                             <property name="name">
-                                <cstring>edtUsername</cstring>
+                                <cstring>lbUsername</cstring>
                             </property>
                             <property name="sizePolicy">
                                 <sizepolicy>
@@ -183,12 +177,15 @@
                                 </size>
                             </property>
                             <property name="text">
-                                <string>Username:</string>
+                                <string>&amp;Username:</string>
+                            </property>
+                            <property name="buddy" stdset="0">
+                                <cstring>edtUsername</cstring>
                             </property>
                         </widget>
                         <widget class="QLineEdit">
                             <property name="name">
-                                <cstring>lineEdit10</cstring>
+                                <cstring>edtUsername</cstring>
                             </property>
                         </widget>
                     </hbox>
@@ -220,7 +217,10 @@
                                 </size>
                             </property>
                             <property name="text">
-                                <string>Password:</string>
+                                <string>&amp;Password:</string>
+                            </property>
+                            <property name="buddy" stdset="0">
+                                <cstring>edtPassword</cstring>
                             </property>
                         </widget>
                         <widget class="QLineEdit">
@@ -237,7 +237,125 @@
         </widget>
         <widget class="QButtonGroup">
             <property name="name">
-                <cstring>buttonGroup3</cstring>
+                <cstring>grpBlog</cstring>
+            </property>
+            <property name="title">
+                <string>Blog Settings</string>
+            </property>
+            <vbox>
+                <property name="name">
+                    <cstring>unnamed</cstring>
+                </property>
+                <widget class="QLayoutWidget">
+                    <property name="name">
+                        <cstring>layout7</cstring>
+                    </property>
+                    <hbox>
+                        <property name="name">
+                            <cstring>unnamed</cstring>
+                        </property>
+                        <widget class="QLabel">
+                            <property name="name">
+                                <cstring>textLabel1</cstring>
+                            </property>
+                            <property name="text">
+                                <string>&amp;Default Blog</string>
+                            </property>
+                            <property name="buddy" stdset="0">
+                                <cstring>comboBlogs</cstring>
+                            </property>
+                        </widget>
+                        <widget class="QComboBox">
+                            <property name="name">
+                                <cstring>comboBlogs</cstring>
+                            </property>
+                            <property name="sizePolicy">
+                                <sizepolicy>
+                                    <hsizetype>7</hsizetype>
+                                    <vsizetype>0</vsizetype>
+                                    <horstretch>0</horstretch>
+                                    <verstretch>0</verstretch>
+                                </sizepolicy>
+                            </property>
+                        </widget>
+                        <widget class="QPushButton">
+                            <property name="name">
+                                <cstring>btnFetchBlogs</cstring>
+                            </property>
+                            <property name="text">
+                                <string>Fetch</string>
+                            </property>
+                        </widget>
+                    </hbox>
+                </widget>
+                <widget class="QLabel">
+                    <property name="name">
+                        <cstring>textLabel2</cstring>
+                    </property>
+                    <property name="text">
+                        <string>&amp;Blog Homepage</string>
+                    </property>
+                    <property name="buddy" stdset="0">
+                        <cstring>edtHomepage</cstring>
+                    </property>
+                </widget>
+                <widget class="QLayoutWidget">
+                    <property name="name">
+                        <cstring>layout9</cstring>
+                    </property>
+                    <hbox>
+                        <property name="name">
+                            <cstring>unnamed</cstring>
+                        </property>
+                        <widget class="QLineEdit">
+                            <property name="name">
+                                <cstring>edtHomepage</cstring>
+                            </property>
+                        </widget>
+                        <widget class="QPushButton">
+                            <property name="name">
+                                <cstring>btnFetchHome</cstring>
+                            </property>
+                            <property name="text">
+                                <string>Fetch</string>
+                            </property>
+                        </widget>
+                    </hbox>
+                </widget>
+                <widget class="QLayoutWidget">
+                    <property name="name">
+                        <cstring>layout20</cstring>
+                    </property>
+                    <hbox>
+                        <property name="name">
+                            <cstring>unnamed</cstring>
+                        </property>
+                        <widget class="QLabel">
+                            <property name="name">
+                                <cstring>textLabel2_2</cstring>
+                            </property>
+                            <property name="text">
+                                <string>Operation Status:</string>
+                            </property>
+                        </widget>
+                        <widget class="QLabel">
+                            <property name="name">
+                                <cstring>lblStatus</cstring>
+                            </property>
+                            <property name="text">
+                                <string>&lt;font color="#ff0000"&gt;Stopped&lt;/font&gt;</string>
+                            </property>
+                            <property name="alignment">
+                                <set>WordBreak|AlignVCenter|AlignRight</set>
+                            </property>
+                        </widget>
+                    </hbox>
+                </widget>
+            </vbox>
+        </widget>
+        <widget class="QButtonGroup">
+            <property name="name">
+                <cstring>grpSettings</cstring>
             </property>
             <property name="title">
                 <string>Additional Settings</string>
@@ -323,19 +441,44 @@
         </widget>
     </vbox>
 </widget>
-<images>
-    <image name="image0">
-        <data format="XPM.GZ" length="653">789c5dd04d6e83301005e03da7b060872aa2a80112553d42a52e2b555d7866ec9810f2d3a68baaeadd3b6fa224100312df1b633c9e95eeedf5c595b3ecebe44f1d3b4efed395f23d0c3fef1fcfbf593e6f1cee959be70f591e1cbb62e11b5a2ec0cd99ede3991558fb96960cee2f5c595540fd9257563d82a8f91a5c834bf6b517b000b52664d59d91a926ab1e405f5fd81985841b7000010e600201b12a1b83e8056e41692ef4c610dad0821154c410c1dea888562530dab0f6efc6392b3cb14c33dd1c9e30cee25a99bacd38eb754ae8d2641ea71024f693f5649b862d51a71337d7ff56bbd49386dacc2dd3d742c3c8ddfe9a213e1046946adc4724f229f2380b03455dc44fb282b0f7e335b31e7aec264cd6ab24c9ed5ceeceeaef29fb07780e9a91</data>
-    </image>
-    <image name="image1">
-        <data format="PNG" length="646">89504e470d0a1a0a0000000d49484452000000100000001008060000001ff3ff610000024d49444154388d8dd24b48946114c6f1fffb998e77b31489661c41b188d42e4690d23705a15d1c6b19049182ba8a30248460b4458564543bb16623d26da1d4d4a2d5377673a186165418888a97111b1d2f233197d362d0b40c7de05dbdf0e33987a34404005558dd003888a4517a5a1ad8449488907cf48af1b06887fed31fc039bcc0d45280918959b70c3cb26d0468aab0baa14d37eb4fbf4df3c39c83fbc90d9eddbcc8d6b8685d15541a1b0280e3cbd402697bb3a929dfc7ebb7fd9cbffe98e2d252322d964d2007abe4e0b97af9d4d72b775a9f4b4ad165b96bcc486b9fc883f7f3623de310f22f1922c27a4f031ab53813deb9259ada3f602b29a1abeb1d20984c895cadaf232bd3aaabfc8a759b28114115561b1909317a767e2179f97978bd5e96fc8b949fb5130e2b02013fcdb79b191a1a724bbf73cd623500e969b17966fdeeb1e161c2e130a9a9a9c42724f2f2850ba584e8e8786aafd59265b5eaaa606d13b57c0700aaa0d2309bcdfa497b194a297c3e1ffec579ece59126c1a09f7b4df7191c1c74cb40a4c91a208254183b2d16fd54d91fc433314e4e6e2e3e9f8f85d1cf74f77ec7fbb145ad8cb03ad2efb48d8d8cba5d1d9d844221525252884d48a658de706bff575c55499cd89db47cb9ff020032e0b44d4c8cbb5f7574120c0689898d233dc944f6f658b480603f9c0673bff82fb0dc64d233e97675743233ed615746eccadff13dc96889d18e7577f0775441a56152e8178ad3397d601b477213a96b1fa5ad7b1ab525ead886c00a1499d94638aca369100a4394d6b8696075b443353611b129a58cdf6d000e2cccc202940000000049454e44ae426082</data>
-    </image>
-    <image name="image2">
-        <data format="PNG" length="559">89504e470d0a1a0a0000000d49484452000000100000001008060000001ff3ff61000001f649444154388d8d934d6b135114869f3b33499d7c997ea4126dc4622b241237ee02ea42f10754f40788d09d75a5e8d69da03f40d4851b71635742c15dd04575592b29c620a4b4b5064d9392a493997b5ddc38938982be70e1dc8ff73def39872be4cdc39697cd2f983b1b2f45e72708fe0d09ded1c20a86b16879d9c282b9f57149389dff2303186034be94546ce296904be34af45aa03c7d292cb0d310b1f55e293868c3c1de1f3a2a6263856c2ba070114e5f86e4b4262b0f9adbf0ee19346aa0a42f20fa5d2c9f2c2c4dbefe5c934771b204afee406d3554aae547763ac8dc6bc3d70fd0ef42620a66cec0b1a216a9ae82196ac700915890b95183d7f761f92ebc7d02ed5d888dc3fc7938928768e22f0e5041387d0aae3ed44e267290ca821090bf04d704bc79041b653042024388da902d80d7d77bcf01d382b1041c3f0b93274095471d0ca1b909ef5f40a73968b0d0f6e7ce0d9c066e030125c17375ec74616b1d7a2d408094909903e982f4c075fc490402bd3dd8a968f5a959b8f2403ffe8d434988c661fb13ec56fdf60702ce3e941f436616e62fc0583c5cd67e035aebb07c0f36d7fc63a16ea0868609e91ccc14f5fc8727e33af0bd0af53590cea06cb064aeb8627cfb5cc2eda57403ebf0a31ee2ea54104a8440a5321503612caaf8e453fff33078688eac61b20295cc543023b77f013f08a57d7a66276a0000000049454e44ae426082</data>
-    </image>
-    <image name="image3">
-        <data format="XPM.GZ" length="2913">789c6d96594f2b471085dff91516f586a2baf68c67539407f67d313b4479e8153098d5668bf2dfd373aa988b6e8291eccf5ddd7dfa54558f7f2cf4ce0f767b0b3fe65ea6667ae37aeeda3cf716fc6c32f9f8f3af3ffe9e9b1f94bdf67f98f7b2f9dfe6e639f65c8fca50bbc6b64cfbe0d8f15acb55bf0e8d039f83b33a36017cdb723d30b98d6002671d33383743d7c77e0db836951b60fca0e5a66f2a0b3d7401ae4db00df81d6c6de1c0fc00767660a187afc0d1e6167a0cce630a9b19eccf41b9523d6fe0da068ffdd9808d75ae008fc0d60e8dec7f08f636b80abcdeb2cd5ce6c41fc4dbd215ce633ef4dbda192f7a25beb1a6a9115f81831b58f841abcad6cbf9efc0d1058f78037d6ee82a0b668ca7dd6a6173ddb1015f295b97836fc09533ea57ae1c9de4f311dc3827fef007d824163f7dc7e25faeec359f97c2be0a721ef8ef9c0b9adf53615f79f16705ec7deda57ea6e0e04d907a3c0647df97fda9af9c89ffbcd3b2ef7be345efd217ebfe63f0c037be04ef752cf93b56b641f4396517907f827f3ef343adb73765abeb6f2abb30c4f881b297f9fc021efa52ea8317952bf19bcf95bde837fcc5aa67bb63e48f07e0c2c700fd06f5ec4b5f6bbd3d772c7e9d812b1fd49f997214bdb4251c0641eaa900d7c94fc9675f388d8bdfc84f72cf6abf3c0aa771392fee8734db79e825d16bd238fce77de53c889fa8d7b49af7a207f5ddba19a49f501fe9f429a388c7fdd29e46f2c7f7c2a110fd3401471fa5ded80ba7f9327ea35ce879d06fa11f32599fac7215c44fdc37497dee257f43709658fae559b9d47ab954ae55ff46c7588f96c17962390ff4a6d3969a1fabdc04ac6f848b6efcf38bb5fe9ec065d22be77d55b641fa15f743daadd1fa21651f643d99df04a3fa33b00d314aff9d805d7a20c87d34138efd28eba1fed36ac689bfa8ef10be983794adf64fd5b1f8532a47f1c34c3a9671f13bc481ec474dc7522f47ca9932ea29a91fa8df2fca7994f3edb61cfb41ef7bfa104ef1a2efa863c93ff4258a5eeabb168eb9fa07bfd2ee4594fb04f74f1cc64ceb63a763ac67c6ca43f1976ae542fd44bfb624f926f4772cd34bee9765e5f4c005a37f63154ba97f43ca7594fbce772cf57da2dce8fcbd8ea51e713fa7e84af3e1941b3ddfabb289921f3c7fdbd93a1ffdd592ac4f85727a84615cfc4f244ca8e74456f5de2bbb28f5e33a96fe3bec58fa03f7416c1b5ef285fb32a6f2511e778c7e18e1fe8af813fef96262c3f6fb37a3e9f71876ec3970e42bbee69bffc6f0986ff98e277ccf0ffcc84fe9f3338f7f897961596bc6affc864feffc215112c39fbca8fb2df132afe8e7555efb8a49fbacf3066ff2166ff30eeff24afa668ff7f980477ca831477ccc277cca6729f29c2ff892fb3ce02cc5e43cd4982269dce6922baeb921262243961c790a142586aee8ba3d19ddd0986e530cd31d4de87e34a5077ad498277aa6179ad28c5ee92dadf24e1ff4498bb444cbb4a231abb446ebb4419bb445db49c78c76788376698ff6e980c7881971a4433a6adda0633aa1d3f6c469a5333aa70b89e15dbaa4bef84503cac49fa42fa721153f7da6922aaad37b6398974653937ed319fb6b4e4dfaa192be0fa95cafccb5b931e3ffcb7b8abbe523736726adbbdff2fecfef73ff02d928cb32</data>
-    </image>
-</images>
+<connections>
+    <connection>
+        <sender>comboProviders</sender>
+        <signal>activated(const QString&amp;)</signal>
+        <receiver>AccountSettingsDialog</receiver>
+        <slot>comboProviders_activated(const QString&amp;)</slot>
+    </connection>
+    <connection>
+        <sender>btnFetchHome</sender>
+        <signal>clicked()</signal>
+        <receiver>AccountSettingsDialog</receiver>
+        <slot>btnFetchHome_clicked()</slot>
+    </connection>
+    <connection>
+        <sender>btnFetchBlogs</sender>
+        <signal>clicked()</signal>
+        <receiver>AccountSettingsDialog</receiver>
+        <slot>btnFetchBlogs_clicked()</slot>
+    </connection>
+    <connection>
+        <sender>buttonOk</sender>
+        <signal>clicked()</signal>
+        <receiver>AccountSettingsDialog</receiver>
+        <slot>accept()</slot>
+    </connection>
+    <connection>
+        <sender>buttonCancel</sender>
+        <signal>clicked()</signal>
+        <receiver>AccountSettingsDialog</receiver>
+        <slot>reject()</slot>
+    </connection>
+</connections>
+<slots>
+    <slot>comboProviders_activated(const QString&amp;)</slot>
+    <slot>btnFetchHome_clicked()</slot>
+    <slot>btnFetchBlogs_clicked()</slot>
+    <slot>accept()</slot>
+    <slot>reject()</slot>
+</slots>
 <layoutdefaults spacing="6" margin="11"/>
 </UI>

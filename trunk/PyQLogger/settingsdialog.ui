@@ -522,6 +522,12 @@
         <receiver>SettingsDialog</receiver>
         <slot>btnDisablePlug_clicked()</slot>
     </connection>
+    <connection>
+        <sender>lbAccounts</sender>
+        <signal>selected(int)</signal>
+        <receiver>SettingsDialog</receiver>
+        <slot>lbAccounts_selected(int)</slot>
+    </connection>
 </connections>
 <slots>
     <slot>btnAddAccount_clicked()</slot>
@@ -532,6 +538,7 @@
     <slot>btnUnload_clicked()</slot>
     <slot>btnEnablePlug_clicked()</slot>
     <slot>btnDisablePlug_clicked()</slot>
+    <slot>lbAccounts_selected(int)</slot>
 </slots>
 <layoutdefaults spacing="6" margin="11"/>
 </UI>

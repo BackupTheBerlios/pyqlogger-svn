@@ -221,10 +221,24 @@
         <receiver>LoginDialog</receiver>
         <slot>btnLogin_clicked()</slot>
     </connection>
+    <connection>
+        <sender>comboUsers</sender>
+        <signal>activated(const QString&amp;)</signal>
+        <receiver>LoginDialog</receiver>
+        <slot>comboUsers_activated(const QString&amp;)</slot>
+    </connection>
+    <connection>
+        <sender>edtPassword</sender>
+        <signal>textChanged(const QString&amp;)</signal>
+        <receiver>LoginDialog</receiver>
+        <slot>edtPassword_textChanged(const QString&amp;)</slot>
+    </connection>
 </connections>
 <slots>
     <slot>btnSettings_clicked()</slot>
     <slot>btnLogin_clicked()</slot>
+    <slot>comboUsers_activated(const QString&amp;)</slot>
+    <slot>edtPassword_textChanged(const QString&amp;)</slot>
 </slots>
 <layoutdefaults spacing="6" margin="11"/>
 </UI>

@@ -1,0 +1,77 @@
+#! /usr/bin/python
+## This file is part of PyQLogger.
+## 
+## Copyright (c) 2004 Eli Yukelzon a.k.a Reflog         
+##
+## PyQLogger is free software; you can redistribute it and/or modify
+## it under the terms of the GNU General Public License as published by
+## the Free Software Foundation; either version 2 of the License, or
+## (at your option) any later version.
+## 
+## PyQLogger is distributed in the hope that it will be useful,
+## but WITHOUT ANY WARRANTY; without even the implied warranty of
+## MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+## GNU General Public License for more details.
+## 
+## You should have received a copy of the GNU General Public License
+## along with PyQLogger; if not, write to the Free Software
+## Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+
+#from BloggerService import *
+from EaseXML import  XMLObject,TextNode,IntegerAttribute,ListNode,StringAttribute
+from Blog import Blog
+from Services import *
+from Services import BlogServices
+
+class Account(XMLObject):
+    """
+    Base class for blog account providers
+    """        
+    Name = StringAttribute() # Display name    
+    Username = TextNode() #  Login name
+    Password = TextNode(optional=True) # Top Secret!
+    Host = TextNode() # Account's host
+    SelectedBlog = IntegerAttribute() # id of currently selected blog
+    Service = StringAttribute() #What Blogging API Is used
+    Blogs = ListNode('Blog')
+    
+    def serviceByName(self,name):
+        assert(name)
+        for b in BlogServices:            
+            (s_module,s_class) = b.split('.')
+            if name == s_class:
+                return getattr(globals()[s_module],s_class)
+        raise Exception("Invalid Blog Service name : "+name)
+  
+    def __blogById(self,blogId):
+        for blog in self.Blogs:
+            if blog.ID == blogId:
+                return blog
+        raise Exception("Invalid blog number %s !"%blogId)
+
+    def init(self):
+        self.BlogService = self.serviceByName(self.Service)(self.Host,self.Username,self.Password)
+
+    def login(self):
+        """
+        Perform login to server (if needed)
+        """
+        pass
+    
+    def fetchBlogs(self):
+        """
+        get the list of blogs for this account
+        """
+        pass
+    
+    def __len__(self):
+        """
+        Return number of blogs in account
+        """
+        return len(self.Blogs)
+    
+    def __getitem__(self, blogId):
+        """
+        Get a blog in account by it's id
+        """
+        return self.__blogById(blogId)
