@@ -17,13 +17,7 @@
 ## Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 """ Wrapper module for PyOSD """
 import sys
-
-try:
-	import pyosd
-except:
-	print """Could not locate the PyOSD module.  Please make sure that
-you have installed PyOSD for the version of Python that you are running."""
-	sys.exit(1)
+import pyosd
 
 class OSD:
 	def __init__(self,font='-adobe-*-*-*-*-*-60-*-*-*-*-*-*-*'):

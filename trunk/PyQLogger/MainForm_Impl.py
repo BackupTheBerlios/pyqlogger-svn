@@ -33,9 +33,9 @@ class MainForm_Impl(MainForm):
 
     def __init__(self,parent = None,name = None,fl = 0):
         MainForm.__init__(self,parent,name,fl)
-        osdmode = 0
+        notifymode = 0
         if len(sys.argv) > 1 and sys.argv[1] == '-s':
-            osdmode = 1
+            notifymode = 1
         self.statusFrame.hide()
         self.sh = HTMLSyntax(self.sourceEditor)
         self.sourceEditor.setTextFormat(Qt.PlainText)
@@ -48,10 +48,10 @@ class MainForm_Impl(MainForm):
         tabLayout2 = QHBoxLayout(self.tab_2,11,6,"tabLayout2")
         tabLayout2.setAutoAdd( True )
         initToolbar(self,self.plugins)
-        self.osd = Notifier(self,osdmode)
+        self.notifier = Notifier(self,notifymode)
         self.bg = BackGround()
         self.workers = BackGround()
-        self.uChecker = updateCheckWorker(self.osd)
+        self.uChecker = updateCheckWorker(self.notifier)
         self.aMenu = QPopupMenu()
         self.aMenu.insertItem("Delete post",1)
         self.aMenu.insertItem("Export post",2)
@@ -75,7 +75,7 @@ class MainForm_Impl(MainForm):
             res = QMessageBox.question(self,"Question","Are you sure you want to delete this post?",QMessageBox.Yes,QMessageBox.No)
             if res == QMessageBox.Yes:
                 ab = self._getAtomBlog()
-                b = postDeleteWorker(ab,self.osd,self,"Deleting post...")
+                b = postDeleteWorker(ab,self.notifier,self,"Deleting post...")
                 self.workers.add(b) 
         elif(i == 2):
             s = QFileDialog.getSaveFileName(os.path.expanduser("~"),
@@ -148,7 +148,7 @@ class MainForm_Impl(MainForm):
         title = unicode(self.editPostTitle.text())
         if title:
             ab = self._getAtomBlog()
-            b = newPostWorker(ab,self.osd,self,"Posting to blog...")
+            b = newPostWorker(ab,self.notifier,self,"Posting to blog...")
             self.workers.add(b,self.sender())
         else:
             QMessageBox.warning(self,"Warning","You forgot the post's title!")
@@ -171,7 +171,7 @@ class MainForm_Impl(MainForm):
     def btnRefreshBlogs_clicked(self):      
         at = self._getAtomBlog()
         if at:
-            b = blogFetchWorker(at,self.osd,self,"Fetching list of blogs...")
+            b = blogFetchWorker(at,self.notifier,self,"Fetching list of blogs...")
             self.workers.add(b,self.sender())
     
     def btnSettings_clicked(self):
@@ -194,7 +194,7 @@ class MainForm_Impl(MainForm):
     def btnReloadFeed_clicked(self):
         at = self._getAtomBlog()
         if at:
-            b = postFetchWorker(at,self.osd,self,"Fetching posts...")
+            b = postFetchWorker(at,self.notifier,self,"Fetching posts...")
             self.workers.add(b,self.sender())
     
     def comboBlogs_activated(self,a0):

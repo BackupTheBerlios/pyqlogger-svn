@@ -17,13 +17,21 @@
 ## Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 """ Wrapper module for displaying notifications """
 
-import OSD,Status
+import Status
+import qt
 
 class Notifier:
     def __init__(self,parent,mode):
         self.parent = parent
         if mode == 0 :
-            self.display = OSD.OSD()
+	    try:
+		import OSD
+		self.display = OSD.OSD()
+	    except:
+		qt.QMessageBox.warning(None,
+		    self.parent.trUtf8("Warning"),
+		    self.parent.trUtf8("""Seems like you don't have PyOSD installed!\nReverting to status bar notifications"""))
+		self.display  = Status.StatusNotifier(parent)
         elif mode == 1:
             self.display  = Status.StatusNotifier(parent)
         else:

@@ -58,8 +58,8 @@ class BackGround:
 	
 
 class bgWorker:
-	def __init__(self,atomBlog,OSD,parent,statusmsg=None):
-		self.OSD = OSD
+	def __init__(self,atomBlog,notifier,parent,statusmsg=None):
+		self.notifier = notifier
 		self.parent = parent
 		self.atomBlog = atomBlog
 		self.result = None
@@ -67,7 +67,7 @@ class bgWorker:
 
 	def status(self):
 		if self.statusmsg:
-			self.OSD.status(self.statusmsg)
+			self.notifier.status(self.statusmsg)
 
 class blogFetchWorker(bgWorker):
 	""" class for fetching list of blogs in background """
@@ -87,9 +87,9 @@ class blogFetchWorker(bgWorker):
 				self.parent.comboBlogs.insertItem(blog)					
 			idx = [i for i in range(0,self.parent.comboBlogs.count()) if self.parent.comboBlogs.text(i) == self.parent.settings["selectedblog"]]
 			self.parent.comboBlogs.setCurrentItem( idx [0] )
-			self.OSD.info("%d Blogs fetched!"%(self.result))
+			self.notifier.info("%d Blogs fetched!"%(self.result))
 		else:
-			self.OSD.error("Couldn't fetch blogs!")
+			self.notifier.error("Couldn't fetch blogs!")
 
 
 
@@ -107,10 +107,10 @@ class postFetchWorker(bgWorker):
 			self.parent.PublishedItems = {}
 			self.parent.PublishedPosts[self.parent.settings["selectedblog"]]  = self.PublishedPosts
 			self.parent.populateLists()
-			self.OSD.info("%d posts fetched!"%(len(self.PublishedPosts)))
+			self.notifier.info("%d posts fetched!"%(len(self.PublishedPosts)))
 			self.parent.SaveAll()
 		else:
-			self.OSD.error("Couldn't fetch posts from blog!")
+			self.notifier.error("Couldn't fetch posts from blog!")
 
 
 class postDeleteWorker(bgWorker):
@@ -130,9 +130,9 @@ class postDeleteWorker(bgWorker):
 		if not self.result:
 			i = self.parent.listPublishedPosts.currentItem()
 			self.parent.listPublishedPosts.removeItem(i)
-			self.OSD.info("Post deleted!")
+			self.notifier.info("Post deleted!")
 		else:
-			self.OSD.error("Couldn't fetch posts from blog! Error:"+self.result)
+			self.notifier.error("Couldn't fetch posts from blog! Error:"+self.result)
 
 class newPostWorker(bgWorker):
 	""" class for posting new blog item (or reposting) in background """
@@ -184,15 +184,15 @@ class newPostWorker(bgWorker):
 					if v == self.item_to_update:
 						k.setText(v['title'])
 						self.parent.listPublishedPosts.updateItem(k)
-			self.OSD.info("Publishing success!")
+			self.notifier.info("Publishing success!")
 		else:
-			self.OSD.error("Couldn't post to blog!")
+			self.notifier.error("Couldn't post to blog!")
 
 class updateCheckWorker:
 	""" class that provides new version checking in background """
-	def __init__(self,osd):
+	def __init__(self,notifier):
 		from pyqlogger import VERSION
-		self.OSD = osd
+		self.notifier = notifier
 		self.notified = LooseVersion(VERSION)
 		self.Timer = QTimer()
 		self.Timer.connect(self.Timer, SIGNAL("timeout()"), self.work)
@@ -205,6 +205,6 @@ class updateCheckWorker:
 			newver = LooseVersion( line.strip() )
 			if newver > self.notified :
 				self.notified = newver
-				self.OSD.info("New version %s is available at the site!"%(str(newver)))
+				self.notifier.info("New version %s is available at the site!"%(str(newver)))
 		except:
 			pass
