@@ -20,21 +20,25 @@
 ## 15/10/2004 - added new function getPost for single post fetching
 ##            - added optional date passing for newPost and editPost
 
-import httplib,sha,sha,base64
-import time, random
+import httplib,sha,sha,base64,urllib2,time, random
 from xml.sax.saxutils import escape , unescape
 import feedparser, re
 
 class AtomBlog:
 	""" Implementation of Atom API for posting to Blogger
-		Written by Reflog, based on code from http://www.daikini.com """
+		Written by Reflog, based on code from http://www.daikini.com 
+		This is an abstract class. Clients should introduct the following:
+		self.host = blog host
+		self.path = blog atom endpoint
+		self.feedpath = format for getting the feed
+		self.postpath = format for getting the post	
+	"""
 		
-	def __init__(self,username,password):
+	def __init__(self,host,username,password):
 		self.id_re = re.compile(r'(\d+)$')
-		self.host = "www.blogger.com"
-		self.path = "/atom"
 		self.username = username
 		self.password = password
+		self.host = host
 		
 	def _getNonce(self):
 		""" Generate a random string 'Nonce' marked with timestamp """
@@ -83,7 +87,7 @@ class AtomBlog:
 		""" Returns posts Atom Feed """
 		(created,headers) = self._makeCommonHeaders()
 		conn = httplib.HTTPConnection(self.host)
-		path = "%s/%s" % (self.path , blogId)
+		path = self.feedpath % (blogId)
 		conn.request("GET", path, "", headers)
 		response = conn.getresponse()
 		xml = response.read()
@@ -105,7 +109,7 @@ class AtomBlog:
 		""" Returns a post """
 		(created,headers) = self._makeCommonHeaders()
 		conn = httplib.HTTPConnection(self.host)
-		path = "%s/%s/%s" % (self.path , blogId, postId)
+		path = self.postpath % (blogId, entryId)
 		conn.request("GET", path, "", headers)
 		response = conn.getresponse()
 		xml = response.read()
@@ -124,22 +128,26 @@ class AtomBlog:
 		if res:
 			return res[0]
 			
-	def _makeBody(self,title,content,created):
+	def _makeBody(self,title,content,created,cat=None):
 		""" generate body of post entry based on parameters """
+		if cat:
+			catstr = "\n<dc:subject>%s</dc:subject>\n"%(cat) 
+		else:
+			catstr = ""
 		return unicode("""<?xml version="1.0" encoding="UTF-8" ?>
 		<entry xmlns="http://purl.org/atom/ns#">
 		<generator url="http://www.reflog.info/">Reflog's Blogger</generator>
 		<title mode="escaped" type="text/html">%s</title>
-		<issued>%s</issued>
+		<issued>%s</issued>%s		
 		<content mode="escaped" type="text/html">%s</content>
-		</entry>""" % (escape(title),created,escape(content))).encode("utf-8")
+		</entry>""" % (escape(title),created,catstr,escape(content))).encode("utf-8")
 		
 	def newPost(self,blogId,title,content,date=None):
 		""" Make a new post to Blogger, returning it's ID """
 		
 		(created,headers) = self._makeCommonHeaders(date)	
 		headers["Content-type"] = "application/atom+xml"
-		path = "%s/%s" % (self.path,blogId)
+		path = self.feedpath % (blogId)
 		body = self._makeBody(title,content,created)
 		conn = httplib.HTTPConnection(self.host)
 		conn.request("POST", path, body, headers)
@@ -153,7 +161,7 @@ class AtomBlog:
 	
 	def editPost (self,blogId,entryId,title,content,date=None):
 		""" Edits existing post on Blogger, returns new ID """		
-		path = "%s/%s/%s" % (self.path , blogId, entryId)
+		path = self.postpath % (blogId, entryId)
 		(created,headers) = self._makeCommonHeaders(date)	
 		headers["Content-type"] = "application/atom+xml"
 		body = self._makeBody(title,content,created)
@@ -163,13 +171,69 @@ class AtomBlog:
 		resp = response.read()
 		conn.close()
 
+	def getCategories(self,blogId):
+		""" Fetches the list of blog's categories """
+		return None
+
+	def getHomepage(self,blogid):
+		""" Returns the homepage of the blog """
+		return None
 
 	def deletePost(self,blogId,entryId):
 		""" Deletes a post from specified Blog """
-		path = "%s/%s/%s" % (self.path , blogId, entryId)
-		path = "%s/%s/%s" % (self.path , blogId, entryId)
+		path = self.postpath % (blogId, entryId)
 		(created,headers) = self._makeCommonHeaders()	
 		conn = httplib.HTTPConnection(self.host)
 		conn.request("DELETE", path, "", headers)
 		response = conn.getresponse()
 		return bool(response.status == 410 or response.status == 200)
+
+class GenericAtomClient(AtomBlog):
+	""" Generic class for AtomAPI Handling """
+	endpoints = ("","","")
+	def __init__(self,host,username,password,path,feedpath,postpath):
+		AtomBlog.__init__(self,host,username,password)
+		self.path = path
+		self.feedpath = feedpath
+		self.postpath = postpath
+
+
+class BloggerClient(GenericAtomClient):
+	""" Wrapper for Blogger.com """
+	endpoints = ("/atom", "/atom/%s", "/atom/%s/%s")
+	def __init__(self,host,username,password):
+		GenericAtomClient.__init__(self,host,username,password,"/atom", "/atom/%s", "/atom/%s/%s")
+		self.hp_re = re.compile(r'<homePageLink>(.*)</homePageLink>',re.MULTILINE)		
+
+	def getHomepage(self,blogid):
+		""" Returns the homepage of the blog """
+		req_url = "http://www.blogger.com/rsd.pyra?blogID=%s"%(blogid)
+		try:
+			req = urllib2.urlopen(req_url)
+			lines = req.read()
+			req.close()
+			m = self.hp_re.search(lines)
+			if m: return m.group(1)
+		except:
+			pass			
+
+
+class MovableTypeClient(GenericAtomClient):
+	""" Wrapper for MovableType servers """
+	def __init__(self,host,username,password):
+		GenericAtomClient.__init__(self,host,username,password,
+			"/mt-atom.cgi/weblog","/mt-atom.cgi/weblog/blog_id=%s","/mt-atom.cgi/weblog/blog_id=%s/entry_id=%s")
+
+	endpoints = ("/mt-atom.cgi/weblog","/mt-atom.cgi/weblog/blog_id=%s","/mt-atom.cgi/weblog/blog_id=%s/entry_id=%s")
+
+	def getCategories(self,blogId):
+		""" Fetches the list of blog's categories """
+		path = self.feedpath+"/svc=categories"%(blogId)
+		(created,headers) = self._makeCommonHeaders()
+		conn = httplib.HTTPConnection(self.host)
+		conn.request("GET", path, "", headers)
+		response = conn.getresponse()
+		xml = response.read()
+		conn.close()
+		res = []
+		return feedparser.parse(xml)['categories']

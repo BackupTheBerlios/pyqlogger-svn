@@ -331,7 +331,7 @@ def initToolbar(self,plugs):
 	plugs.manualAdd( ToolbarPlugin.SimpleButton(self,"OL",makeOrderedList,None,tbOl_image) )
 
 def surroundWith(self,tag,param=''):
-	text = str(self.sourceEditor.selectedText())
+	text = unicode(self.sourceEditor.selectedText())
 	self.sourceEditor.removeSelectedText()
 	line, index = self.sourceEditor.getCursorPosition()
 	if param != '': 
@@ -356,7 +356,8 @@ def alignRight():surroundWith(qApp.mainWidget(),'div','align="right"')
 def insertHR():
 	self = qApp.mainWidget()
 	line, index = self.sourceEditor.getCursorPosition()
-	self.sourceEditor.insertAt("<HR>", line, index)
+	self.sourceEditor.insertAt("<HR>\n", line, index)
+	self.sourceEditor.setCursorPosition(line+1,0)
 
 def insertUrl():
 	pass
@@ -368,6 +369,7 @@ def insertBR():
 	self = qApp.mainWidget()
 	line, index = self.sourceEditor.getCursorPosition()
 	self.sourceEditor.insertAt("<BR>\n", line, index)
+	self.sourceEditor.setCursorPosition(line+1,0)
 	
 def incFont():surroundWith(qApp.mainWidget(),'font','size="+1"')
 
@@ -375,7 +377,7 @@ def decFont():surroundWith(qApp.mainWidget(),'font','size="-1"')
 
 def makeUnorderedList():
 	self = qApp.mainWidget()
-	text = str(self.sourceEditor.selectedText())
+	text = unicode(self.sourceEditor.selectedText())
 	self.sourceEditor.removeSelectedText()
 	lines = ["<li>%s</li>"%(line) for line in text.split("\n")]
 	newtext = "<ul>\n%s\n</ul>" % ( "\n".join(lines) )
@@ -385,7 +387,7 @@ def makeUnorderedList():
 
 def makeOrderedList():
 	self = qApp.mainWidget()
-	text = str(self.sourceEditor.selectedText())
+	text = unicode(self.sourceEditor.selectedText())
 	self.sourceEditor.removeSelectedText()
 	lines = ["<li>%s</li>"%(line) for line in text.split("\n")]
 	newtext = "<ol>\n%s\n</ol>" % ( "\n".join(lines) )

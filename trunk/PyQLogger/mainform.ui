@@ -26,8 +26,8 @@ Python:## Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  
         <rect>
             <x>0</x>
             <y>0</y>
-            <width>726</width>
-            <height>480</height>
+            <width>814</width>
+            <height>503</height>
         </rect>
     </property>
     <property name="caption">
@@ -39,7 +39,7 @@ Python:## Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  
     <property name="sizeGripEnabled">
         <bool>false</bool>
     </property>
-    <vbox>
+    <hbox>
         <property name="name">
             <cstring>unnamed</cstring>
         </property>
@@ -62,258 +62,302 @@ Python:## Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  
                         <cstring>unnamed</cstring>
                     </property>
                     <property name="margin">
-                        <number>3</number>
+                        <number>0</number>
                     </property>
-                    <widget class="QLayoutWidget">
+                    <property name="spacing">
+                        <number>0</number>
+                    </property>
+                    <widget class="QFrame">
                         <property name="name">
-                            <cstring>layout11</cstring>
+                            <cstring>frame4</cstring>
                         </property>
-                        <hbox>
+                        <property name="frameShape">
+                            <enum>StyledPanel</enum>
+                        </property>
+                        <property name="frameShadow">
+                            <enum>Raised</enum>
+                        </property>
+                        <vbox>
                             <property name="name">
                                 <cstring>unnamed</cstring>
                             </property>
-                            <widget class="QToolButton">
+                            <widget class="QLayoutWidget">
                                 <property name="name">
-                                    <cstring>btnNewPost</cstring>
+                                    <cstring>layout9</cstring>
                                 </property>
-                                <property name="text">
-                                    <string></string>
-                                </property>
-                                <property name="accel">
-                                    <string>Ctrl+N</string>
-                                </property>
-                                <property name="iconSet">
-                                    <iconset>image1</iconset>
-                                </property>
-                                <property name="toolTip" stdset="0">
-                                    <string>Click here to create new post</string>
-                                </property>
-                                <property name="whatsThis" stdset="0">
-                                    <string>Press this button to create a new post. If you have an unsaved post you'll be propted to save it. &lt;b&gt;Hotkey: Ctrl-N&lt;/b&gt;</string>
-                                </property>
+                                <hbox>
+                                    <property name="name">
+                                        <cstring>unnamed</cstring>
+                                    </property>
+                                    <widget class="QToolButton">
+                                        <property name="name">
+                                            <cstring>btnNewPost</cstring>
+                                        </property>
+                                        <property name="text">
+                                            <string></string>
+                                        </property>
+                                        <property name="accel">
+                                            <string>Ctrl+N</string>
+                                        </property>
+                                        <property name="iconSet">
+                                            <iconset>image1</iconset>
+                                        </property>
+                                        <property name="toolTip" stdset="0">
+                                            <string>Click here to create new post</string>
+                                        </property>
+                                        <property name="whatsThis" stdset="0">
+                                            <string>Press this button to create a new post. If you have an unsaved post you'll be propted to save it. &lt;b&gt;Hotkey: Ctrl-N&lt;/b&gt;</string>
+                                        </property>
+                                    </widget>
+                                    <widget class="QToolButton">
+                                        <property name="name">
+                                            <cstring>btnPreview</cstring>
+                                        </property>
+                                        <property name="text">
+                                            <string></string>
+                                        </property>
+                                        <property name="accel">
+                                            <string>Ctrl+V</string>
+                                        </property>
+                                        <property name="iconSet">
+                                            <iconset>image2</iconset>
+                                        </property>
+                                        <property name="toolTip" stdset="0">
+                                            <string>Click here to open blog preview in browser.</string>
+                                        </property>
+                                        <property name="whatsThis" stdset="0">
+                                            <string>This button will launch your default browser with your blog for preview. &lt;b&gt;Hotkey Ctrl-V&lt;/b&gt;</string>
+                                        </property>
+                                    </widget>
+                                    <widget class="QToolButton">
+                                        <property name="name">
+                                            <cstring>btnFetchPosts</cstring>
+                                        </property>
+                                        <property name="maximumSize">
+                                            <size>
+                                                <width>327</width>
+                                                <height>32767</height>
+                                            </size>
+                                        </property>
+                                        <property name="text">
+                                            <string></string>
+                                        </property>
+                                        <property name="accel">
+                                            <string>Ctrl+R</string>
+                                        </property>
+                                        <property name="iconSet">
+                                            <iconset>image3</iconset>
+                                        </property>
+                                        <property name="toolTip" stdset="0">
+                                            <string>Click here to re-fetch the list of posts.</string>
+                                        </property>
+                                        <property name="whatsThis" stdset="0">
+                                            <string>Pressing this button will re-fetch the list of posts from your blog's feed and save them locally for later editing. &lt;b&gt;Hotkey Ctrl-R&lt;/b&gt;</string>
+                                        </property>
+                                    </widget>
+                                    <widget class="QToolButton">
+                                        <property name="name">
+                                            <cstring>btnSettings</cstring>
+                                        </property>
+                                        <property name="text">
+                                            <string></string>
+                                        </property>
+                                        <property name="accel">
+                                            <string></string>
+                                        </property>
+                                        <property name="iconSet">
+                                            <iconset>image4</iconset>
+                                        </property>
+                                        <property name="toolTip" stdset="0">
+                                            <string>Click here to display settings dialog.</string>
+                                        </property>
+                                        <property name="whatsThis" stdset="0">
+                                            <string>This will display the &lt;b&gt;Settings wizard&lt;/b&gt; once again</string>
+                                        </property>
+                                    </widget>
+                                </hbox>
                             </widget>
-                            <widget class="QToolButton">
+                            <widget class="QLayoutWidget">
                                 <property name="name">
-                                    <cstring>btnPreview</cstring>
+                                    <cstring>layout10</cstring>
                                 </property>
-                                <property name="text">
-                                    <string></string>
-                                </property>
-                                <property name="accel">
-                                    <string>Ctrl+V</string>
-                                </property>
-                                <property name="iconSet">
-                                    <iconset>image2</iconset>
-                                </property>
-                                <property name="toolTip" stdset="0">
-                                    <string>Click here to open blog preview in browser.</string>
-                                </property>
-                                <property name="whatsThis" stdset="0">
-                                    <string>This button will launch your default browser with your blog for preview. &lt;b&gt;Hotkey Ctrl-V&lt;/b&gt;</string>
-                                </property>
+                                <hbox>
+                                    <property name="name">
+                                        <cstring>unnamed</cstring>
+                                    </property>
+                                    <widget class="QLabel">
+                                        <property name="name">
+                                            <cstring>textLabel2</cstring>
+                                        </property>
+                                        <property name="text">
+                                            <string>Blog:</string>
+                                        </property>
+                                    </widget>
+                                    <widget class="QComboBox">
+                                        <property name="name">
+                                            <cstring>comboBlogs</cstring>
+                                        </property>
+                                        <property name="sizePolicy">
+                                            <sizepolicy>
+                                                <hsizetype>7</hsizetype>
+                                                <vsizetype>0</vsizetype>
+                                                <horstretch>0</horstretch>
+                                                <verstretch>0</verstretch>
+                                            </sizepolicy>
+                                        </property>
+                                    </widget>
+                                    <widget class="QToolButton">
+                                        <property name="name">
+                                            <cstring>btnRefreshBlogs</cstring>
+                                        </property>
+                                        <property name="text">
+                                            <string></string>
+                                        </property>
+                                        <property name="iconSet">
+                                            <iconset>image5</iconset>
+                                        </property>
+                                        <property name="toolTip" stdset="0">
+                                            <string>Click here to reload the list of available blogs.</string>
+                                        </property>
+                                        <property name="whatsThis" stdset="0">
+                                            <string>This button fetches the list of &lt;b&gt;Blogs&lt;/b&gt; from your current account.</string>
+                                        </property>
+                                    </widget>
+                                </hbox>
                             </widget>
-                            <widget class="QToolButton">
-                                <property name="name">
-                                    <cstring>btnFetchPosts</cstring>
-                                </property>
-                                <property name="maximumSize">
-                                    <size>
-                                        <width>327</width>
-                                        <height>32767</height>
-                                    </size>
-                                </property>
-                                <property name="text">
-                                    <string></string>
-                                </property>
-                                <property name="accel">
-                                    <string>Ctrl+R</string>
-                                </property>
-                                <property name="iconSet">
-                                    <iconset>image3</iconset>
-                                </property>
-                                <property name="toolTip" stdset="0">
-                                    <string>Click here to re-fetch the list of posts.</string>
-                                </property>
-                                <property name="whatsThis" stdset="0">
-                                    <string>Pressing this button will re-fetch the list of posts from your blog's feed and save them locally for later editing. &lt;b&gt;Hotkey Ctrl-R&lt;/b&gt;</string>
-                                </property>
-                            </widget>
-                            <widget class="QToolButton">
-                                <property name="name">
-                                    <cstring>btnSettings</cstring>
-                                </property>
-                                <property name="text">
-                                    <string></string>
-                                </property>
-                                <property name="iconSet">
-                                    <iconset>image4</iconset>
-                                </property>
-                                <property name="toolTip" stdset="0">
-                                    <string>Click here to display settings dialog.</string>
-                                </property>
-                                <property name="whatsThis" stdset="0">
-                                    <string>This will display the &lt;b&gt;Settings wizard&lt;/b&gt; once again</string>
-                                </property>
-                            </widget>
-                        </hbox>
+                        </vbox>
                     </widget>
-                    <widget class="QLayoutWidget">
+                    <widget class="QFrame">
                         <property name="name">
-                            <cstring>layout10</cstring>
+                            <cstring>frame5</cstring>
                         </property>
-                        <hbox>
+                        <property name="frameShape">
+                            <enum>StyledPanel</enum>
+                        </property>
+                        <property name="frameShadow">
+                            <enum>Raised</enum>
+                        </property>
+                        <vbox>
                             <property name="name">
                                 <cstring>unnamed</cstring>
                             </property>
-                            <widget class="QLabel">
+                            <widget class="QLayoutWidget">
                                 <property name="name">
-                                    <cstring>textLabel2</cstring>
+                                    <cstring>layout7</cstring>
                                 </property>
-                                <property name="text">
-                                    <string>Blog:</string>
-                                </property>
+                                <hbox>
+                                    <property name="name">
+                                        <cstring>unnamed</cstring>
+                                    </property>
+                                    <property name="margin">
+                                        <number>5</number>
+                                    </property>
+                                    <widget class="QLabel">
+                                        <property name="name">
+                                            <cstring>pixmapLabel1</cstring>
+                                        </property>
+                                        <property name="pixmap">
+                                            <pixmap>image6</pixmap>
+                                        </property>
+                                        <property name="scaledContents">
+                                            <bool>false</bool>
+                                        </property>
+                                    </widget>
+                                    <widget class="QLabel">
+                                        <property name="name">
+                                            <cstring>textLabel1_2</cstring>
+                                        </property>
+                                        <property name="text">
+                                            <string>P&amp;ublished Posts</string>
+                                        </property>
+                                        <property name="buddy" stdset="0">
+                                            <cstring>listPublishedPosts</cstring>
+                                        </property>
+                                    </widget>
+                                </hbox>
                             </widget>
-                            <widget class="QComboBox">
+                            <widget class="QListBox">
                                 <property name="name">
-                                    <cstring>comboBlogs</cstring>
-                                </property>
-                                <property name="sizePolicy">
-                                    <sizepolicy>
-                                        <hsizetype>7</hsizetype>
-                                        <vsizetype>0</vsizetype>
-                                        <horstretch>0</horstretch>
-                                        <verstretch>0</verstretch>
-                                    </sizepolicy>
-                                </property>
-                            </widget>
-                            <widget class="QToolButton">
-                                <property name="name">
-                                    <cstring>btnRefreshBlogs</cstring>
-                                </property>
-                                <property name="text">
-                                    <string></string>
-                                </property>
-                                <property name="iconSet">
-                                    <iconset>image5</iconset>
-                                </property>
-                                <property name="toolTip" stdset="0">
-                                    <string>Click here to reload the list of available blogs.</string>
-                                </property>
-                                <property name="whatsThis" stdset="0">
-                                    <string>This button fetches the list of &lt;b&gt;Blogs&lt;/b&gt; from your current account.</string>
-                                </property>
-                            </widget>
-                        </hbox>
-                    </widget>
-                    <widget class="QLayoutWidget">
-                        <property name="name">
-                            <cstring>layout7</cstring>
-                        </property>
-                        <hbox>
-                            <property name="name">
-                                <cstring>unnamed</cstring>
-                            </property>
-                            <property name="margin">
-                                <number>5</number>
-                            </property>
-                            <widget class="QLabel">
-                                <property name="name">
-                                    <cstring>pixmapLabel1</cstring>
-                                </property>
-                                <property name="pixmap">
-                                    <pixmap>image6</pixmap>
-                                </property>
-                                <property name="scaledContents">
-                                    <bool>false</bool>
-                                </property>
-                            </widget>
-                            <widget class="QLabel">
-                                <property name="name">
-                                    <cstring>textLabel1_2</cstring>
-                                </property>
-                                <property name="text">
-                                    <string>P&amp;ublished Posts</string>
-                                </property>
-                                <property name="buddy" stdset="0">
                                     <cstring>listPublishedPosts</cstring>
                                 </property>
                             </widget>
-                        </hbox>
-                    </widget>
-                    <widget class="QListBox">
-                        <property name="name">
-                            <cstring>listPublishedPosts</cstring>
-                        </property>
-                    </widget>
-                    <widget class="QLayoutWidget">
-                        <property name="name">
-                            <cstring>layout8</cstring>
-                        </property>
-                        <hbox>
-                            <property name="name">
-                                <cstring>unnamed</cstring>
-                            </property>
-                            <property name="margin">
-                                <number>7</number>
-                            </property>
-                            <widget class="QLabel">
+                            <widget class="QLayoutWidget">
                                 <property name="name">
-                                    <cstring>pixmapLabel2</cstring>
+                                    <cstring>layout8</cstring>
                                 </property>
-                                <property name="maximumSize">
-                                    <size>
-                                        <width>32</width>
-                                        <height>32767</height>
-                                    </size>
-                                </property>
-                                <property name="pixmap">
-                                    <pixmap>image7</pixmap>
-                                </property>
-                                <property name="scaledContents">
-                                    <bool>false</bool>
-                                </property>
+                                <hbox>
+                                    <property name="name">
+                                        <cstring>unnamed</cstring>
+                                    </property>
+                                    <property name="margin">
+                                        <number>7</number>
+                                    </property>
+                                    <widget class="QLabel">
+                                        <property name="name">
+                                            <cstring>pixmapLabel2</cstring>
+                                        </property>
+                                        <property name="maximumSize">
+                                            <size>
+                                                <width>32</width>
+                                                <height>32767</height>
+                                            </size>
+                                        </property>
+                                        <property name="pixmap">
+                                            <pixmap>image7</pixmap>
+                                        </property>
+                                        <property name="scaledContents">
+                                            <bool>false</bool>
+                                        </property>
+                                    </widget>
+                                    <widget class="QLabel">
+                                        <property name="name">
+                                            <cstring>textLabel1_2_2</cstring>
+                                        </property>
+                                        <property name="text">
+                                            <string>&amp;Saved Posts</string>
+                                        </property>
+                                        <property name="buddy" stdset="0">
+                                            <cstring>listSavedPosts</cstring>
+                                        </property>
+                                    </widget>
+                                </hbox>
                             </widget>
-                            <widget class="QLabel">
+                            <widget class="QListBox">
                                 <property name="name">
-                                    <cstring>textLabel1_2_2</cstring>
-                                </property>
-                                <property name="text">
-                                    <string>&amp;Saved Posts</string>
-                                </property>
-                                <property name="buddy" stdset="0">
                                     <cstring>listSavedPosts</cstring>
                                 </property>
                             </widget>
-                        </hbox>
-                    </widget>
-                    <widget class="QListBox">
-                        <property name="name">
-                            <cstring>listSavedPosts</cstring>
-                        </property>
+                        </vbox>
                     </widget>
                 </vbox>
             </widget>
             <widget class="QLayoutWidget">
                 <property name="name">
-                    <cstring>layout13</cstring>
+                    <cstring>layout10</cstring>
                 </property>
                 <vbox>
                     <property name="name">
                         <cstring>unnamed</cstring>
                     </property>
                     <property name="margin">
-                        <number>3</number>
+                        <number>0</number>
                     </property>
-                    <widget class="QLayoutWidget">
+                    <property name="spacing">
+                        <number>0</number>
+                    </property>
+                    <widget class="QFrame">
                         <property name="name">
-                            <cstring>layout12</cstring>
+                            <cstring>frame7</cstring>
+                        </property>
+                        <property name="frameShape">
+                            <enum>StyledPanel</enum>
+                        </property>
+                        <property name="frameShadow">
+                            <enum>Raised</enum>
                         </property>
                         <hbox>
                             <property name="name">
                                 <cstring>unnamed</cstring>
-                            </property>
-                            <property name="spacing">
-                                <number>64</number>
                             </property>
                             <widget class="QLabel">
                                 <property name="name">
@@ -354,19 +398,86 @@ Python:## Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  
                                 </property>
                                 <property name="minimumSize">
                                     <size>
-                                        <width>370</width>
-                                        <height>0</height>
+                                        <width>350</width>
+                                        <height>26</height>
                                     </size>
                                 </property>
                                 <property name="maximumSize">
                                     <size>
                                         <width>32700</width>
-                                        <height>327</height>
+                                        <height>26</height>
                                     </size>
                                 </property>
                                 <property name="whatsThis" stdset="0">
                                     <string>This will be your posts' title. HTML tags allowed but not highligted. You won't be able to save the post without this title</string>
                                 </property>
+                            </widget>
+                            <widget class="QFrame">
+                                <property name="name">
+                                    <cstring>frameCat</cstring>
+                                </property>
+                                <property name="frameShape">
+                                    <enum>StyledPanel</enum>
+                                </property>
+                                <property name="frameShadow">
+                                    <enum>Raised</enum>
+                                </property>
+                                <property name="lineWidth">
+                                    <number>0</number>
+                                </property>
+                                <hbox>
+                                    <property name="name">
+                                        <cstring>unnamed</cstring>
+                                    </property>
+                                    <property name="margin">
+                                        <number>0</number>
+                                    </property>
+                                    <property name="spacing">
+                                        <number>1</number>
+                                    </property>
+                                    <widget class="QLabel">
+                                        <property name="name">
+                                            <cstring>textLabel2_2</cstring>
+                                        </property>
+                                        <property name="text">
+                                            <string>Category:</string>
+                                        </property>
+                                    </widget>
+                                    <widget class="QComboBox">
+                                        <property name="name">
+                                            <cstring>comboCats</cstring>
+                                        </property>
+                                        <property name="minimumSize">
+                                            <size>
+                                                <width>0</width>
+                                                <height>26</height>
+                                            </size>
+                                        </property>
+                                    </widget>
+                                    <widget class="QToolButton">
+                                        <property name="name">
+                                            <cstring>btnRefreshCat</cstring>
+                                        </property>
+                                        <property name="minimumSize">
+                                            <size>
+                                                <width>28</width>
+                                                <height>26</height>
+                                            </size>
+                                        </property>
+                                        <property name="text">
+                                            <string></string>
+                                        </property>
+                                        <property name="iconSet">
+                                            <iconset>image5</iconset>
+                                        </property>
+                                        <property name="toolTip" stdset="0">
+                                            <string>Click here to reload the list of available blogs.</string>
+                                        </property>
+                                        <property name="whatsThis" stdset="0">
+                                            <string>This button fetches the list of &lt;b&gt;Blogs&lt;/b&gt; from your current account.</string>
+                                        </property>
+                                    </widget>
+                                </hbox>
                             </widget>
                         </hbox>
                     </widget>
@@ -470,9 +581,15 @@ Python:## Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  
                             </hbox>
                         </widget>
                     </widget>
-                    <widget class="QLayoutWidget">
+                    <widget class="QFrame">
                         <property name="name">
-                            <cstring>layout8</cstring>
+                            <cstring>frame6</cstring>
+                        </property>
+                        <property name="frameShape">
+                            <enum>StyledPanel</enum>
+                        </property>
+                        <property name="frameShadow">
+                            <enum>Raised</enum>
                         </property>
                         <hbox>
                             <property name="name">
@@ -516,7 +633,7 @@ Python:## Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  
                                 </property>
                                 <property name="sizeHint">
                                     <size>
-                                        <width>190</width>
+                                        <width>444</width>
                                         <height>21</height>
                                     </size>
                                 </property>
@@ -566,7 +683,7 @@ Python:## Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  
                 </vbox>
             </widget>
         </widget>
-    </vbox>
+    </hbox>
 </widget>
 <images>
     <image name="image0">
@@ -604,24 +721,6 @@ Python:## Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  
     </image>
 </images>
 <connections>
-    <connection>
-        <sender>btnSettings</sender>
-        <signal>clicked()</signal>
-        <receiver>MainForm</receiver>
-        <slot>btnSettings_clicked()</slot>
-    </connection>
-    <connection>
-        <sender>btnPreview</sender>
-        <signal>clicked()</signal>
-        <receiver>MainForm</receiver>
-        <slot>btnPreview_clicked()</slot>
-    </connection>
-    <connection>
-        <sender>btnFetchPosts</sender>
-        <signal>clicked()</signal>
-        <receiver>MainForm</receiver>
-        <slot>btnReloadFeed_clicked()</slot>
-    </connection>
     <connection>
         <sender>btnRefreshBlogs</sender>
         <signal>clicked()</signal>
@@ -683,12 +782,6 @@ Python:## Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  
         <slot>listSavedPosts_contextMenuRequested(QListBoxItem*,const QPoint&amp;)</slot>
     </connection>
     <connection>
-        <sender>btnNewPost</sender>
-        <signal>clicked()</signal>
-        <receiver>MainForm</receiver>
-        <slot>btnNewPost_clicked()</slot>
-    </connection>
-    <connection>
         <sender>sourceEditor</sender>
         <signal>textChanged()</signal>
         <receiver>MainForm</receiver>
@@ -700,18 +793,54 @@ Python:## Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  
         <receiver>MainForm</receiver>
         <slot>MainForm_destroyed(QObject*)</slot>
     </connection>
+    <connection>
+        <sender>comboCats</sender>
+        <signal>activated(const QString&amp;)</signal>
+        <receiver>MainForm</receiver>
+        <slot>comboCats_activated(const QString&amp;)</slot>
+    </connection>
+    <connection>
+        <sender>btnRefreshCat</sender>
+        <signal>clicked()</signal>
+        <receiver>MainForm</receiver>
+        <slot>btnRefreshCat_clicked()</slot>
+    </connection>
+    <connection>
+        <sender>btnFetchPosts</sender>
+        <signal>clicked()</signal>
+        <receiver>MainForm</receiver>
+        <slot>btnReloadFeed_clicked()</slot>
+    </connection>
+    <connection>
+        <sender>btnNewPost</sender>
+        <signal>clicked()</signal>
+        <receiver>MainForm</receiver>
+        <slot>btnNewPost_clicked()</slot>
+    </connection>
+    <connection>
+        <sender>btnSettings</sender>
+        <signal>clicked()</signal>
+        <receiver>MainForm</receiver>
+        <slot>btnSettings_clicked()</slot>
+    </connection>
+    <connection>
+        <sender>btnPreview</sender>
+        <signal>clicked()</signal>
+        <receiver>MainForm</receiver>
+        <slot>btnPreview_clicked()</slot>
+    </connection>
 </connections>
 <tabstops>
-    <tabstop>comboBlogs</tabstop>
-    <tabstop>tabWidget3</tabstop>
     <tabstop>editPostTitle</tabstop>
     <tabstop>sourceEditor</tabstop>
     <tabstop>btnPublish</tabstop>
     <tabstop>btnSavePost</tabstop>
-    <tabstop>btnExit</tabstop>
-    <tabstop>tabWidget2</tabstop>
+    <tabstop>comboBlogs</tabstop>
     <tabstop>listPublishedPosts</tabstop>
     <tabstop>listSavedPosts</tabstop>
+    <tabstop>tabWidget3</tabstop>
+    <tabstop>btnExit</tabstop>
+    <tabstop>tabWidget2</tabstop>
     <tabstop>sourcePreview</tabstop>
 </tabstops>
 <includes>
@@ -736,6 +865,8 @@ Python:## Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  
     <slot>listSavedPosts_contextMenuRequested( QListBoxItem *, const QPoint &amp; )</slot>
     <slot>sourceEditor_textChanged()</slot>
     <slot>MainForm_destroyed( QObject * )</slot>
+    <slot>comboCats_activated( const QString &amp; )</slot>
+    <slot>btnRefreshCat_clicked()</slot>
 </slots>
 <layoutdefaults spacing="6" margin="11"/>
 </UI>

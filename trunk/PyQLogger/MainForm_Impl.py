@@ -22,7 +22,7 @@ from qt import *
 from mainform import MainForm
 from SetupWizardForm_Impl import SetupWizardForm_Impl
 from datetime import date
-from AtomBlog import AtomBlog
+from AtomBlog import *
 from ToolBar import *
 from OSD import OSD
 from SyntaxHighlight import HTMLSyntax
@@ -39,12 +39,11 @@ class MainForm_Impl(MainForm):
 		self.cached_password = None
 		self.cached_atomblog = None
 		self.plugins = PluginFactory(os.path.expanduser("~/.pyqlogger/plugins/"),self)
-		initToolbar(self,self.plugins)
 		tabLayout = QHBoxLayout(self.tab,11,6,"tabLayout")
 		tabLayout.setAutoAdd( True )
 		tabLayout2 = QHBoxLayout(self.tab_2,11,6,"tabLayout2")
 		tabLayout2.setAutoAdd( True )
-		self.plugins.fillToolbar(self.tabWidget3)
+		initToolbar(self,self.plugins)
 		self.osd = OSD()
 		self.bg = BackGround()
 		self.workers = BackGround()
@@ -57,6 +56,15 @@ class MainForm_Impl(MainForm):
 		self.bMenu.insertItem("Export post",2)
 		self.connect(self.aMenu,SIGNAL("activated(int)"),self.pubPopup)
 		self.connect(self.bMenu,SIGNAL("activated(int)"),self.savePopup)
+		self.frameCat.hide()
+		
+	def getPage(self,title):
+		if not title: 
+			return self.tabWidget3.page(0)
+		for i in range(0,self.tabWidget3.count()):
+			if title == str(self.tabWidget3.label(i)):
+				return self.tabWidget3.page(i)
+
 
 	def pubPopup(self,i):
 		if(i == 1):
@@ -170,6 +178,7 @@ class MainForm_Impl(MainForm):
 			self.settings = wiz.settings
 			try:
 				self.WriteSettings(os.path.expanduser("~/.pyqlogger/settings"),self.settings)
+				self.init()
 			except:	
 				QMessageBox.critical(w,"Error","Cannot write configuration!")
 				QApplication.exit()
@@ -256,7 +265,13 @@ class MainForm_Impl(MainForm):
 		if not self.cached_atomblog:
 			psw = self._getPassword()
 			if psw:
-				self.cached_atomblog = AtomBlog(self.settings["login"], psw)
+				self.cached_atomblog = None
+				if self.settings["hosttype"] == 0:
+					self.cached_atomblog = GenericAtomClient(self.settings["host"],self.settings["login"], psw, self.settings["ep"],self.settings["fp"],self.settings["pp"])
+				elif self.settings["hosttype"] == 1:
+					self.cached_atomblog = BloggerClient(self.settings["host"],self.settings["login"], psw)
+				elif self.settings["hosttype"] == 2:
+					self.cached_atomblog = MovableTypeClient(self.settings["host"],self.settings["login"], psw)
 				return self.cached_atomblog
 			else:
 				QMessageBox.warning(self,"Error","Cannot work online without a password!")
@@ -281,6 +296,8 @@ class MainForm_Impl(MainForm):
 		idx = [i for i in range(0,self.comboBlogs.count()) if self.comboBlogs.text(i) == self.settings["selectedblog"]]
 		self.comboBlogs.setCurrentItem( idx [0] )
 		
+		if self.settings["hosttype"] != 1:
+			self.frameCat.show()
 		self.populateLists()
 		
 		self._getPassword()

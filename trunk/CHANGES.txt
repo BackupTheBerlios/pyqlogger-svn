@@ -15,7 +15,12 @@ x/10/2004 - 1.3
 + Added plugin system. ToolBarManager
 * Changed all toolbar buttons into mini plugins
 + Created SpellChecker plugin. Will be packaged separately
- 
++ Added support for other blog providers. MovableType and any other generic AtomApi hosts 
+* Reworked setup wizard. User of previous version has to re-run the setup
++ To Blogger client added a function to fetch the blogs' url automatically (in wizard)
++ Added category posting for clients that support it
++ Added Textile plugin. See http://www.textism.com/tools/textile/ for format and usage
+
 5/10/2004 - 1.2.1
 
 + Added new version notification

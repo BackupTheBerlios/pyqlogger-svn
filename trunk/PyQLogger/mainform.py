@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file '/home/reflog/py/PyQLogger/mainform.ui'
 #
-# Created: Wed Oct 20 01:00:53 2004
+# Created: Sun Oct 24 14:09:56 2004
 #      by: The PyQt User Interface Compiler (pyuic) 3.13
 #
 # WARNING! All changes made in this file will be lost!
@@ -1470,93 +1470,127 @@ class MainForm(QDialog):
         self.setIcon(self.image0)
         self.setSizeGripEnabled(0)
 
-        MainFormLayout = QVBoxLayout(self,0,6,"MainFormLayout")
+        MainFormLayout = QHBoxLayout(self,0,6,"MainFormLayout")
 
         self.splitter2 = QSplitter(self,"splitter2")
         self.splitter2.setOrientation(QSplitter.Horizontal)
 
         LayoutWidget = QWidget(self.splitter2,"layout11")
-        layout11 = QVBoxLayout(LayoutWidget,3,6,"layout11")
+        layout11 = QVBoxLayout(LayoutWidget,0,0,"layout11")
 
-        layout11_2 = QHBoxLayout(None,0,6,"layout11_2")
+        self.frame4 = QFrame(LayoutWidget,"frame4")
+        self.frame4.setFrameShape(QFrame.StyledPanel)
+        self.frame4.setFrameShadow(QFrame.Raised)
+        frame4Layout = QVBoxLayout(self.frame4,11,6,"frame4Layout")
 
-        self.btnNewPost = QToolButton(LayoutWidget,"btnNewPost")
+        layout9 = QHBoxLayout(None,0,6,"layout9")
+
+        self.btnNewPost = QToolButton(self.frame4,"btnNewPost")
         self.btnNewPost.setIconSet(QIconSet(self.image1))
-        layout11_2.addWidget(self.btnNewPost)
+        layout9.addWidget(self.btnNewPost)
 
-        self.btnPreview = QToolButton(LayoutWidget,"btnPreview")
+        self.btnPreview = QToolButton(self.frame4,"btnPreview")
         self.btnPreview.setIconSet(QIconSet(self.image2))
-        layout11_2.addWidget(self.btnPreview)
+        layout9.addWidget(self.btnPreview)
 
-        self.btnFetchPosts = QToolButton(LayoutWidget,"btnFetchPosts")
+        self.btnFetchPosts = QToolButton(self.frame4,"btnFetchPosts")
         self.btnFetchPosts.setMaximumSize(QSize(327,32767))
         self.btnFetchPosts.setIconSet(QIconSet(self.image3))
-        layout11_2.addWidget(self.btnFetchPosts)
+        layout9.addWidget(self.btnFetchPosts)
 
-        self.btnSettings = QToolButton(LayoutWidget,"btnSettings")
+        self.btnSettings = QToolButton(self.frame4,"btnSettings")
         self.btnSettings.setIconSet(QIconSet(self.image4))
-        layout11_2.addWidget(self.btnSettings)
-        layout11.addLayout(layout11_2)
+        layout9.addWidget(self.btnSettings)
+        frame4Layout.addLayout(layout9)
 
         layout10 = QHBoxLayout(None,0,6,"layout10")
 
-        self.textLabel2 = QLabel(LayoutWidget,"textLabel2")
+        self.textLabel2 = QLabel(self.frame4,"textLabel2")
         layout10.addWidget(self.textLabel2)
 
-        self.comboBlogs = QComboBox(0,LayoutWidget,"comboBlogs")
+        self.comboBlogs = QComboBox(0,self.frame4,"comboBlogs")
         self.comboBlogs.setSizePolicy(QSizePolicy(7,0,0,0,self.comboBlogs.sizePolicy().hasHeightForWidth()))
         layout10.addWidget(self.comboBlogs)
 
-        self.btnRefreshBlogs = QToolButton(LayoutWidget,"btnRefreshBlogs")
+        self.btnRefreshBlogs = QToolButton(self.frame4,"btnRefreshBlogs")
         self.btnRefreshBlogs.setIconSet(QIconSet(self.image5))
         layout10.addWidget(self.btnRefreshBlogs)
-        layout11.addLayout(layout10)
+        frame4Layout.addLayout(layout10)
+        layout11.addWidget(self.frame4)
+
+        self.frame5 = QFrame(LayoutWidget,"frame5")
+        self.frame5.setFrameShape(QFrame.StyledPanel)
+        self.frame5.setFrameShadow(QFrame.Raised)
+        frame5Layout = QVBoxLayout(self.frame5,11,6,"frame5Layout")
 
         layout7 = QHBoxLayout(None,5,6,"layout7")
 
-        self.pixmapLabel1 = QLabel(LayoutWidget,"pixmapLabel1")
+        self.pixmapLabel1 = QLabel(self.frame5,"pixmapLabel1")
         self.pixmapLabel1.setPixmap(self.image6)
         self.pixmapLabel1.setScaledContents(0)
         layout7.addWidget(self.pixmapLabel1)
 
-        self.textLabel1_2 = QLabel(LayoutWidget,"textLabel1_2")
+        self.textLabel1_2 = QLabel(self.frame5,"textLabel1_2")
         layout7.addWidget(self.textLabel1_2)
-        layout11.addLayout(layout7)
+        frame5Layout.addLayout(layout7)
 
-        self.listPublishedPosts = QListBox(LayoutWidget,"listPublishedPosts")
-        layout11.addWidget(self.listPublishedPosts)
+        self.listPublishedPosts = QListBox(self.frame5,"listPublishedPosts")
+        frame5Layout.addWidget(self.listPublishedPosts)
 
         layout8 = QHBoxLayout(None,7,6,"layout8")
 
-        self.pixmapLabel2 = QLabel(LayoutWidget,"pixmapLabel2")
+        self.pixmapLabel2 = QLabel(self.frame5,"pixmapLabel2")
         self.pixmapLabel2.setMaximumSize(QSize(32,32767))
         self.pixmapLabel2.setPixmap(self.image7)
         self.pixmapLabel2.setScaledContents(0)
         layout8.addWidget(self.pixmapLabel2)
 
-        self.textLabel1_2_2 = QLabel(LayoutWidget,"textLabel1_2_2")
+        self.textLabel1_2_2 = QLabel(self.frame5,"textLabel1_2_2")
         layout8.addWidget(self.textLabel1_2_2)
-        layout11.addLayout(layout8)
+        frame5Layout.addLayout(layout8)
 
-        self.listSavedPosts = QListBox(LayoutWidget,"listSavedPosts")
-        layout11.addWidget(self.listSavedPosts)
+        self.listSavedPosts = QListBox(self.frame5,"listSavedPosts")
+        frame5Layout.addWidget(self.listSavedPosts)
+        layout11.addWidget(self.frame5)
 
-        LayoutWidget_2 = QWidget(self.splitter2,"layout13")
-        layout13 = QVBoxLayout(LayoutWidget_2,3,6,"layout13")
+        LayoutWidget_2 = QWidget(self.splitter2,"layout10")
+        layout10_2 = QVBoxLayout(LayoutWidget_2,0,0,"layout10_2")
 
-        layout12 = QHBoxLayout(None,0,64,"layout12")
+        self.frame7 = QFrame(LayoutWidget_2,"frame7")
+        self.frame7.setFrameShape(QFrame.StyledPanel)
+        self.frame7.setFrameShadow(QFrame.Raised)
+        frame7Layout = QHBoxLayout(self.frame7,11,6,"frame7Layout")
 
-        self.textLabel1 = QLabel(LayoutWidget_2,"textLabel1")
+        self.textLabel1 = QLabel(self.frame7,"textLabel1")
         self.textLabel1.setSizePolicy(QSizePolicy(1,1,0,0,self.textLabel1.sizePolicy().hasHeightForWidth()))
         self.textLabel1.setMaximumSize(QSize(327,327))
-        layout12.addWidget(self.textLabel1)
+        frame7Layout.addWidget(self.textLabel1)
 
-        self.editPostTitle = QLineEdit(LayoutWidget_2,"editPostTitle")
+        self.editPostTitle = QLineEdit(self.frame7,"editPostTitle")
         self.editPostTitle.setSizePolicy(QSizePolicy(7,1,0,0,self.editPostTitle.sizePolicy().hasHeightForWidth()))
-        self.editPostTitle.setMinimumSize(QSize(370,0))
-        self.editPostTitle.setMaximumSize(QSize(32700,327))
-        layout12.addWidget(self.editPostTitle)
-        layout13.addLayout(layout12)
+        self.editPostTitle.setMinimumSize(QSize(350,26))
+        self.editPostTitle.setMaximumSize(QSize(32700,26))
+        frame7Layout.addWidget(self.editPostTitle)
+
+        self.frameCat = QFrame(self.frame7,"frameCat")
+        self.frameCat.setFrameShape(QFrame.StyledPanel)
+        self.frameCat.setFrameShadow(QFrame.Raised)
+        self.frameCat.setLineWidth(0)
+        frameCatLayout = QHBoxLayout(self.frameCat,0,1,"frameCatLayout")
+
+        self.textLabel2_2 = QLabel(self.frameCat,"textLabel2_2")
+        frameCatLayout.addWidget(self.textLabel2_2)
+
+        self.comboCats = QComboBox(0,self.frameCat,"comboCats")
+        self.comboCats.setMinimumSize(QSize(0,26))
+        frameCatLayout.addWidget(self.comboCats)
+
+        self.btnRefreshCat = QToolButton(self.frameCat,"btnRefreshCat")
+        self.btnRefreshCat.setMinimumSize(QSize(28,26))
+        self.btnRefreshCat.setIconSet(QIconSet(self.image5))
+        frameCatLayout.addWidget(self.btnRefreshCat)
+        frame7Layout.addWidget(self.frameCat)
+        layout10_2.addWidget(self.frame7)
 
         self.tabWidget2 = QTabWidget(LayoutWidget_2,"tabWidget2")
         self.tabWidget2.setMaximumSize(QSize(3270,3270))
@@ -1589,35 +1623,35 @@ class MainForm(QDialog):
         self.sourcePreview = QTextBrowser(self.Preview,"sourcePreview")
         PreviewLayout.addWidget(self.sourcePreview)
         self.tabWidget2.insertTab(self.Preview,QString(""))
-        layout13.addWidget(self.tabWidget2)
+        layout10_2.addWidget(self.tabWidget2)
 
-        layout8_2 = QHBoxLayout(None,0,6,"layout8_2")
+        self.frame6 = QFrame(LayoutWidget_2,"frame6")
+        self.frame6.setFrameShape(QFrame.StyledPanel)
+        self.frame6.setFrameShadow(QFrame.Raised)
+        frame6Layout = QHBoxLayout(self.frame6,11,6,"frame6Layout")
 
-        self.btnExit = QPushButton(LayoutWidget_2,"btnExit")
+        self.btnExit = QPushButton(self.frame6,"btnExit")
         self.btnExit.setMaximumSize(QSize(327,327))
         self.btnExit.setPixmap(self.image8)
-        layout8_2.addWidget(self.btnExit)
-        spacer1 = QSpacerItem(190,21,QSizePolicy.Expanding,QSizePolicy.Minimum)
-        layout8_2.addItem(spacer1)
+        frame6Layout.addWidget(self.btnExit)
+        spacer1 = QSpacerItem(444,21,QSizePolicy.Expanding,QSizePolicy.Minimum)
+        frame6Layout.addItem(spacer1)
 
-        self.btnPublish = QPushButton(LayoutWidget_2,"btnPublish")
+        self.btnPublish = QPushButton(self.frame6,"btnPublish")
         self.btnPublish.setPixmap(self.image9)
-        layout8_2.addWidget(self.btnPublish)
+        frame6Layout.addWidget(self.btnPublish)
 
-        self.btnSavePost = QPushButton(LayoutWidget_2,"btnSavePost")
+        self.btnSavePost = QPushButton(self.frame6,"btnSavePost")
         self.btnSavePost.setPixmap(self.image10)
-        layout8_2.addWidget(self.btnSavePost)
-        layout13.addLayout(layout8_2)
+        frame6Layout.addWidget(self.btnSavePost)
+        layout10_2.addWidget(self.frame6)
         MainFormLayout.addWidget(self.splitter2)
 
         self.languageChange()
 
-        self.resize(QSize(726,480).expandedTo(self.minimumSizeHint()))
+        self.resize(QSize(814,503).expandedTo(self.minimumSizeHint()))
         self.clearWState(Qt.WState_Polished)
 
-        self.connect(self.btnSettings,SIGNAL("clicked()"),self.btnSettings_clicked)
-        self.connect(self.btnPreview,SIGNAL("clicked()"),self.btnPreview_clicked)
-        self.connect(self.btnFetchPosts,SIGNAL("clicked()"),self.btnReloadFeed_clicked)
         self.connect(self.btnRefreshBlogs,SIGNAL("clicked()"),self.btnRefreshBlogs_clicked)
         self.connect(self.comboBlogs,SIGNAL("activated(const QString&)"),self.comboBlogs_activated)
         self.connect(self.btnExit,SIGNAL("clicked()"),self.btnExit_clicked)
@@ -1627,20 +1661,25 @@ class MainForm(QDialog):
         self.connect(self.listSavedPosts,SIGNAL("doubleClicked(QListBoxItem*)"),self.listSavedPosts_doubleClicked)
         self.connect(self.listPublishedPosts,SIGNAL("contextMenuRequested(QListBoxItem*,const QPoint&)"),self.listPublishedPosts_contextMenuRequested)
         self.connect(self.listSavedPosts,SIGNAL("contextMenuRequested(QListBoxItem*,const QPoint&)"),self.listSavedPosts_contextMenuRequested)
-        self.connect(self.btnNewPost,SIGNAL("clicked()"),self.btnNewPost_clicked)
         self.connect(self.sourceEditor,SIGNAL("textChanged()"),self.sourceEditor_textChanged)
         self.connect(self,SIGNAL("destroyed(QObject*)"),self.MainForm_destroyed)
+        self.connect(self.comboCats,SIGNAL("activated(const QString&)"),self.comboCats_activated)
+        self.connect(self.btnRefreshCat,SIGNAL("clicked()"),self.btnRefreshCat_clicked)
+        self.connect(self.btnFetchPosts,SIGNAL("clicked()"),self.btnReloadFeed_clicked)
+        self.connect(self.btnNewPost,SIGNAL("clicked()"),self.btnNewPost_clicked)
+        self.connect(self.btnSettings,SIGNAL("clicked()"),self.btnSettings_clicked)
+        self.connect(self.btnPreview,SIGNAL("clicked()"),self.btnPreview_clicked)
 
-        self.setTabOrder(self.comboBlogs,self.tabWidget3)
-        self.setTabOrder(self.tabWidget3,self.editPostTitle)
         self.setTabOrder(self.editPostTitle,self.sourceEditor)
         self.setTabOrder(self.sourceEditor,self.btnPublish)
         self.setTabOrder(self.btnPublish,self.btnSavePost)
-        self.setTabOrder(self.btnSavePost,self.btnExit)
-        self.setTabOrder(self.btnExit,self.tabWidget2)
-        self.setTabOrder(self.tabWidget2,self.listPublishedPosts)
+        self.setTabOrder(self.btnSavePost,self.comboBlogs)
+        self.setTabOrder(self.comboBlogs,self.listPublishedPosts)
         self.setTabOrder(self.listPublishedPosts,self.listSavedPosts)
-        self.setTabOrder(self.listSavedPosts,self.sourcePreview)
+        self.setTabOrder(self.listSavedPosts,self.tabWidget3)
+        self.setTabOrder(self.tabWidget3,self.btnExit)
+        self.setTabOrder(self.btnExit,self.tabWidget2)
+        self.setTabOrder(self.tabWidget2,self.sourcePreview)
 
         self.textLabel1_2.setBuddy(self.listPublishedPosts)
         self.textLabel1_2_2.setBuddy(self.listSavedPosts)
@@ -1662,6 +1701,7 @@ class MainForm(QDialog):
         QToolTip.add(self.btnFetchPosts,self.__tr("Click here to re-fetch the list of posts."))
         QWhatsThis.add(self.btnFetchPosts,self.__tr("Pressing this button will re-fetch the list of posts from your blog's feed and save them locally for later editing. <b>Hotkey Ctrl-R</b>"))
         self.btnSettings.setText(QString.null)
+        self.btnSettings.setAccel(QString.null)
         QToolTip.add(self.btnSettings,self.__tr("Click here to display settings dialog."))
         QWhatsThis.add(self.btnSettings,self.__tr("This will display the <b>Settings wizard</b> once again"))
         self.textLabel2.setText(self.__tr("Blog:"))
@@ -1672,6 +1712,10 @@ class MainForm(QDialog):
         self.textLabel1_2_2.setText(self.__tr("&Saved Posts"))
         self.textLabel1.setText(self.__tr("Post &Title:"))
         QWhatsThis.add(self.editPostTitle,self.__tr("This will be your posts' title. HTML tags allowed but not highligted. You won't be able to save the post without this title"))
+        self.textLabel2_2.setText(self.__tr("Category:"))
+        self.btnRefreshCat.setText(QString.null)
+        QToolTip.add(self.btnRefreshCat,self.__tr("Click here to reload the list of available blogs."))
+        QWhatsThis.add(self.btnRefreshCat,self.__tr("This button fetches the list of <b>Blogs</b> from your current account."))
         self.tabWidget3.changeTab(self.tab,self.__tr("Tags"))
         self.tabWidget3.changeTab(self.tab_2,self.__tr("Plugins"))
         self.tabWidget2.changeTab(self.Source,self.__tr("Source"))
@@ -1743,6 +1787,12 @@ class MainForm(QDialog):
 
     def MainForm_destroyed(self,a0):
         print "MainForm.MainForm_destroyed(QObject*): Not implemented yet"
+
+    def comboCats_activated(self,a0):
+        print "MainForm.comboCats_activated(const QString&): Not implemented yet"
+
+    def btnRefreshCat_clicked(self):
+        print "MainForm.btnRefreshCat_clicked(): Not implemented yet"
 
     def __tr(self,s,c = None):
         return qApp.translate("MainForm",s,c)

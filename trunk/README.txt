@@ -14,6 +14,9 @@ FEATURES:
 * Multiple blog support
 * Post export
 * Update notification (for pyqlogger itself)
+* Pluggable features, like SpellChecker and others
+* Unicode support
+* Multiple blog providers
 
 USES:
 ~~~~~
@@ -26,4 +29,5 @@ THANKS:
 ~~~~~~~
 Detlev Offenbach for Eric3, the most excellent Python IDE: http://www.die-offenbachs.de/detlev/eric3.html
 David Boddie and others at PyKDE mailing list for help with QSyntaxHighlighter
-Savannah project for hosting
+BerliOS project for hosting
+Mark Pilgrim for FeedParser, PyTextile and his awesome book DiveIntoPython

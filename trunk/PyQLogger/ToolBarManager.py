@@ -1,12 +1,9 @@
 '''
 Module for workig with plugins. To recap:
-1. plugins should be stored in .py files inside ~/.pyqlogger/plugins/ dir
+1. plugins should be stored in .p files inside ~/.pyqlogger/plugins/ dir
 2. internal plugins are made using static function called SimpleButton
-3. each plugin MUST have:
-	* on_click  - method
-	* title - string attribute
+3. each plugin MUST have one method getWidget()
 4. it CAN have:
-	* image - QPixmap attribute
 	* page - string attribute (on what tab page to put the button)
 5. all plugins are loaded once and not reloaded. I may redo that later.
 '''
@@ -14,24 +11,38 @@ import os,sys
 from glob import glob
 from qt import *
 
+
 class ToolbarPlugin:
 	''' All plugins should inherit from this class '''
-	def on_click(self):
-		abstract		
 	def SimpleButton(parent,title,handler,page=None,image=None):
-		button = ToolbarPlugin(parent)
-		button.image = image
-		button.page = page
-		button.title = title
-		button.on_click = handler
-		return button
+		tabpage = parent.getPage(page)
+		button = QPushButton(tabpage)
+		if image : 
+			bi = QPixmap()
+			bi.loadFromData(image,"PNG")
+			button.setIconSet(QIconSet(bi))
+			w = bi.width()+3
+			h = bi.height()+3
+			if w < 32:
+				w = 32
+			if h < 32:
+				h = 32
+			button.setMaximumSize(QSize(w,h))
+		else:
+			button.setText(title)
+#			button.setMaximumSize(QSize(defw,defh))
+		QToolTip.add(button,title)
+		parent.connect(button,SIGNAL("clicked()"),handler)
+		button.show()
+		p = ToolbarPlugin(parent)
+		p.getWidget = lambda: button
 
+	def getWidget(self):
+		abstract
+	
 	def __init__(self,parent):
 		self.parent = parent
 
-	def parent(self):
-		return parent
-		
 	SimpleButton = staticmethod(SimpleButton)
 
 class PluginFactory:
@@ -46,8 +57,8 @@ class PluginFactory:
 	
 	def plugIsOk(self,plug):
 		return bool( hasattr(plug,'__bases__') and	ToolbarPlugin in plug.__bases__ \
-				and hasattr(plug,'image') and hasattr(plug,'page')\
-				and hasattr(plug,'parent') and hasattr(plug,'title') )
+				and hasattr(plug,'getWidget') )
+				
 		
 	def scan(self):
 		path = os.path.join(self.dir, '*.p')		
@@ -61,45 +72,11 @@ class PluginFactory:
 					for k,v in l.items():
 						# check if provided class can be applied
 						if self.plugIsOk(v):
-							self.plugins += [ v(self.parent) ]
+							pl = v(self.parent)
+							self.plugins += [ pl ]
+							pl.getWidget()
 				except:
 					pass
 
 	def manualAdd(self,plugin):
 		self.plugins += [ plugin ]
-			
-	def fillToolbar(self, tabWidget):
-		def fixButtons(bh):
-			for tabpage,buttons in bh.items():
-				maxw = maxh = 0
-				for b in buttons: # collect max sizes
-					if b.size().width() > maxw: 
-						maxw = b.size().width()
-					if b.size().height() > maxh: 
-						maxh = b.size().height()
-				for b in buttons: # set max sizes to all
-					b.setMaximumSize(QSize(maxw,maxh))
-		
-		def getPage(title, tabWidget):
-			if not title: return tabWidget.page(0)
-			for i in range(0,tabWidget.count()):
-				if title == str(tabWidget.label(i)):
-					return tabWidget.page(i)
-
-		for pi in self.plugins:
-			tabpage = getPage(pi.page, tabWidget)
-			button = QPushButton(tabpage)
-			if pi.image : 
-				bi = QPixmap()
-				bi.loadFromData(pi.image,"PNG")
-				button.setIconSet(QIconSet(bi))
-				button.setMaximumSize(QSize(bi.width()+3,bi.height()+3))
-			else:
-				button.setText(pi.title)
-			button.show()
-			if not self.buttons.has_key(tabpage): 
-				self.buttons[tabpage] = []
-			self.buttons[tabpage] += [ button ]
-			self.parent.connect(button,SIGNAL("clicked()"),pi.on_click)
-
-		fixButtons(self.buttons)
