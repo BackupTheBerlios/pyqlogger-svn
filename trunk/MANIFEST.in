@@ -1,4 +1,8 @@
 include PyQLogger/*.py
+include PyQLogger/Plugins/*.py
+include PyQLogger/Dialogs/*.py
+include PyQLogger/Services/*.py
+include UI/*.ui
 include plugins/*.p*
 include MANIFEST.in
 include LICENSE.txt
@@ -11,3 +15,4 @@ include pyqlogger.desktop
 
 exclude test*
 exclude build.py
+

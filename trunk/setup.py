@@ -1,8 +1,9 @@
 # $Id$
-"""PyQLogger: PyQt Blogger Client
+"""PyQLogger: Multi-account Blog Client
 
-User friendly and feature full Qt GUI written in Python for posting to Blogger using
-Atom API.
+User friendly and feature full Blog managment tool written in Python for posting to
+Blogger, MovableType, LiveJournal and other blog provider. Has many nice features and
+supports plugins.
 
 """
 

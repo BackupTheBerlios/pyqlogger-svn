@@ -23,7 +23,7 @@ from EaseXML import XMLObject, TextNode, IntegerAttribute, ListNode,\
 from Blog import Blog
 from Services import *
 from Services import BlogServices
-__revision__ = "$Id:  $"
+__revision__ = "$Id$"
 
 class Account(XMLObject):
     """
