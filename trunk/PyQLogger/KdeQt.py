@@ -15,33 +15,22 @@ try:
 
     def setPreview(parent,text):
         parent.vp.begin()
-        sys.stderr.write("%s" % text)
         parent.vp.write(text)
         parent.vp.end()
 
     def prepareCommandLine(): 
         args = KCmdLineArgs.parsedArgs()
-        return args.isSet ( "statusbar")or args.isSet ( "s")
+        return args.isSet ( "statusbar") or args.isSet ( "s")
         
     def setupKDE(app,wnd):
-
-        icons = KIconLoader ()
-        systray = KSystemTray (wnd)
-        systray.setPixmap (icons.loadIcon("kedit", 0))
-        QToolTip.add(systray, "PyQLogger - Blogger GUI")
-        systray.show ()
-
-##        try:
-##            t = KSystemTray(wnd)
-##        except Exception, inst:
-##            sys.stderr.write("setupKDE: exception: %s\n" % inst)
-##            
-##        if t:
-##            t.setPixmap( KSystemTray.loadIcon( "kedit" ) )
-##            QToolTip.add(t,"PyQLogger - Blogger GUI")
-##            t.show()
-##        else:
-##            sys.stderr.write("setupKDE: t is None\n")
+        try:
+            icons = KIconLoader ()
+            systray = KSystemTray (wnd)
+            systray.setPixmap (icons.loadIcon("kedit", 1))
+            QToolTip.add(systray, "PyQLogger - Blogger GUI")
+            systray.show ()
+        except Exception, inst:
+           sys.stderr.write("setupKDE: cannot set tray, exception: %s\n" % inst)
             
         dcop  = app.dcopClient ()
         if dcop:

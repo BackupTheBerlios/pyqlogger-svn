@@ -76,6 +76,9 @@ class MainForm_Impl(MainForm):
             if title == str(self.tabWidget3.label(i)):
                 return self.tabWidget3.page(i)
 
+    def tabWidget2_currentChanged(self,a0):
+        if a0 == self.Preview:
+            KdeQt.setPreview(self,self.sourceEditor.text())
 
     def pubPopup(self,action):
         if(action == 1):
@@ -131,8 +134,6 @@ class MainForm_Impl(MainForm):
         self.bMenu.setItemEnabled(2,a0 != None)
         self.bMenu.popup(a1)
 
-    def sourceEditor_textChanged(self):
-        KdeQt.setPreview(self,self.sourceEditor.text())
     
     def btnNewPost_clicked(self):
         if self.current_post:
@@ -224,6 +225,7 @@ class MainForm_Impl(MainForm):
             self.current_post = d
             self.editPostTitle.setText(d["title"])
             self.sourceEditor.setText(d["content"])
+            self.tabWidget2.setCurrentPage(0)            
             self.sender().setFocus()
         else:
             QMessageBox.critical(self,"Error","Something is not right!")
@@ -233,10 +235,14 @@ class MainForm_Impl(MainForm):
             currentItem = self.SavedItems[item]
             self.editPostTitle.setText(currentItem["title"])
             self.sourceEditor.setText(currentItem["content"])
+            self.tabWidget2.setCurrentPage(0)
             self.sender().setFocus()
         else:
             QMessageBox.critical(self,"Error","Something is not right!")
 
+    def sourceEditor_textChanged(self):
+        """ this even should be connected to plugins """
+        pass
 
     def WriteSettings(self,filename,hash):
         """ pickles the current settings hash to specified file """
