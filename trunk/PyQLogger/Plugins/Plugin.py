@@ -18,43 +18,61 @@
 ## Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 from EaseXML import XMLObject, ItemNode, TextNode, RawNode, \
-                    ListNode,IntegerAttribute
+                                        ListNode,IntegerAttribute
 
 
 class Option(XMLObject):
-  Type = TextNode() # one of : 'Integer','String','Boolean','List', 'DoubleList'
-  Name = TextNode()
-  Value = RawNode(default='',optional=True)
+    Type = TextNode() # one of : 'Integer','String','Boolean','List', 'DoubleList'
+    Name = TextNode()
+    Value = RawNode(default='',optional=True)
+    def getListOptionValue(self):
+        tmp = self.Value.split(';')
+        if len(tmp) > 2:
+            sel = int(tmp[0])
+            return tmp[1:][sel]
+        
+    def getDoubleListOptionValue(self):
+        if self.Value:
+            hash = pickle.loads( str(option.Value) )
+        else:
+            hash = {}
+        return hash
 
 class PluginData(XMLObject):
-  # Indication of plugin's status (0 - disable, 1 - enable)
-  Enabled = IntegerAttribute(default=0)
-  Options = ListNode('Option')
-  Class = TextNode()
+    # Indication of plugin's status (0 - disable, 1 - enable)
+    Enabled = IntegerAttribute(default=0)
+    Options = ListNode('Option')
+    Class = TextNode()
 
+    def optionByName(self, name):
+        for o in self.Options:
+            if o.Name == name:
+                return o
+            
+        
 class Plugin:
-  """
-  Base class for all plugins
-  """
-  # Visible name. Will be used as tooltip, as menu caption or as item in config dialog.    
-  Name = None
-  # Who's responsible for this???
-  Author = None
-  # Byte array of the icon. (used in menu and toolbar)
-  Icon = None
-  # Additional information
-  Info = None
-  # This should be an instance of PluginData type
-  Data = None
-  
-  def description(self):
-    return "Unkown plugin type"
+    """
+    Base class for all plugins
+    """
+    # Visible name. Will be used as tooltip, as menu caption or as item in config dialog.    
+    Name = None
+    # Who's responsible for this???
+    Author = None
+    # Byte array of the icon. (used in menu and toolbar)
+    Icon = None
+    # Additional information
+    Info = None
+    # This should be an instance of PluginData type
+    Data = None
+    
+    def description(self):
+        return "Unkown plugin type"
 
-  def defaultOptions(self):
-    return []
-  
-  
+    def defaultOptions(self):
+        return []
+    
+    
 class InternalPlugin (Plugin):
-  """ Subclass to mark the plugin as internal (invisible to settings) """
-  def description(self):
-    return "Internal plugin"
+    """ Subclass to mark the plugin as internal (invisible to settings) """
+    def description(self):
+        return "Internal plugin"

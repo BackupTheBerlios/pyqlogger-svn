@@ -22,7 +22,7 @@ class SmileyPlugin(ToolbarPlugin, QObject):
     def on_click(self):
         if self.frame.isHidden(): 
 	    pos = self.button.pos()#self.parent.sender().cursor().pos()-self.parent.pos()
-	    self.frame.move(pos)
+	    self.frame.move(pos+QPoint(50,30))
 	    self.frame.show()
 	    self.frame.raiseW()
 	else: 

@@ -273,10 +273,7 @@ class PluginSettingsDialog(QDialog):
             elif option.Type == "DoubleList":
                 col = 0
                 ql.hide()
-                if option.Value:
-                    hash = pickle.loads( str(option.Value) )
-                else:
-                    hash = {}
+                hash = option.getDoubleListOptionValue()
                 qw = DListWidget(parent, hash, self.forms )                
             if col:
                 layout.addWidget(ql, row, 0)

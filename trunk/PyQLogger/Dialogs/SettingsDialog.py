@@ -148,7 +148,7 @@ class SettingsDialog(QDialog):
     def accept(self):
         #update gui changes
         self.settings.UI.EnableKde = int(self.chkKDE.isChecked())
-        self.settings.Speller.Enables = int(self.chkSpellEnable.isChecked())
+        self.settings.Speller.Enabled = int(self.chkSpellEnable.isChecked())
         self.settings.Speller.Prefix = self.edtSpellPrefix.text()
         self.settings.Speller.Language = self.edtSpellLanguage.text()
         self.settings.UI.EnableTray = int(self.chkTray.isChecked())

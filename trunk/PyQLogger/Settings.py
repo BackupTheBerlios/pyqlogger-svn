@@ -45,6 +45,7 @@ class Settings(XMLObject):
     Accounts  = ListNode('Account')         # list of accounts
     AutoLogin = TextNode(optional=True)     # which account to autologin
     Speller   = ItemNode("SpellerSettings") # speller settings
+    StyleSheet = TextNode(optional=True)    # file with css
     
     def accountByName(self, name):
         """ searches the list of accouns, and returns one by it's .Name """

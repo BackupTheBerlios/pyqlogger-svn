@@ -163,8 +163,8 @@ class ListeningtoPlugin(ToolbarPlugin):
             try:
                 import xmms.control
                 if xmms.is_running():
-		    self.xmms = xmms.control 
-		    return True
+            self.xmms = xmms.control 
+            return True
             except:
                 pass
             return False
@@ -240,5 +240,5 @@ class ListeningtoPlugin(ToolbarPlugin):
         self.parent.connect(button,SIGNAL("clicked()"),self.on_click)
         button.hide()
         self.button = button
-	return button
+        return button
 

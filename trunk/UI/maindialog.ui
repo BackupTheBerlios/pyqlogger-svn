@@ -36,7 +36,7 @@ Python:## Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  
     <property name="icon">
         <pixmap>image0</pixmap>
     </property>
-    <property name="sizeGripEnabled" stdset="0">
+    <property name="sizeGripEnabled">
         <bool>false</bool>
     </property>
     <vbox>
@@ -572,19 +572,55 @@ Python:## Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  
                             <attribute name="title">
                                 <string>Preview</string>
                             </attribute>
-                            <hbox>
+                            <vbox>
                                 <property name="name">
                                     <cstring>unnamed</cstring>
-                                </property>
-                                <property name="margin">
-                                    <number>0</number>
                                 </property>
                                 <widget class="QTextBrowser">
                                     <property name="name">
                                         <cstring>sourcePreview</cstring>
                                     </property>
                                 </widget>
-                            </hbox>
+                                <widget class="QLayoutWidget">
+                                    <property name="name">
+                                        <cstring>layout7</cstring>
+                                    </property>
+                                    <hbox>
+                                        <property name="name">
+                                            <cstring>unnamed</cstring>
+                                        </property>
+                                        <widget class="QLabel">
+                                            <property name="name">
+                                                <cstring>textLabel1_4</cstring>
+                                            </property>
+                                            <property name="text">
+                                                <string>Style Sheet file:</string>
+                                            </property>
+                                        </widget>
+                                        <widget class="QLineEdit">
+                                            <property name="name">
+                                                <cstring>edtStylesheet</cstring>
+                                            </property>
+                                        </widget>
+                                        <widget class="QPushButton">
+                                            <property name="name">
+                                                <cstring>btnLoadCSS</cstring>
+                                            </property>
+                                            <property name="text">
+                                                <string>Load</string>
+                                            </property>
+                                        </widget>
+                                        <widget class="QPushButton">
+                                            <property name="name">
+                                                <cstring>btnApplyCSS</cstring>
+                                            </property>
+                                            <property name="text">
+                                                <string>Apply</string>
+                                            </property>
+                                        </widget>
+                                    </hbox>
+                                </widget>
+                            </vbox>
                         </widget>
                         <widget class="QWidget">
                             <property name="name">
@@ -796,8 +832,6 @@ Python:## Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  
         </widget>
     </vbox>
 </widget>
-<toolbars>
-</toolbars>
 <images>
     <image name="image0">
         <data format="PNG" length="495">89504e470d0a1a0a0000000d49484452000000100000001008060000001ff3ff61000001b649444154388d95d33f48955118c7f1cf79efeb9f5044292222c9a8d690081a02b7f668686868b85ca2c196960621688d5a82b0281a1a0a0a893609a4706c348a220d6a28436fbd7549ed7a7d4fc3ab5e4dc9fac1c339cf393cdfe7fc799e106304ce864ceedf14703b76438831520e510bb1bd8ba4f4f7e0980b0b35ea39776348954366ef214e5da3b79fa4650b4083cf6f78728972c8c44a92c557a3f1bf353315e3604796eaea66dfd16686af1fc55ab5b8e7bacc84ae1df4f416fef63e761d94dad643da5e2c8edfe4e190d0123605882983231c384648e8dc291592c281b1ebec3f2c56ee6f04203c1e6272bc0040da2a6de2d177849763c2c845924d08af9f73fc7cd3cf7345eab85c00a78739715994888b75b1b1c616eb2ccdf1e2012bb533ff63e504cb6aeb60a0220c543666877b157a761302f59fcc4efe01d84a67ee14e3428da757a84e4b85d07cc4cd3433c5e855b1fa81047943987dcff4142552f3df69fc226ddb183c97317c92b713c24a810605a854cc13d52f3cbbc1529dbcd1b4851a8f2e30394127da96ad15a9d56f2e9ae95c12ede9a7b4a60fe6bef1e99dbfbed2ad18c26a3b9743b66e33d82ab81b7e035532d04eb68a95b50000000049454e44ae426082</data>
@@ -951,6 +985,24 @@ Python:## Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  
         <receiver>MainForm</receiver>
         <slot>close()</slot>
     </connection>
+    <connection>
+        <sender>edtStylesheet</sender>
+        <signal>textChanged(const QString&amp;)</signal>
+        <receiver>MainForm</receiver>
+        <slot>edtStylesheet_textChanged(const QString&amp;)</slot>
+    </connection>
+    <connection>
+        <sender>btnLoadCSS</sender>
+        <signal>clicked()</signal>
+        <receiver>MainForm</receiver>
+        <slot>btnLoadCSS_clicked()</slot>
+    </connection>
+    <connection>
+        <sender>btnApplyCSS</sender>
+        <signal>clicked()</signal>
+        <receiver>MainForm</receiver>
+        <slot>btnApplyCSS_clicked()</slot>
+    </connection>
 </connections>
 <tabstops>
     <tabstop>editPostTitle</tabstop>
@@ -965,6 +1017,9 @@ Python:## Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  
     <tabstop>editorTab</tabstop>
     <tabstop>sourcePreview</tabstop>
 </tabstops>
+<includes>
+    <include location="local" impldecl="in implementation">maindialog.ui.h</include>
+</includes>
 <slots>
     <slot>btnNewPost_clicked()</slot>
     <slot>btnDeletePost_clicked()</slot>
@@ -983,12 +1038,15 @@ Python:## Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  
     <slot>sourceEditor_textChanged()</slot>
     <slot>comboCats_activated( const QString &amp; )</slot>
     <slot>btnRefreshCat_clicked()</slot>
-    <slot>editorTab_currentChanged(QWidget*)</slot>
+    <slot>editorTab_currentChanged( QWidget * )</slot>
     <slot>btnExit_clicked()</slot>
     <slot>btnRelogin_clicked()</slot>
     <slot>exit()</slot>
-    <slot>MainForm_destroyed(QObject*)</slot>
+    <slot>MainForm_destroyed( QObject * )</slot>
     <slot>close()</slot>
+    <slot>edtStylesheet_textChanged( const QString &amp; )</slot>
+    <slot>btnLoadCSS_clicked()</slot>
+    <slot>btnApplyCSS_clicked()</slot>
 </slots>
 <layoutdefaults spacing="6" margin="11"/>
 </UI>

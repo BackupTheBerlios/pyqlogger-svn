@@ -297,6 +297,8 @@ class MainDialog(QDialog):
         self.forms = forms
         self.sourceEditor.manager = manager
         manager.fillToolbar()
+        self.edtStylesheet.setText(self.settings.StyleSheet)
+        self.edtStylesheet_textChanged('')
         if settings.Speller.Enabled:
             try:
                 import aspell
@@ -330,3 +332,23 @@ class MainDialog(QDialog):
         for post in selectedblog.Posts.Data:
             self.PublishedItems [ QListBoxText(self.listPublishedPosts, post.Title) ] = post
 
+
+    def edtStylesheet_textChanged( self, text ):
+        fname = str(self.edtStylesheet.text())
+        havefile = bool(fname and os.path.exists(fname))
+        canapply = bool(self.settings.UI.EnableKde) and havefile
+        self.btnApplyCSS.setEnabled(havefile)
+    
+    def btnLoadCSS_clicked(self):
+        filename = QFileDialog.getOpenFileName(os.path.expanduser("~"),
+                                    "All files (*.*)",self,           
+                                    "CSS Sheet",
+                                    "Choose a filename to open")
+        if str(filename):
+            self.edtStylesheet.setText(filename)
+            self.edtStylesheet_textChanged(filename)
+                
+    def btnApplyCSS_clicked(self):
+        self.settings.StyleSheet = str(self.edtStylesheet.text())
+        self.vp.setUserStyleSheet(open(self.settings.StyleSheet).read())
+        
