@@ -27,6 +27,15 @@ class PyQLoggerConfig (ConfigParser):
     def __init__(self, defaults=None):
         ConfigParser.__init__(self, defaults)
 
+    def write(self, configfile):
+        fp = open(configfile, "w")
+        if fp:
+            try:
+                ConfigParser.write(self, fp)
+            except Exception, inst:
+                print inst
+        fp.close()
+    
     def read(self, configfile):
     # do some checking to see if there's a new style file available
     # if not, check if there's an old one.
@@ -38,12 +47,14 @@ class PyQLoggerConfig (ConfigParser):
 
     def convert_config(self, configfile):
         """ unpickles the specified file into a hash """
+        print "running conversion"
         config_hash = None
         try:
-            fd = open(configfile[0:-4])
+            fd = open(str(configfile[0:-4]))
             config_hash = pickle.load(fd)
             fd.close()
-        except:
+        except Exception, inst:
+            print inst
             return
     
         # This is soooooo nasty, way too many if statements....
@@ -51,14 +62,18 @@ class PyQLoggerConfig (ConfigParser):
             if key == "blogs":
                 if len(config_hash["blogs"]) > 0:
                     bloglist = config_hash["blogs"]
+
                     for blogname in bloglist.keys():
                         blogentry = bloglist[blogname]
                         blogid = blogentry["id"]
-                        if not self.has_section(blogid):
-                            self.add_section(blogid)
+                        if self.has_option("main", "blogs"):
+                            blogids = str(self.get("main", "blogs"))
+                            if blogid not in blogs.split(';'):
+                                blogids += ";blogid"
+                                self.set("main", "blogs", blogids)
+                        else:
+                            self.set("main", "blogs", blogid)
                         if blogname == config_hash["selectedblog"]:
-                            if not self.has_section("main"):
-                                self.add_section("main")
                             self.set("main", "selectedblog", blogid)
                         self.set(blogid, "name", blogname)
                     for blogkey in blogentry.keys():
@@ -70,13 +85,20 @@ class PyQLoggerConfig (ConfigParser):
                     self.set("main",key, config_hash[key])
         
         try:
-            fd = open(configfile, "w")
+            fd = open(str(configfile), "w")
             self.write(fd)
             fd.close()
-        except:
+        except Exception, inst:
+            print inst
             pass
         return
 
+    def set(self, section, option, value):
+        print "adding section %s, option %s has value %s" % (str(section), str(option), str(value))
+        if not self.has_section(section):
+            self.add_section(section)
+        ConfigParser.set(self, section, option, value)
+            
     def savesettings(self, configfile):
         try:
             fd = open(configfile, "w")
@@ -86,3 +108,22 @@ class PyQLoggerConfig (ConfigParser):
             # We need better error handling here, user needs to be notified
             pass
         return
+        
+    def addblogs(blogdict):
+        if len(blogdict) < 1:
+            return
+        for blogname in blogdict.keys():
+            blogentry = blogdict[blogname]
+            blogid = blogentry["id"]
+            if self.has_option("main", "blogs"):
+                blogids = str(self.get("main", "blogs"))
+                if blogid not in blogs.split(';'):
+                    blogids += ";blogid"
+                    self.set("main", "blogs", blogids)
+            else:
+                self.set("main", "blogs", blogid)
+            if blogname == config_hash["selectedblog"]:
+                self.set("main", "selectedblog", blogid)
+            self.set(blogid, "name", blogname)
+        for blogkey in blogentry.keys():
+            self.set(blogid, blogkey, blogentry[blogkey])
