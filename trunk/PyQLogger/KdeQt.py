@@ -84,6 +84,8 @@ try:
    
     class KQApplication(KApplication):
         def __init__(self, argv, opts):
+	    if not '--caption' in argv:
+	        argv += [ '--caption','PyQLogger' ]
             sysargv = argv[:]
             from pyqlogger import VERSION
             aboutData = KAboutData("pyqlogger", "PyQLogger", VERSION,  

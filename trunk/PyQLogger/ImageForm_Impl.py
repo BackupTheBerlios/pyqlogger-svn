@@ -137,7 +137,8 @@ class ImageForm_Impl(ImageForm):
 	    return None
         try:            
             p = self.previewImage
-            fn = os.tmpnam() + os.path.basename(filename)
+	    import tempfile
+	    fn = tempfile.mkstemp('-%s' % filename)
             w = p.width()
             h = p.height()
             if w > 120:
