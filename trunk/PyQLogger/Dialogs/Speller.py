@@ -82,21 +82,17 @@ class Speller:
     def load(self,text):
         self.text = unicode(text)
         self.CalculateWords()
-        self.cur_word = 0
+        return self.keepChecking()
+
+    def keepChecking(self):
         ret = {}
-        self.keepChecking(ret)
-        return ret
-
-    def keepChecking(self, ret):        
-        if self.cur_word < len(self._words):
-            w = self._words[ self.cur_word ]
+        idx = 0
+        for w in self._words:
             word = w.group(0)
-            sug = self.speller.suggest(word)
-            if sug != None:  # should we even check it?
-                    ret[word] =  { "word":w, "sug": sug, "idx":self.cur_word } 
-            self.cur_word += 1
-            self.keepChecking(ret)
-
-
-
+            if self.CheckString(w,word):
+                sug = self.speller.suggest(word)
+                if sug != None:  # should we even check it?
+                    ret[word] =  { "word":w, "sug": sug, "idx":idx } 
+            idx += 1
+        return ret
 

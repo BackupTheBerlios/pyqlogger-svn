@@ -119,41 +119,45 @@ class MainDialog(QMainWindow):
                     except:
                         self.log.error("Exception while importing file",exc_info=1)
                         QMessageBox.warning(self, "Warning", "Cannot import post file!")
-                
+
     def listPublishedPosts_contextMenuRequested(self, a0, a1):
         self.aMenu.setItemEnabled(1, a0 != None)
         self.aMenu.setItemEnabled(2, a0 != None)
         self.aMenu.popup(a1)
-    
+
     def listSavedPosts_contextMenuRequested(self, a0, a1):
         self.bMenu.setItemEnabled(1, a0 != None)
         self.bMenu.setItemEnabled(2, a0 != None)
         self.bMenu.popup(a1)
 
-
-    def NewPostAction_activated(self):
+    def proposeSavePost(self, action):
         if self.current_post:
+            changed = self.current_post.Title != unicode(self.editPostTitle.text())
+            changed = changed or self.current_post.Content != unicode(self.sourceEditor.text())
+        else:
+            changed = unicode(self.editPostTitle.text()) != ""
+            changed = changed or unicode(self.sourceEditor.text()) != ""
+        if changed:
             res = QMessageBox.question(self, "Question", 
-                                   "Current post is unsaved. Are you sure you want to erase it?",
+                                   "Current post is unsaved. Are you sure you want to %s?"%action,
                                    QMessageBox.Yes, QMessageBox.No)
             if res == QMessageBox.No:
-                return
+                return True
+        return False    
+    
+    def NewPostAction_activated(self):
+        if self.proposeSavePost("erase it"):
+            return
         self.editPostTitle.setText("")
         self.sourceEditor.setText("")
         self.current_post = None
 
-    def closeEvent(self, event):
-        print "in close"
+    def close_Event(self, event):
         self.reload = self.sender() == self.btnRelogin or self.sender() == self.ReloginAction
-        if self.current_post:
-            res = QMessageBox.question(self, "Question", 
-                                   "Current post is unsaved. Are you sure you want to exit?",
-                                   QMessageBox.Yes, QMessageBox.No)
-            if res == QMessageBox.No:
-                event.ignore()
-                return
+        if self.proposeSavePost("exit"):
+            return False
         self.SaveAll()
-        event.accept()
+        return True
 
     def btnPublish_clicked(self):
         title = unicode(self.editPostTitle.text())
@@ -214,6 +218,8 @@ class MainDialog(QMainWindow):
         self.populateLists()
     
     def listPublishedPosts_doubleClicked(self, postitem):
+        if self.proposeSavePost("overwrite it"):       
+            return
         if self.PublishedItems.has_key(postitem):
             post = self.PublishedItems[postitem]
             self.current_post = post
@@ -225,6 +231,8 @@ class MainDialog(QMainWindow):
             QMessageBox.critical(self, "Error", "Something is not right!")
     
     def listSavedPosts_doubleClicked(self, item):
+        if self.proposeSavePost("overwrite it"):       
+            return
         if self.SavedItems.has_key(item):
             currentItem = self.SavedItems[item]
             self.editPostTitle.setText(currentItem.Title)
@@ -275,8 +283,18 @@ class MainDialog(QMainWindow):
                     ctrl.setChecked(True)
                 bidx += 1
 
+    def eventFilter(self, object, event):
+        """ this is a dirty-ass hack to intercept the closeEvent fully """
+        if event and event.type() == QEvent.Close and object != self:
+            if not self.close_Event(event):
+                return True
+            else:
+                self.forms["Main"]["Class"].removeEventFilter(self)
+        return False
 
     def init_ui(self, settings, forms):
+        self.forms = forms
+        forms["Main"]["Class"].installEventFilter(self)
         UI.API.setPreviewWidget(self)
         self.sourceEditor = UI.MyQextScintilla(self.Source, self)
         self.Source.layout().addWidget(self.sourceEditor)
