@@ -22,9 +22,12 @@ class Smiley_Plugin(ToolBarManager.ToolbarPlugin):
 	
     def getWidget(self):
         page = self.parent.getPage("Plugins")
-        button = QPushButton("smile!",page)
         import os,pickle
-        self.smiles = pickle.load(open(os.path.expanduser("~/.pyqlogger/plugins/")+"smiley.theme"))
+	try:
+            self.smiles = pickle.load(open(os.path.expanduser("~/.pyqlogger/plugins/")+"smiley.theme"))
+	except:
+	    return    
+        button = QPushButton("smile!",page)
 	self.frame = QFrame(self.parent)
 	self.frame.setFrameShape(QFrame.StyledPanel)
 	self.frame.setFrameShadow(QFrame.Raised)
