@@ -25,6 +25,7 @@ from qt import QTimer, SIGNAL, QListBoxText, QThread, \
 from datetime import date
 from distutils.version import LooseVersion
 import sys, urllib2
+from PyQLogger.Plugins.EventPlugin import EventType
 
 ###########  Fetch Blogs ###################
 
@@ -80,6 +81,8 @@ def donePublishPost(self, res):
         self.editPostTitle.setText("")
         self.sourceEditor.setText("")
         self.notifier.info("Publishing success!")
+        self.prepareCrossBlog()
+        self.manager.handleEvent(EventType.AFTERPUBLISH, None)        
     else:
         self.notifier.error(res)
     self.btnPublish.setEnabled(True)
@@ -89,7 +92,8 @@ def startPublishPost(self):
     try:
         title = unicode(self.editPostTitle.text())
         content = unicode(self.sourceEditor.text())
-        self.account.Blogs[self.account.SelectedBlog].createPost(title, content)
+        for blog in self.getCrossBlogList():
+            blog.createPost(title, content)
     except Exception, e:
         import traceback
         traceback.print_exc()

@@ -50,8 +50,9 @@ def load_forms(splash, app, settings):
     from PyQLogger.Dialogs import MainDialog
     wnd = MainDialog.MainDialog()
     wnd_c = qt_ui_loader.create( 'UI/maindialog.ui', wnd,None,True )
-    wnd.init_ui(settings)
+    wnd_c.closeEvent = wnd.closeEvent
     __FORMS__["Main"] = { "Class": wnd_c , "Impl": wnd }
+    wnd.init_ui(settings, __FORMS__)
     UI.API.setupTray(app, __FORMS__["Main"])
     UI.API.setupDCOP(app, __FORMS__["Main"])
     splash.message( "Loading form: Login" ,alignflag)

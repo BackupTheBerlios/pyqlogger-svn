@@ -36,7 +36,7 @@ import os,sys
 from glob import glob
 
 
-def importClasses(folders):
+def importClasses(folders, parent):
     """ 
     Function to traverse each forder in the 'folders' list and
     get all files with .p extension and try to compile them.
@@ -61,9 +61,9 @@ def importClasses(folders):
                                 PluginClasses += [ kClass ]
                                 g[ kName ] = kClass
                         else:
-                            print "Cannot load plugin: %s is a bad plugin name or unkown parent class!" % kName
+                            parent.log.warning("Cannot load plugin: %s is a bad plugin name or unkown parent class!" % kName,exc_info=1)
                 except Exception,  e:
-                    print "Exception on loading plugin: " + str(e)
+                    parent.log.error("Exception on loading plugin",exc_info=1)
     return PluginClasses
 
 class Manager(XMLObject):
@@ -92,7 +92,7 @@ class Manager(XMLObject):
                 self.PluginData += [ inst.Data ]
             else: # use existing data
                 inst.Data = exists[0]
-            print "Adding (%s) plugin"%inst.Name
+            parent.log.debug("Adding (%s) plugin"%inst.Name,exc_info=1)
             self.Plugins += [ inst ] # add to the list            
             self.Plugin2Data [ inst ] = inst.Data # link for lookup
         if changed:
@@ -128,14 +128,14 @@ class Manager(XMLObject):
     def load(parent):
         """ Create a fresh copy of initialized Manager class """
         paths = ["/home/reflog/.pyqlogger/plugins","/usr/share/pyqlogger/plugins"]
-        l = importClasses(paths)
+        l = importClasses(paths, parent)
         sys.path += paths
         file = os.path.expanduser("~")+"/.pyqlogger/plugins.xml"
         if os.path.exists(file):
             try:
                 m = XMLObject.instanceFromXml(open(file).read())
             except Exception, e:
-                print "Couldn't read plugin data. Either empty of borken! (%s)"%(str(e))
+                parent.log.error("Couldn't read plugin data. Either empty of borken!",exc_info=1)
         else:
             m = Manager(PluginData=[])
         m.init(parent,l)
@@ -150,7 +150,7 @@ class Manager(XMLObject):
             file = os.path.expanduser("~")+"/.pyqlogger/plugins.xml"
             open(file,"w").write(str(self))
         except Exception, e:
-            print "Cannot write configuration! (%s)"%(str(e))
+            self.parent.log.error("Couldn't write plugin data!",exc_info=1)
     
 
 

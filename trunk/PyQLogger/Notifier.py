@@ -39,6 +39,22 @@ class Notifier:
         else:
             print "What the hell?"
             sys.exit()
-        for method in [mname for mname in dir(self.display) if len(mname)>2 and mname[:2] != '__' ]:
-            setattr(self, method, getattr(self.display, method))
         self.mode = mode
+        
+    def error(self, msg):
+        self.display.error(msg)        
+        self.parent.log.error(msg)
+        
+    def info(self, msg):
+        self.display.info(msg)
+        self.parent.log.info(msg)
+        
+    def warn(self, msg):
+        self.display.warn(msg)
+        self.parent.log.warning(msg)
+        
+    def status(self, msg):
+        self.display.status(msg)
+        self.parent.log.info(msg)
+        
+        

@@ -29,6 +29,9 @@ from PyQLogger.Post import Post
 from PyQLogger import BG, UI
 from PyQLogger.Network import Network, netOp
 from Speller import Speller
+from PyQLogger.Plugins.EventPlugin import EventType
+from Logging import LoggerWidget
+from logging import Logger
 
 class MainDialog(QMainWindow):
     def spellTimer(self):
@@ -74,7 +77,7 @@ class MainDialog(QMainWindow):
                     post = self.PublishedItems[ self.listPublishedPosts.selectedItem () ]
                     open(unicode(filename),"w").write(post.Content)
                 except Exception, e:
-                    print "Exception while saving to file: " + str(e)
+                    self.log.error("Exception while saving to file",exc_info=1)
                     QMessageBox.warning(self, "Warning", "Cannot write post to file %s" % filename)
 
     def savePopup(self, action):
@@ -96,7 +99,7 @@ class MainDialog(QMainWindow):
                     post = self.SavedItems [ self.listSavedPosts.selectedItem () ]
                     open(unicode(filename),"w").write(post.Content)
                 except Exception, e:
-                    print "Exception while saving to file: " + str(e)
+                    self.log.error("Exception while saving to file",exc_info=1)
                     QMessageBox.warning(self, "Warning", "Cannot write post to file %s!" % filename)
         elif(action == 3):
             files = QFileDialog.getOpenFileNames("All files (*.*)",
@@ -114,7 +117,8 @@ class MainDialog(QMainWindow):
                         listitem = QListBoxText(self.listSavedPosts, title)
                         self.SavedItems [ listitem ] = item
                     except:
-                        print "Cannot import post!"
+                        self.log.error("Exception while importing file",exc_info=1)
+                        QMessageBox.warning(self, "Warning", "Cannot import post file!")
                 
     def listPublishedPosts_contextMenuRequested(self, a0, a1):
         self.aMenu.setItemEnabled(1, a0 != None)
@@ -139,6 +143,7 @@ class MainDialog(QMainWindow):
         self.current_post = None
 
     def closeEvent(self, event):
+        print "in close"
         self.reload = self.sender() == self.btnRelogin or self.sender() == self.ReloginAction
         if self.current_post:
             res = QMessageBox.question(self, "Question", 
@@ -158,7 +163,11 @@ class MainDialog(QMainWindow):
                 if self.current_post and self.current_post.ID:
                     self.network.enqueue(netOp("Editing post...",BG.startEditPost,BG.doneEditPost))
                 else:
-                    self.network.enqueue(netOp("Publishing post...",BG.startPublishPost,BG.donePublishPost))
+                    self.manager.handleEvent(EventType.BEFOREPUBLISH, None)
+                    if self.getCrossBlogList():
+                        self.network.enqueue(netOp("Publishing post...",BG.startPublishPost,BG.donePublishPost))
+                    else:
+                        QMessageBox.warning(self, "Warning", "You have to select at least one blog to post to!")
             else:
                 QMessageBox.warning(self, "Warning", "You forgot the post's title!")
         else:
@@ -168,7 +177,7 @@ class MainDialog(QMainWindow):
         title = unicode(self.editPostTitle.text())
         if title:
             listitem = QListBoxText(self.listSavedPosts, title)
-            item = Post(Created=date.today(), Title=title,Content=unicode(self.sourceEditor.text()))
+            item = Post(Created=str(date.today()), Title=title,Content=unicode(self.sourceEditor.text()))
             self.account.Blogs[self.account.SelectedBlog].Drafts.Data += [ item ]
             self.SavedItems [ listitem ] = item
         else:
@@ -184,7 +193,8 @@ class MainDialog(QMainWindow):
             try:
                 self.settings.save()
             except Exception, inst: 
-                print "btnSettings_clicked: %s" % inst
+                import traceback
+                traceback.print_exc()
                 QMessageBox.critical(self, "Error", "Cannot write configuration!")
                 QApplication.exit()
     
@@ -232,63 +242,71 @@ class MainDialog(QMainWindow):
         try:
             self.settings.save()
         except Exception, inst:
-            print "SaveAll: %s" % inst
+            self.log.critical("Cannot write configuration!", exc_info=1)
             QMessageBox.critical(self, "Error", "Cannot write configuration!")
-            
-    class PublishMenuHanlder(QObject):
-        def Popup(self, idx):
-            chk = self.sender().isItemChecked(idx)            
-            #itemParameter
-            self.sender().setItemChecked(idx, not chk)
-            
-        def eventFilter(self, object, event):
-            if event.type() == QEvent.MouseButtonRelease:
-                if event.state() == (Qt.MidButton | Qt.ControlButton):
-                    self.Menu.popup(event.globalPos())
-                    return True
-            return False
+                    
+    def getCrossBlogList(self):
+        res = []
+        for (account, bloghash) in self.crossPost.items():
+            for (blog, control) in bloghash.items():
+                if control.isChecked():
+                    if not hasattr(account, "inited"):
+                        account.init()
+                    res += [ blog ] 
+        return res
+    
+    def prepareCrossBlog(self):
+        for control in self.crossPostControls:
+            control.hide()
+        self.crossPostControls = []
+        self.crossPost = {}
+        for a in self.settings.Accounts:
+            self.crossPost[a]={}
+            lbl = QLabel(self.grpCross)
+            lbl.setText("Account: %s Blogs: "%a.Name )
+            self.crossPostControls += [ lbl ]
+            bidx = 0
+            for b in a.Blogs:
+                ctrl = QCheckBox(self.grpCross)
+                ctrl.setText(b.Name)
+                self.crossPost[a][b] = ctrl
+                self.crossPostControls += [ ctrl ]
+                if bidx == a.SelectedBlog and a.Name == self.account.Name:
+                    ctrl.setChecked(True)
+                bidx += 1
 
-        def getTargets(self):
-            ret = {}
-            for acc in self.menus:
-                bidx = 0
-                ret [ acc ] = []
-                for b in acc.Blogs:
-                    if bool(self.menus[acc].isItemChecked(bidx)):
-                        ret [ acc ] += [ b ]
-                    bidx += 1
-            return ret 
-        
-        def buildAccountMenu(self, settings, account):
-            Menu = QPopupMenu()
-            aidx = 0
-            self.menus = {}
-            for a in settings.Accounts:
-                bidx = 0
-                subMenu = QPopupMenu(Menu)
-                for b in a.Blogs:
-                    subMenu.insertItem(b.Name, bidx)
-                    subMenu.setItemParameter(bidx, aidx)
-                    if bidx == a.SelectedBlog and a.Name == account.Name:
-                        subMenu.setItemChecked(bidx, True)
-                    bidx += 1            
-                self.connect(subMenu, SIGNAL("activated(int)"), self.Popup)
-                Menu.insertItem(a.Name, subMenu, aidx)
-                self.menus [a] = subMenu
-                aidx += 1
-            self.Menu = Menu
 
-    def init_ui(self, settings):
+    def init_ui(self, settings, forms):
         UI.API.setPreviewWidget(self)
         self.sourceEditor = UI.MyQextScintilla(self.Source, self)
         self.Source.layout().addWidget(self.sourceEditor)
+        logLayout = QHBoxLayout(None,0,6,"logLayout")
+        self.log = Logger("Default")
+        self.logFrame.hide()
+        self.btnLogger = LoggerWidget(self.leftFrame, self.log, self)
+        logLayout.addWidget(self.btnLogger)
+        self.leftFrame.layout().addLayout(logLayout)
+        self.log.info("info test")
+        self.log.critical("critical test")
         self.current_post = None
         self.cached_password = None
         self.cached_atomblog = None
+        grpLayout = QVBoxLayout(self.grpCross)
+        grpLayout.setAutoAdd( True )        
         tabLayout = QHBoxLayout(self.toolbarTab.page(0), 11, 6, "tabLayout")
         tabLayout.setAutoAdd( True )
         tabLayout2 = QHBoxLayout(self.toolbarTab.page(1), 11, 6, "tabLayout2")
         tabLayout2.setAutoAdd( True )
+        forms["Main"]["Class"].setUsesTextLabel( settings.UI.EnableText )
+        for button in [self.btnPublish,self.btnSavePost,self.btnExit,self.btnRelogin]:
+            if settings.UI.EnableText:
+                button.setMaximumSize(QSize(65,65))
+                button.setMinimumSize(QSize(65,65))
+            else:
+                button.setMaximumSize(QSize(45,45))
+                button.setMinimumSize(QSize(45,45))
+            button.setUsesTextLabel( settings.UI.EnableText )
+        self.statusBar=forms["Main"]["Class"].statusBar()        
         self.notifier = Notifier(self, settings.UI.Notification)
         self.aMenu = QPopupMenu()
         self.aMenu.insertItem("Delete post", 1)
@@ -306,7 +324,6 @@ class MainDialog(QMainWindow):
         self.connect(self.bMenu, SIGNAL("activated(int)"), self.savePopup)
         self.connect(self.sourceEditor, PYSIGNAL("aboutToShowMenu"), self.showMenu)
         self.connect(self.sourceEditor, SIGNAL("textChanged()"), self.sourceEditor_textChanged)
-        #self.frameCat.hide()
         self.network = Network(self)
         self.network.start()
         
@@ -363,15 +380,14 @@ class MainDialog(QMainWindow):
         self.password = password
         self.settings = settings        
         self.forms = forms
-        forms["Main"]["Class"].setUsesTextLabel( settings.UI.EnableText )
-        self.statusBar=forms["Main"]["Class"].statusBar()
-
+        if not hasattr(self,"crossPostControls"):
+            self.crossPostControls = []
+        self.crossPost = {}
+        self.prepareCrossBlog()
+        
         if self.notifier.mode != 1:
             self.statusBar.hide()
         self.sourceEditor.manager = manager
-        a = self.PublishMenuHanlder(self)
-        a.buildAccountMenu( settings , account )
-        self.btnPublish.installEventFilter(a)
         manager.fillToolbar()
         self.edtStylesheet.setText(self.settings.StyleSheet)
         self.edtStylesheet_textChanged('')
@@ -383,7 +399,7 @@ class MainDialog(QMainWindow):
                 self.connect( timer, SIGNAL("timeout()"), self.spellTimer )
                 timer.start( 5000 )        
             except Exception , e:
-                print "Asked to use ASpell when it's not installed! Disabling..."
+                self.log.warn("Asked to use ASpell when it's not installed! Disabling...")
                 settings.Speller.Enabled = 0                
         self.comboBlogs.clear()
         for blog in self.account.Blogs:
@@ -391,8 +407,6 @@ class MainDialog(QMainWindow):
             
         self.comboBlogs.setCurrentItem( self.account.SelectedBlog )
         
-##        if self.settings.getint("main", "hosttype") == 2:
-##            self.frameCat.show()
         self.populateLists()
         return True
 

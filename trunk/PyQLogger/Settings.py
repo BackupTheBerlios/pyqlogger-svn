@@ -28,7 +28,7 @@ class UISettings(XMLObject):
     EnableTray =  IntegerAttribute(default=1)
     EnableKde =  IntegerAttribute(default=1)
     EnableDCOP =  IntegerAttribute(default=1)
-    Notification = IntegerAttribute(default=0)
+    Notification = IntegerAttribute(default=1)
     EnableText = IntegerAttribute(default=0)
     
 class SpellerSettings(XMLObject):
@@ -63,6 +63,8 @@ class Settings(XMLObject):
                 return XMLObject.instanceFromXml(open(fname).read())
             except Exception, e:
                 print "Couldn't read settings. Either empty of borken! (%s)"% e
+                import traceback
+                traceback.print_exc()
         return Settings(UI=UISettings(), Speller=SpellerSettings())
             
     load = staticmethod(load)
@@ -71,7 +73,9 @@ class Settings(XMLObject):
         """ write settings back to xml file """
         try:
             fname = os.path.expanduser("~")+"/.pyqlogger/settings.xml"
-            open(fname,"w").write(str(self))
+            res = str(self)
+            open(fname,"w").write(res)
         except Exception, e:
-            print "Cannot write configuration! (%s)" % (str(e))
-            
+            print "Cannot write configuration! (%s)" % (str(e))           
+            import traceback
+            traceback.print_exc()

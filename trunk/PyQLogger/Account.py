@@ -63,11 +63,12 @@ class Account(XMLObject):
             cnt += 1
         raise Exception("Invalid blog number %s !"%blogId)
 
-    def init(self):
+    def init(self):        
         svc = self.serviceByName(self.Service)
         self.BlogService = svc(self.Host, self.Username, self.Password)
         for blog in self.Blogs: 
             blog.Service = self.BlogService
+        self.inited = True
 
     def login(self):
         """
