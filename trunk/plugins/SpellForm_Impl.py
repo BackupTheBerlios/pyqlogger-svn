@@ -6,14 +6,6 @@ from qt import *
 from spellform import SpellForm
 import re,sys
 
-try:
-	import aspell
-except:
-	print """Seems like you don't have ASpell bindings installed!
-	you can get it from http://prdownloads.sourceforge.net/uncpythontools/aspell-1.0.zip?download"""
-	sys.exit()
-
-
 class SpellForm_Impl(SpellForm):
 	_digitRegex = re.compile(r"^\d")
 	_htmlRegex = re.compile(r"</[c-g\d]+>|</[i-o\d]+>|</[a\d]+>|</[q-z\d]+>|<[cg]+[^>]*>|<[i-o]+[^>]*>|<[q-z]+[^>]*>|<[a]+[^>]*>|<(\[^\]*\|'[^']*'|[^'\>])*>", re.IGNORECASE|re.MULTILINE)
@@ -25,12 +17,23 @@ class SpellForm_Impl(SpellForm):
 
 	def __init__(self,parent = None,name = None,modal = 0,fl = 0):
 		SpellForm.__init__(self,parent,name,modal,fl)
+
+		try:
+			import aspell
+		except:
+			QMessageBox.warning(None,
+				self.trUtf8("Error"),
+				self.trUtf8("""Seems like you don't have ASpell bindings installed!\nYou can get it from http://prdownloads.sourceforge.net/uncpythontools/aspell-1.0.zip?download"""))
+			self.notcapable = True
+			return
+
 		try:
 			self.speller = aspell.spell_checker(prefix='/usr')
 		except:
 			QMessageBox.warning(None,
 				self.trUtf8("Error"),
 				self.trUtf8("""ASpell module couldn't be initialized!"""))
+			self.notcapable = True
 
 	def CalculateWords(self):
 		"""Calculates the words from the Text property"""

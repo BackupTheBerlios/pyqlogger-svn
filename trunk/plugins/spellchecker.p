@@ -30,6 +30,8 @@ class SpellCheck_Plugin(ToolBarManager.ToolbarPlugin):
 			return
 		from SpellForm_Impl import SpellForm_Impl
 		s = SpellForm_Impl()
+		if s.notcapable:
+			return
 		s.load(text)
 		res = s.exec_loop()
 		if res:
