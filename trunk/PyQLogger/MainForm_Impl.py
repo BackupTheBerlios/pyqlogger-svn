@@ -42,7 +42,7 @@ class MainForm_Impl(MainForm):
         self.current_post = None
         self.cached_password = None
         self.cached_atomblog = None
-        self.plugins = PluginFactory(os.path.expanduser("~/.pyqlogger/plugins/"),self)
+        self.plugins = PluginFactory(self)
         tabLayout = QHBoxLayout(self.tab,11,6,"tabLayout")
         tabLayout.setAutoAdd( True )
         tabLayout2 = QHBoxLayout(self.tab_2,11,6,"tabLayout2")
