@@ -1,7 +1,7 @@
 ## $Id$
 ## This file is part of PyQLogger.
 ## 
-## Copyright (c) 2004 Eli Yukelzon a.k.a Reflog 		
+## Copyright (c) 2004 Eli Yukelzon a.k.a Reflog         
 ##
 ## PyQLogger is free software; you can redistribute it and/or modify
 ## it under the terms of the GNU General Public License as published by
@@ -19,7 +19,7 @@
 
 from qt import *
 from imageform import ImageForm
-import urllib2
+import urllib2,PatchedClientForm,re,os
 
 class ImageForm_Impl(ImageForm):
     alignList = {}
@@ -30,9 +30,7 @@ class ImageForm_Impl(ImageForm):
         self.alignList['Right'] = 'right'
         self.alignList['Center'] = 'center'
         self.btnUpload.setEnabled(False)
-	self.chkArk.setEnabled(False)
-	self.chkShack.setEnabled(False)
-	self.buttonOk.setEnabled(False)
+        self.buttonOk.setEnabled(False)
         for key in self.alignList.keys():
             self.comboAlign.insertItem(key)
 
@@ -41,13 +39,20 @@ class ImageForm_Impl(ImageForm):
         image = str(self.editUrl.text())
         thumb = str(self.editThumb.text())
         title = str(self.editTitle.text())
-        if str(self.editWidth.text()): width = int(str(self.editWidth.text())) 
-	else: width = None
-        if str(self.editBorder.text()): border = int(str(self.editBorder.text())) 
-	else: border = None
-        if str(self.editHeight.text()): height = int(str(self.editHeight.text()))
-	else: height = None
-        if not image: return None
+        if str(self.editWidth.text()): 
+            width = int(str(self.editWidth.text())) 
+        else: 
+            width = None
+        if str(self.editBorder.text()): 
+            border = int(str(self.editBorder.text())) 
+        else: 
+            border = None
+        if str(self.editHeight.text()): 
+            height = int(str(self.editHeight.text()))
+        else: 
+            height = None
+        if not image: 
+            return None
         else:  
             if thumb:
                 width = 40
@@ -82,7 +87,6 @@ class ImageForm_Impl(ImageForm):
             except:
                 QMessageBox.warning(self,"Warning","Cannot open the image url!")                
 
-    # public slot
     def editUrl_textChanged(self,a0):
         self.buttonOk.setEnabled(str(self.editUrl.text())!='')
 
@@ -92,13 +96,46 @@ class ImageForm_Impl(ImageForm):
             self.buttonOk.setEnabled(str(self.editUrl.text())!='')
         else:
             self.widgetStack2.raiseWidget(self.pageUpload)
-            self.buttonOk.setEnabled(self.btnUpload.isEnabled())
+            self.buttonOk.setEnabled(False)
 
     def chkThumb_toggled(self,a0):
         pass
 
+    imgre = re.compile('\[img\](.*?)\[/img\]',re.IGNORECASE)
+    
+    def uploadArk(self,afile):
+        try:
+            c = PatchedClientForm.ParseResponse(urllib2.urlopen("http://www.imageark.net"))
+            c[0].referer = 'http://www.imageark.net'
+            c[0].find_control("userfile").add_file(open(afile,"rb"),filename= os.path.basename(afile))
+            content = urllib2.urlopen(c[0].click()).read()
+            m = self.imgre.search(content)
+            if m:
+                return m.group(1)
+        except:
+            return None
+
+    def uploadShack(self,afile):
+        try:
+            c =PatchedClientForm.ParseResponse(urllib2.urlopen("http://www.imageshack.us/"))
+            c[0].referer = 'http://www.imageshack.us/index2.php'
+            c[0].find_control("fileupload").add_file(open(afile,"rb"),filename= os.path.basename(afile))
+            content = urllib2.urlopen(c[0].click()).read()
+            m = self.imgre.search(content)
+            if m:
+                return m.group(1)
+        except:
+            return None
+
+
     def btnUpload_clicked(self):
-        pass
+        r = None
+        if self.chkShack.isChecked():
+            r = self.uploadShack(str(self.editFile.text()))
+        elif self.chkArk.isChecked():
+            r = self.uploadArk(str(self.editFile.text()))
+        if r: self.editUrl.setText(r)
+
 
     def btnOpen_clicked(self):
         s = str(QFileDialog.getOpenFileName(None , \
