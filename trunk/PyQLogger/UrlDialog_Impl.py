@@ -45,9 +45,9 @@ class UrlDialog_Impl(UrlDialog):
 
     def urltag(self):
         urltag = '<a href='
-        url = self.editUrl.text()
-        alt = self.editTitle.text()
-        name = self.editName.text()
+        url = unicode(self.editUrl.text())
+        alt = unicode(self.editTitle.text())
+        name = unicode(self.editName.text())
     
         if not url or not name:
             return None
@@ -58,8 +58,8 @@ class UrlDialog_Impl(UrlDialog):
             urltag += ' alt=\'%s\'' % alt
     
         if self.checkOpen.isChecked():
-            if self.targetList.has_key('%s' % self.comboOpen.currentText()):
-                target = self.targetList['%s' % self.comboOpen.currentText()]
+            if self.targetList.has_key(unicode(self.comboOpen.currentText())):
+                target = self.targetList[unicode(self.comboOpen.currentText())]
                 urltag += ' target=\'%s\'' % target
     
         urltag += '>%s</a>' % name
