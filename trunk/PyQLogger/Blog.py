@@ -38,39 +38,27 @@ class Blog(XMLObject):
     
 
     def delete(self, postNr):
-        """
-        remove post
-        """
+        """  remove post  """
         pass
     
-    def updatePost(self, postNr, title, content):
-        """
-        change post's content
-        """
+    def updatePost(self, postNr, title, content, **other):
+        """   change post's content     """
         pass
     
-    def createPost(self, title, content):
-        """
-        create new post
-        """
+    def createPost(self, title, content, **other):
+        """  create new post    """
         pass
     
     def reloadPosts(self):
-        """
-        fetch the list of posts in a blog
-        """
-        pass
+        """   fetch the list of posts in a blog   """
+        self.Posts = self.Service.getPosts(self.ID)
     
     def __len__(self):
-        """
-        return the amount of posts in a blog
-        """
+        """   return the amount of posts in a blog     """
         return len(self.Posts)
     
     def __getitem__(self, postNr):
-        """
-        return a post by it's id
-        """
+        """    return a post by it's id     """
         return self.__postById(postNr)
     
     

@@ -319,8 +319,8 @@ tbImg_image = \
 
 from qt import qApp
 from ToolBarManager import ToolbarPlugin
-from UrlDialog_Impl import UrlDialog_Impl
-from ImageForm_Impl import ImageForm_Impl
+from Dialogs.UrlDialog import UrlDialog
+from Dialogs.ImageDialog import ImageDialog
 
 def initToolbar(self, plugs):
     plugs.manualAdd( ToolbarPlugin.SimpleButton(self, "Bold", makeBold, None, tbBold_image) )

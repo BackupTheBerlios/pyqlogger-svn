@@ -157,7 +157,8 @@ def create( ui_file, connector=None, parent=None, exportchildren=False ):
         try:
             s = getattr( connector, slot )
             if callable( s ):
-                qt.QObject.connect( sender, signal, s )
+                if sender:
+			qt.QObject.connect( sender, signal, s )
         except AttributeError:
             pass
     # for connections

@@ -51,6 +51,8 @@ class Account(XMLObject):
 
     def init(self):
         self.BlogService = self.serviceByName(self.Service)(self.Host,self.Username,self.Password)
+        for b in self.Blogs: # dunno, maybe there is a better way? FIXME!
+            b.Service = self.BlogService
 
     def login(self):
         """
@@ -62,7 +64,10 @@ class Account(XMLObject):
         """
         get the list of blogs for this account
         """
-        pass
+        blogs = self.BlogService.getBlogs() # fetch blogs from server        
+        for b in blogs:
+            if not [ bb for bb in self.Blogs if bb.Name == b.name ]: # it's new! add it
+                self.Blogs += [ b ]
     
     def __len__(self):
         """

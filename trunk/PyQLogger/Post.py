@@ -32,7 +32,7 @@ class Post(XMLObject):
         """
         return string representation of the post
         """
-        return """ID: %s\nTitle: %s\nDate: %s\nBody:\n%s"""%(self.ID,self.Title,self.Created,self.Content)
+        return "ID: %s\nTitle: %s\nDate: %s\nBody:\n%s"%(self.ID,self.Title,self.Created,self.Content)
 
 
 

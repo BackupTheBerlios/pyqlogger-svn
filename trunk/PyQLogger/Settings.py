@@ -20,23 +20,29 @@ from Account import Account
 from EaseXML import  XMLObject,TextNode,ListNode, IntegerAttribute,ItemNode,ChoiceNode
 import os
 
-class UI(XMLObject):
-    EnableKde =  IntegerAttribute()
-    EnableQScintilla =  IntegerAttribute()
-    Notification = IntegerAttribute()
 
 class Settings(XMLObject):
+    """ Class for storing and retrieving ALL information about PyQLogger """
+    class UI(XMLObject):
+        """ Subclass representing settings related to GUI """
+        EnableTray =  IntegerAttribute(default=1,optional=True)
+        EnableKde =  IntegerAttribute(default=1,optional=True)
+        EnableQScintilla =  IntegerAttribute(default=1,optional=True)
+        Notification = IntegerAttribute(default=0)
+        
     UI_Settings = ItemNode('UI',optional=True) # GUI settings
-    Accounts = ListNode('Account') # list of accounts
-    AutoLogin = TextNode(optional=True) # which account to autologin
+    Accounts = ListNode('Account')                  # list of accounts
+    AutoLogin = TextNode(optional=True)        # which account to autologin
     
     def accountByName(self,name):
+        """ searches the list of accouns, and returns one by it's .Name """
         for a in self.Accounts:
             if a.Name == name:
                 return a
         raise Exception("Inavlid Account name: "+name)
 
     def load():
+        """ static method to create new settings class from xml file """
         file = os.path.expanduser("~")+"/.pyqlogger/settings.xml"
         if os.path.exists(file):
             try:
@@ -48,6 +54,10 @@ class Settings(XMLObject):
     load = staticmethod(load)
     
     def save(self):
-        file = os.path.expanduser("~")+"/.pyqlogger/settings.xml"
-        open(file,"w").write(str(self))
-        
+        """ write settings back to xml file """
+        try:
+            file = os.path.expanduser("~")+"/.pyqlogger/settings.xml"
+            open(file,"w").write(str(self))
+        except Exception, e:
+            print "Cannot write configuration! (%s)"%(str(e))
+            
