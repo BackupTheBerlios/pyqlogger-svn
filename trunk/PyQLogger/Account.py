@@ -42,11 +42,21 @@ class Account(XMLObject):
             if name == s_class:
                 return getattr(globals()[s_module],s_class)
         raise Exception("Invalid Blog Service name : "+name)
+        
+    def blogByName(self,name):
+        """ searches the list of accouns, and returns one by it's .Name """
+        for a in self.Blogs:
+            if a.Name == name:
+                return a
+        raise Exception("Invalid Blog name: "+name)
+
   
-    def __blogById(self,blogId):
+    def blogById(self,blogId):
+        cnt = 0
         for blog in self.Blogs:
             if blog.ID == blogId:
-                return blog
+                return cnt
+            cnt += 1
         raise Exception("Invalid blog number %s !"%blogId)
 
     def init(self):
@@ -79,4 +89,4 @@ class Account(XMLObject):
         """
         Get a blog in account by it's id
         """
-        return self.__blogById(blogId)
+        return self.Blogs [ self.blogById(blogId) ]

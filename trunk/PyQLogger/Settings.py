@@ -20,15 +20,15 @@ from Account import Account
 from EaseXML import  XMLObject,TextNode,ListNode, IntegerAttribute,ItemNode,ChoiceNode
 import os
 
+class UI(XMLObject):
+    """ Subclass representing settings related to GUI """
+    EnableTray =  IntegerAttribute(default=1,optional=True)
+    EnableKde =  IntegerAttribute(default=1,optional=True)
+    EnableQScintilla =  IntegerAttribute(default=1,optional=True)
+    Notification = IntegerAttribute(default=0)
 
 class Settings(XMLObject):
     """ Class for storing and retrieving ALL information about PyQLogger """
-    class UI(XMLObject):
-        """ Subclass representing settings related to GUI """
-        EnableTray =  IntegerAttribute(default=1,optional=True)
-        EnableKde =  IntegerAttribute(default=1,optional=True)
-        EnableQScintilla =  IntegerAttribute(default=1,optional=True)
-        Notification = IntegerAttribute(default=0)
         
     UI_Settings = ItemNode('UI',optional=True) # GUI settings
     Accounts = ListNode('Account')                  # list of accounts
@@ -49,7 +49,7 @@ class Settings(XMLObject):
                 return XMLObject.instanceFromXml(open(file).read())
             except Exception, e:
                 print "Couldn't read settings. Either empty of borken! (%s)"%(str(e))
-        return Settings()
+        return Settings(UI_Settings=UI())
             
     load = staticmethod(load)
     

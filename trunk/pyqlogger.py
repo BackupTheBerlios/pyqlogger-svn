@@ -34,7 +34,7 @@ __FORMS__ = {}
 
 alignflag = Qt.AlignBottom
 
-def load_forms(splash,settings):
+def load_forms(splash,app,settings):
     splash.message( "Loading form: Main",alignflag )
     qApp.processEvents()
     from PyQLogger.Dialogs import MainDialog
@@ -42,6 +42,7 @@ def load_forms(splash,settings):
     wnd_c = qt_ui_loader.create( 'UI/maindialog.ui', wnd,None,True )
     wnd.init_ui(settings)
     __FORMS__["Main"] = { "Class": wnd_c , "Impl": wnd }
+    KdeQt.setupKDE(app, __FORMS__["Main"], settings)
     splash.message( "Loading form: Login" ,alignflag)
     qApp.processEvents()
     from PyQLogger.Dialogs import LoginDialog
@@ -59,6 +60,7 @@ def load_forms(splash,settings):
     from PyQLogger.Dialogs import AccountSettingsDialog
     wnd = AccountSettingsDialog.AccountSettingsDialog()
     wnd_c = qt_ui_loader.create( 'UI/accountsettingsdialog.ui', wnd,None,True )
+    wnd.init_ui()
     __FORMS__["AccountSettings"] = { "Class": wnd_c , "Impl": wnd }
     splash.message( "Loading form: Image Insert",alignflag )
     qApp.processEvents();
@@ -89,7 +91,7 @@ def main():
     settings = Settings.Settings.load()
     splash.message( "Loading forms...",alignflag )
     qApp.processEvents();
-    load_forms(splash,settings)
+    load_forms(splash,app,settings)
     acc = None
     pwd = None
     if settings.AutoLogin: # check if we have auto login info
@@ -99,17 +101,16 @@ def main():
     while True:
         if not acc:
             wnd = __FORMS__["Login"]
-            wnd["Impl"].init(settings,__FORMS__)
-            if wnd["Class"].exec_loop() == QDialog.Accepted:
-                acc = wnd["Impl"].acc
-                pwd = str(wnd["Impl"].edtPassword.text())       
+            if wnd["Impl"].init(settings,__FORMS__):
+                if wnd["Class"].exec_loop() == QDialog.Accepted:
+                    acc = wnd["Impl"].acc
+                    pwd = str(wnd["Impl"].edtPassword.text())       
         if not acc or not pwd:
             break
         else:
             wnd = __FORMS__["Main"]
             wnd["Impl"].init(settings,acc,pwd)
             app.setMainWidget(wnd["Class"])
-            KdeQt.setupKDE(app, wnd, settings)
             wnd["Class"].show()
             splash.finish(wnd["Class"])
             app.exec_loop()

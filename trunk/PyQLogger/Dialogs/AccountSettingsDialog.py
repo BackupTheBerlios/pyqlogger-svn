@@ -1,4 +1,5 @@
 from PyQLogger.Account import Account
+from PyQLogger.Blog import Blog
 from qt import QListBoxPixmap,QPixmap,QListBoxText,QDialog
 from PyQLogger.Services import *
 from PyQLogger.Services import BlogServices
@@ -34,16 +35,20 @@ class AccountSettingsDialog(QDialog):
                     break
             if not flag:
                 self.acc.Blogs += [ self.getBlog(cbname) ]
+        self.acc.SelectedBlog = int(self.comboBlogs.currentItem())
         # set account type        
         for s in BlogServices:            
             (m,c) = s.split(".")
-            for tn in range(0,self.comboProviders.count()):
-                cla = getattr(globals()[m],c)
-                if self.comboProviders.text(tn) == cla.name:
-                    self.acc.Service = c
-                    break
+            cla = getattr(globals()[m],c)
+            if self.comboProviders.text(self.comboProviders.currentItem()) == cla.name:
+                self.acc.Service = c
+                return
         
-    def init(self,acc=None):
+    def getBlog(self,name):
+        # return just fetched blog...
+        return Blog()
+
+    def init_ui(self):
         for s in BlogServices:            
             (smodule,sclass) = s.split(".")
             cla = getattr(globals()[smodule],sclass)
@@ -52,12 +57,17 @@ class AccountSettingsDialog(QDialog):
                 self.comboProviders.insertItem(image,cla.name)
             else:
                 self.comboProviders.insertItem(cla.name)
-            
+        
+
+    def init(self,acc=None):            
         if not acc:
-            self.acc = Account()
+            self.acc = Account(SelectedBlog = 0,Service='MovableTypeService')
+            self.acc.Blogs += [ Blog(Name="test",ID="123") ]
+            self.acc.init()
         else:
             self.acc = acc
-            self.setFromAccount()
+            
+        self.setFromAccount()
 
     def accept(self):
         self.putToAccount()

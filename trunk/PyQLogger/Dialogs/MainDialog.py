@@ -28,6 +28,7 @@ from datetime import date
 #from AtomBlog import MovableTypeClient, BloggerClient, GenericAtomClient,LiveJournalClient
 from PyQLogger.ToolBar import initToolbar
 from PyQLogger.Notifier import Notifier
+from PyQLogger.Post import Post
 from PyQLogger.ToolBarManager import PluginFactory
 from PyQLogger import BG, KdeQt
 
@@ -142,13 +143,8 @@ class MainDialog(QDialog):
         title = unicode(self.editPostTitle.text())
         if title:
             listitem = QListBoxText(self.listSavedPosts, title)
-            item = { 
-                "date":date.today(),
-                "title":title,
-                "content":unicode(self.sourceEditor.text()),
-                }   
-            blogid = self.settings.get("main", "selectedblog")
-            self.SavedPosts[blogid] += [ item ]
+            item = Post(Created=date.today(), Title=title,Content=unicode(self.sourceEditor.text()))                
+            self.account.Blogs[self.account.SelectedBlog].Drafts += [ item ]
             self.SavedItems [ listitem ] = item
         else:
             QMessageBox.warning(self, "Warning", "You forgot the post's title!")
@@ -172,8 +168,11 @@ class MainDialog(QDialog):
                 QApplication.exit()
     
     def btnPreview_clicked(self):
-        url = self.settings.get("main", "url")
-        webbrowser.open_new(url)
+        url = self.account.Blogs[self.account.SelectedBlog].Url
+        if url:
+            webbrowser.open_new(url)
+        else:
+            QMessageBox.warning(self, "Warning", "You don't have homepage configured!\nYou can do that in the Setup dialog.")
     
     def btnReloadFeed_clicked(self):
         aBlog = self.__getAtomBlog()
@@ -182,17 +181,16 @@ class MainDialog(QDialog):
             bg()
     
     def comboBlogs_activated(self, blogname):
-        if len(blogname) > 0:
-            blogid = self.settings.getblogID(blogname)
-            self.settings.set("main", "selectedblog", blogid)
+        if blogname:
+            self.account.SelectedBlog =  self.account.blogById(self.account.blogByName(blogname).ID)
             self.populateLists()
     
     def listPublishedPosts_doubleClicked(self, postitem):
         if self.PublishedItems.has_key(postitem):
             post = self.PublishedItems[postitem]
             self.current_post = post
-            self.editPostTitle.setText(post["title"])
-            self.sourceEditor.setText(post["content"])
+            self.editPostTitle.setText(post.Ttitle)
+            self.sourceEditor.setText(post.Content)
             self.editorTab.setCurrentPage(0)            
             self.sender().setFocus()
         else:
@@ -201,8 +199,8 @@ class MainDialog(QDialog):
     def listSavedPosts_doubleClicked(self, item):
         if self.SavedItems.has_key(item):
             currentItem = self.SavedItems[item]
-            self.editPostTitle.setText(currentItem["title"])
-            self.sourceEditor.setText(currentItem["content"])
+            self.editPostTitle.setText(currentItem.Title)
+            self.sourceEditor.setText(currentItem.Content)
             self.editorTab.setCurrentPage(0)
             self.sender().setFocus()
         else:
@@ -245,6 +243,7 @@ class MainDialog(QDialog):
         self.frameCat.hide()
         
     def init(self, settings, account, password):
+        print settings
         self.reload = False
         self.account = account
         self.password = password

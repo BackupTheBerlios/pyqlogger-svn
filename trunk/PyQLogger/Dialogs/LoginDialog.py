@@ -19,11 +19,12 @@ class LoginDialog(QDialog):
             wnd["Impl"].init()
             if wnd["Class"].exec_loop() == QDialog.Rejected: 
                 QMessageBox.warning(None,"No Accounts!","""Program cannot work without accounts!""")
-                self.reject()
+                return False
             self.settings.Accounts += [ wnd["Impl"].acc ]
             self.settings.save()
+            print self.settings
         self.fillList()
-            
+        return True
 
     def fillList(self):
         self.comboUsers.clear()
@@ -33,8 +34,17 @@ class LoginDialog(QDialog):
             if image:
                 self.comboUsers.insertItem(image,f.Name)
             else:
-                self.comboUsers.insertItem(f.Name)                
-
+                self.comboUsers.insertItem(f.Name)
+        if len(self.settings.Accounts):
+            tacc = 0
+            if self.settings.AutoLogin:
+                for i in range(0,self.comboUsers.count()):
+                    if self.settings.AutoLogin == str(self.comboUsers.text(i)):
+                        tacc = i
+                        break
+            self.comboUsers.setCurrentItem( tacc )
+            self.comboUsers_activated( self.settings.Accounts [ tacc ].Name )
+    
 
     def comboUsers_activated(self,itemname):
         acc = self.settings.accountByName(str(itemname))
@@ -59,7 +69,7 @@ class LoginDialog(QDialog):
         
     def btnSettings_clicked(self):
         wnd = self.forms["Settings"]
-        wnd["Impl"].init(self.settings)
+        wnd["Impl"].init(self.settings,self.forms)
         if wnd["Class"].exec_loop() == QDialog.Accepted:
             self.fillList()
             self.settings.save()
