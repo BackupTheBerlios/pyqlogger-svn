@@ -216,9 +216,27 @@ def prepareModule(settings):
             
     if settings.UI_Settings.EnableQScintilla:
         try:
-            from qt import SIGNAL, QFont
+            from qt import SIGNAL, QFont,PYSIGNAL
             from qtext import QextScintilla, QextScintillaLexerHTML
-        
+            
+            class MyQextScintilla(QextScintilla):
+                def contextMenuEvent(self, evt):
+                    evt.accept()
+                    self.emit(PYSIGNAL('aboutToShowMenu'), (evt,))
+                    
+                def fillDefaultMenu(self, parent):
+                    self.undoid = parent.insertItem("Undo",self.undo)  
+                    self.redoid = parent.insertItem("Redo",self.redo)  
+                    self.cutid = parent.insertItem("Cut",self.cut)  
+                    self.copyid = parent.insertItem("Copy",self.copy)  
+                    parent.insertItem("Paste",self.paste)  
+                  
+                def updateDefaultMenu(self, parent):
+                    parent.setItemEnabled(self.undoid,self.isUndoAvailable())
+                    parent.setItemEnabled(self.redoid,self.isRedoAvailable())
+                    parent.setItemEnabled(self.copyid,self.hasSelectedText())
+                    parent.setItemEnabled(self.cutid,self.hasSelectedText())
+
             def setMonospaced(editor):
                 try:
                     rangeLow = range(editor.STYLE_DEFAULT)
@@ -238,14 +256,13 @@ def prepareModule(settings):
         
             def _setEditWidget(parent):
                 parent.sourceEditor.hide()
-                parent.sourceEditor = QextScintilla(parent.Source)
+                parent.sourceEditor = MyQextScintilla(parent.Source)
                 parent.sourceEditor.setUtf8(1)
                 parent.sourceEditor.SendScintilla(QextScintilla.SCI_SETWRAPMODE, QextScintilla.SC_WRAP_WORD)
                 parent.sourceEditor.setLexer(QextScintillaLexerHTML(parent))
                 setMonospaced(parent.sourceEditor)
                 parent.Source.layout().addWidget(parent.sourceEditor)
                 parent.connect(parent.sourceEditor, SIGNAL("textChanged()"), parent.sourceEditor_textChanged)
-                
             API.setEditWidget = staticmethod(_setEditWidget)
 
         except ImportError,e:

@@ -19,9 +19,7 @@
 
 __revision__ = "$Id: MainForm_Impl.py 102 2005-01-11 13:37:12Z reflog $"
 
-from qt import  QHBoxLayout, QPopupMenu, QMessageBox, QFileDialog, \
-                          QApplication, QListBoxText, QLineEdit, QInputDialog, \
-                          Qt, qApp, SIGNAL, QProgressBar,QDialog
+from qt import *
 import os, pickle, webbrowser
 from PyQLogger.Settings import Settings
 from datetime import date
@@ -31,8 +29,24 @@ from PyQLogger.Post import Post
 from PyQLogger.ToolBarManager import PluginFactory
 from PyQLogger import BG, UI
 from PyQLogger.Network import Network, netOp
+from Speller import Speller
 
 class MainDialog(QDialog):
+    def spellTimer(self):
+        scin = self.sourceEditor
+        text = unicode ( scin.text() )
+        if text :
+            # clear indicators
+            scin.SendScintilla(scin.SCI_STARTSTYLING, 0, scin.INDIC2_MASK)
+            scin.SendScintilla(scin.SCI_SETSTYLING , len(text), 0)
+            # set indicator to squigly
+            scin.SendScintilla(scin.SCI_INDICSETSTYLE,2,scin.INDIC_SQUIGGLE)
+            scin.SendScintilla(scin.SCI_INDICSETFORE,2,0x00ffff)
+            self.speller_result = self.speller.load( unicode ( text ) )
+            for result in self.speller_result.values():
+                scin.SendScintilla(scin.SCI_STARTSTYLING,result["word"].start(), scin.INDIC2_MASK)
+                scin.SendScintilla(scin.SCI_SETSTYLING,result["word"].end()-result["word"].start(), scin.INDIC2_MASK)
+
     def getPage(self, title):
         if not title: 
             return self.toolbarTab.page(0)
@@ -212,7 +226,7 @@ class MainDialog(QDialog):
             
     def init_ui(self, settings):
         UI.API.setPreviewWidget(self)
-        UI.API.setEditWidget(self)
+        UI.API.setEditWidget(self)             
         self.current_post = None
         self.cached_password = None
         self.cached_atomblog = None
@@ -231,12 +245,49 @@ class MainDialog(QDialog):
         self.bMenu = QPopupMenu()
         self.bMenu.insertItem("Delete post", 1)
         self.bMenu.insertItem("Export post", 2)
+        self.connect(self.sourceEditor, PYSIGNAL("aboutToShowMenu"), self.showMenu)
         self.connect(self.aMenu, SIGNAL("activated(int)"), self.pubPopup)
         self.connect(self.bMenu, SIGNAL("activated(int)"), self.savePopup)
         self.frameCat.hide()
         self.network = Network(self)
         self.network.start()
+
+    def handleContextMenu(self):
+        self.sourceEditor.updateDefaultMenu(self.editMenu)
+
+    def handleSpellMenu(self, idx):
+        res = self.speller_result[self.curword]
+        newword = res["sug"][idx]
+        self.speller.ReplaceWord(res["idx"],newword)
+        self.sourceEditor.setText(self.speller.text)
         
+    def fillSpellerMenu(self, start, end , parent):
+        self.curword = unicode(self.sourceEditor.text())[start:end]        
+        if self.speller_result.has_key(self.curword):
+            idx = 0
+            Menu = QPopupMenu(parent)
+            for s in self.speller_result[self.curword]["sug"][:15]:
+                Menu.insertItem(s, idx)
+                idx += 1
+            self.connect(Menu, SIGNAL('activated(int)'), self.handleSpellMenu)
+            parent.insertSeparator()
+            parent.insertItem("Corrections",Menu)
+            
+    def showMenu(self, evt):
+        sci = self.sourceEditor
+        gpos = evt.globalPos()
+        pos = evt.pos()
+        position = sci.SendScintilla(sci.SCI_POSITIONFROMPOINTCLOSE,pos.x(),pos.y())
+        self.editMenu = QPopupMenu(self.sourceEditor)
+        self.connect(self.editMenu, SIGNAL('aboutToShow()'), self.handleContextMenu)
+        sci.fillDefaultMenu(self.editMenu)
+        if position > -1 :
+            end = sci.SendScintilla( sci.SCI_WORDENDPOSITION , position, True)
+            start = sci.SendScintilla( sci.SCI_WORDSTARTPOSITION , position, True)
+            self.fillSpellerMenu(start,end,self.editMenu)
+        self.editMenu.popup(gpos)
+        
+    
     def init(self, settings, forms, account, password, manager):
         self.manager = manager
         self.reload = False
@@ -244,6 +295,10 @@ class MainDialog(QDialog):
         self.password = password
         self.settings = settings        
         self.forms = forms
+        self.speller = Speller(self)
+        timer = QTimer( self )
+        self.connect( timer, SIGNAL("timeout()"), self.spellTimer )
+        timer.start( 5000 )        
         self.comboBlogs.clear()
         for blog in self.account.Blogs:
             self.comboBlogs.insertItem(blog.Name)
