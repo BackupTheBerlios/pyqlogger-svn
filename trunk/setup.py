@@ -1,3 +1,4 @@
+# $Id$
 """PyQLogger: PyQt Blogger Client
 
 This is a QT GUI written in Python for posting to Blogger using

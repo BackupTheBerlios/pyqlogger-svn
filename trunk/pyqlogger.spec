@@ -1,3 +1,4 @@
+# $Id$
 %define _name           pyqlogger
 %define _version        1.3.1
 %define _rel            1

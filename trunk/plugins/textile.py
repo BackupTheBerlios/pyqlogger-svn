@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+# $Id$
 # _*_ coding: latin1 _*_
 
 """This is Textile

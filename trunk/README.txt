@@ -1,3 +1,5 @@
+$Id$
+
 PyQLogger - PyQT Blogger Client by Reflog
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
