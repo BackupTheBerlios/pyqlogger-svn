@@ -27,6 +27,7 @@ from ToolBar import *
 from OSD import OSD
 from SyntaxHighlight import HTMLSyntax
 from BG import *
+from ToolBarManager import *
 
 class MainForm_Impl(MainForm):
 
@@ -37,7 +38,13 @@ class MainForm_Impl(MainForm):
 		self.current_post = None
 		self.cached_password = None
 		self.cached_atomblog = None
-		self.toobarMap = initToolbar(self)
+		self.plugins = PluginFactory(os.path.expanduser("~/.pyqlogger/plugins/"),self)
+		initToolbar(self,self.plugins)
+		tabLayout = QHBoxLayout(self.tab,11,6,"tabLayout")
+		tabLayout.setAutoAdd( True )
+		tabLayout2 = QHBoxLayout(self.tab_2,11,6,"tabLayout2")
+		tabLayout2.setAutoAdd( True )
+		self.plugins.fillToolbar(self.tabWidget3)
 		self.osd = OSD()
 		self.bg = BackGround()
 		self.workers = BackGround()
@@ -121,6 +128,7 @@ class MainForm_Impl(MainForm):
 			res = QMessageBox.question(self,"Question","Current post is unsaved. Are you sure you want to exit?",QMessageBox.Yes,QMessageBox.No)
 			if res == QMessageBox.No:
 				return
+		self.SaveAll()
 		qApp.closeAllWindows()
 
 	
@@ -300,11 +308,3 @@ class MainForm_Impl(MainForm):
 			if self.PublishedPosts == None:
 				self.PublishedPosts = {}
 			self.PublishedPosts[self.settings["selectedblog"]] = []
-		
-
-	def tb_clicked(self):
-		sender = self.sender()
-		if self.toobarMap.has_key(sender):
-			self.toobarMap[sender](self)
-
-
