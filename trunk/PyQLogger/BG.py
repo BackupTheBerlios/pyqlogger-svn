@@ -79,6 +79,7 @@ class blogFetchWorker(bgWorker):
         try:
             blogs = self.atomBlog.getBlogs()
             self.result = len(blogs)
+            p.settings.delblogs()
             p.settings.addblogs(blogs)
         except Exception, inst:
             self.result = None

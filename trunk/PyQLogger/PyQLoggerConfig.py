@@ -26,13 +26,6 @@ class PyQLoggerConfig (ConfigParser):
     
     def __init__(self, defaults=None):
         ConfigParser.__init__(self, defaults)
-
-    def write(self, fp):
-        if fp:
-            try:
-                ConfigParser.write(self, fp)
-            except Exception, inst:
-                print inst
     
     def read(self, configfile):
     # do some checking to see if there's a new style file available
@@ -54,11 +47,11 @@ class PyQLoggerConfig (ConfigParser):
             print inst
             return
     
-        # This is soooooo nasty, way too many if statements....
         for key in config_hash.keys():
             if key == "blogs":
                 if len(config_hash["blogs"]) > 0:
                     bloglist = config_hash["blogs"]
+                    self.delblogs()
                     self.addblogs(bloglist)
                     if config_hash.has_key("selectedblog"):
                         blogid = self.getblogID(unicode(config_hash["selectedblog"]))
@@ -96,12 +89,27 @@ class PyQLoggerConfig (ConfigParser):
         try:
             fd = open(configfile, "w")
             self.write(fd)
-            fp.close()
+            fd.close()
         except Exception, inst:
+            print "savesettings: %s" % inst
             # We need better error handling here, user needs to be notified
             pass
         return
+    
+    def remove_section(self, section):
+        try:
+            ConfigParser.remove_section(self, section)
+        except Exception, inst:
+            print "remove_section: %s" % inst
         
+    def delblogs(self):
+        blogids = str(self.get("main", "blogs"))
+        if blogids:
+            for blogid in blogids.split(';'):
+                self.remove_section(blogid)
+        self.set("main", "blogs", "")
+        self.set("main", "selectedblog", "")
+    
     def addblogs(self, blogdict):
         if len(blogdict) < 1:
             return

@@ -111,7 +111,8 @@ class SetupWizardForm_Impl(SetupWizardForm):
             url = bc.getHomepage(self.blogs[unicode(self.comboBlogs.currentText())]['id'])
             if url:
                 self.editURL.setText(url)
-        except:
+        except Exception, inst:
+            print "btnFetchUrl_clicked: %s" % inst
             QMessageBox.critical(self,"Error","Couldn't fetch blog's URL!")
             pass
     

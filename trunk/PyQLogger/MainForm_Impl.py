@@ -195,6 +195,7 @@ class MainForm_Impl(MainForm):
                 self.settings.write(os.path.expanduser("~/.pyqlogger/settings.ini"))
                 self.init()
             except Exception, inst: 
+                print "btnSettings_clicked: %s" % inst
                 QMessageBox.critical(self,"Error","Cannot write configuration!")
                 QApplication.exit()
     
@@ -247,8 +248,10 @@ class MainForm_Impl(MainForm):
             f = open(filename)
             h = pickle.load(f)
             f.close()
-        except:
+        except Exception, inst:
+            print "ReadSettings: %s" % inst
             return None
+            
         if not h.has_key("newstyle"):
             new_hash = {}
             for blogid in self.settings.get("main", "blogs").split(';'):
@@ -265,7 +268,8 @@ class MainForm_Impl(MainForm):
             self.settings.write(os.path.expanduser("~/.pyqlogger/settings.ini"))
             self.WriteSettings(os.path.expanduser("~/.pyqlogger/drafts"),self.SavedPosts)
             self.WriteSettings(os.path.expanduser("~/.pyqlogger/posts"),self.PublishedPosts)
-        except:
+        except Exception, inst:
+            print "SaveAll: %s" % inst
             QMessageBox.critical(self,"Error","Cannot write configuration!")
 
     def MainForm_destroyed(self,a0):
