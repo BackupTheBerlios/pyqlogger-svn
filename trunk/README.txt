@@ -31,3 +31,4 @@ Detlev Offenbach for Eric3, the most excellent Python IDE: http://www.die-offenb
 David Boddie and others at PyKDE mailing list for help with QSyntaxHighlighter
 BerliOS project for hosting
 Mark Pilgrim for FeedParser, PyTextile and his awesome book DiveIntoPython
+Xander Soldaat, for his patches and words of encouragment
