@@ -79,6 +79,7 @@ class UrlDialog_Impl(UrlDialog):
             if self.targetList.has_key(unicode(self.comboOpen.currentText())):
                 self.parent.settings.set("URL Dialog", "target", unicode(self.comboOpen.currentText()))
         else:
-            self.parent.settings.remove_option("URL Dialog", "target")
+            if self.parent.settings.has_option("URL Dialog", "target"):
+                self.parent.settings.remove_option("URL Dialog", "target")
             
         UrlDialog.accept(self)

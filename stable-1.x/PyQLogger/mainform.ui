@@ -800,12 +800,6 @@ Python:## Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  
         <slot>comboBlogs_activated(const QString&amp;)</slot>
     </connection>
     <connection>
-        <sender>btnExit</sender>
-        <signal>clicked()</signal>
-        <receiver>MainForm</receiver>
-        <slot>btnExit_clicked()</slot>
-    </connection>
-    <connection>
         <sender>btnPublish</sender>
         <signal>clicked()</signal>
         <receiver>MainForm</receiver>
@@ -830,12 +824,6 @@ Python:## Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  
         <slot>listSavedPosts_doubleClicked(QListBoxItem*)</slot>
     </connection>
     <connection>
-        <sender>MainForm</sender>
-        <signal>&lt;No Signal&gt;</signal>
-        <receiver>MainForm</receiver>
-        <slot>MainForm_destroyed(QObject*)</slot>
-    </connection>
-    <connection>
         <sender>listPublishedPosts</sender>
         <signal>contextMenuRequested(QListBoxItem*,const QPoint&amp;)</signal>
         <receiver>MainForm</receiver>
@@ -852,12 +840,6 @@ Python:## Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  
         <signal>textChanged()</signal>
         <receiver>MainForm</receiver>
         <slot>sourceEditor_textChanged()</slot>
-    </connection>
-    <connection>
-        <sender>MainForm</sender>
-        <signal>destroyed(QObject*)</signal>
-        <receiver>MainForm</receiver>
-        <slot>MainForm_destroyed(QObject*)</slot>
     </connection>
     <connection>
         <sender>comboCats</sender>
@@ -901,6 +883,12 @@ Python:## Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  
         <receiver>MainForm</receiver>
         <slot>tabWidget2_currentChanged(QWidget*)</slot>
     </connection>
+    <connection>
+        <sender>btnExit</sender>
+        <signal>clicked()</signal>
+        <receiver>MainForm</receiver>
+        <slot>close()</slot>
+    </connection>
 </connections>
 <tabstops>
     <tabstop>editPostTitle</tabstop>
@@ -915,10 +903,12 @@ Python:## Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  
     <tabstop>tabWidget2</tabstop>
     <tabstop>sourcePreview</tabstop>
 </tabstops>
+<includes>
+    <include location="local" impldecl="in implementation">mainform.ui.h</include>
+</includes>
 <slots>
     <slot>btnNewPost_clicked()</slot>
     <slot>btnDeletePost_clicked()</slot>
-    <slot>btnExit_clicked()</slot>
     <slot>btnPublish_clicked()</slot>
     <slot>btnSavePost_clicked()</slot>
     <slot>btnRefreshBlogs_clicked()</slot>
@@ -928,14 +918,13 @@ Python:## Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  
     <slot>comboBlogs_activated( const QString &amp; )</slot>
     <slot>listPublishedPosts_doubleClicked( QListBoxItem * )</slot>
     <slot>listSavedPosts_doubleClicked( QListBoxItem * )</slot>
-    <slot>MainForm_destroyed( QObject * )</slot>
     <slot>tb_clicked()</slot>
     <slot>listPublishedPosts_contextMenuRequested( QListBoxItem *, const QPoint &amp; )</slot>
     <slot>listSavedPosts_contextMenuRequested( QListBoxItem *, const QPoint &amp; )</slot>
     <slot>sourceEditor_textChanged()</slot>
     <slot>comboCats_activated( const QString &amp; )</slot>
     <slot>btnRefreshCat_clicked()</slot>
-    <slot>tabWidget2_currentChanged(QWidget*)</slot>
+    <slot>tabWidget2_currentChanged( QWidget * )</slot>
 </slots>
 <layoutdefaults spacing="6" margin="11"/>
 </UI>

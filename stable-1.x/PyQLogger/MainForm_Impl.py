@@ -149,16 +149,16 @@ class MainForm_Impl(MainForm):
         self.sourceEditor.setText("")
         self.current_post = None
         
-    def btnExit_clicked(self):
+    def closeEvent(self, e):
+	e.accept()
         if self.current_post:
             res = QMessageBox.question(self, "Question", "Current post is unsaved. Are you sure you want to exit?",
                                    QMessageBox.Yes, QMessageBox.No)
             if res == QMessageBox.No:
-                return
+                e.ignore()
         self.SaveAll()
-        qApp.closeAllWindows()
 
-    
+
     def btnPublish_clicked(self):       
         title = unicode(self.editPostTitle.text())
         if title:
@@ -287,8 +287,7 @@ class MainForm_Impl(MainForm):
             print "SaveAll: %s" % inst
             QMessageBox.critical(self, "Error", "Cannot write configuration!")
 
-    def MainForm_destroyed(self, a0):
-        self.SaveAll()
+
         
     def __getPassword(self):
         if not self.cached_password:

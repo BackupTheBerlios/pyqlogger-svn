@@ -162,6 +162,8 @@ try:
         parent.sourceEditor.setUtf8(1)
         parent.sourceEditor.SendScintilla(QextScintilla.SCI_SETWRAPMODE, QextScintilla.SC_WRAP_WORD)
         parent.sourceEditor.setLexer(QextScintillaLexerHTML(parent))
+        parent.sourceEditor.SendScintilla(QextScintilla.SCI_ASSIGNCMDKEY,QextScintilla.SCK_END,QextScintilla.SCI_LINEENDWRAP)
+        parent.sourceEditor.SendScintilla(QextScintilla.SCI_ASSIGNCMDKEY,QextScintilla.SCK_HOME, QextScintilla.SCI_VCHOMEWRAP)
         setMonospaced(parent.sourceEditor)
         parent.Source.layout().addWidget(parent.sourceEditor)
         parent.connect(parent.sourceEditor, SIGNAL("textChanged()"), parent.sourceEditor_textChanged)

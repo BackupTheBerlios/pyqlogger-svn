@@ -1727,7 +1727,7 @@ class MainForm(QDialog):
 
         self.connect(self.btnRefreshBlogs,SIGNAL("clicked()"),self.btnRefreshBlogs_clicked)
         self.connect(self.comboBlogs,SIGNAL("activated(const QString&)"),self.comboBlogs_activated)
-        self.connect(self.btnExit,SIGNAL("clicked()"),self.btnExit_clicked)
+        self.connect(self.btnExit,SIGNAL("clicked()"),self.close)
         self.connect(self.btnPublish,SIGNAL("clicked()"),self.btnPublish_clicked)
         self.connect(self.btnSavePost,SIGNAL("clicked()"),self.btnSavePost_clicked)
         self.connect(self.listPublishedPosts,SIGNAL("doubleClicked(QListBoxItem*)"),self.listPublishedPosts_doubleClicked)
