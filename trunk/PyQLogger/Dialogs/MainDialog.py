@@ -244,10 +244,11 @@ class MainDialog(QDialog):
         self.aMenu.insertItem("Export post", 2)
         self.bMenu = QPopupMenu()
         self.bMenu.insertItem("Delete post", 1)
-        self.bMenu.insertItem("Export post", 2)
-        self.connect(self.sourceEditor, PYSIGNAL("aboutToShowMenu"), self.showMenu)
+        self.bMenu.insertItem("Export post", 2)        
         self.connect(self.aMenu, SIGNAL("activated(int)"), self.pubPopup)
         self.connect(self.bMenu, SIGNAL("activated(int)"), self.savePopup)
+        if settings.UI_Settings.EnableQScintilla:
+            self.connect(self.sourceEditor, PYSIGNAL("aboutToShowMenu"), self.showMenu)
         self.frameCat.hide()
         self.network = Network(self)
         self.network.start()
@@ -256,10 +257,13 @@ class MainDialog(QDialog):
         self.sourceEditor.updateDefaultMenu(self.editMenu)
 
     def handleSpellMenu(self, idx):
-        res = self.speller_result[self.curword]
-        newword = res["sug"][idx]
-        self.speller.ReplaceWord(res["idx"],newword)
-        self.sourceEditor.setText(self.speller.text)
+        if idx == 99:
+            self.speller.speller.add_to_personal(self.curword)
+        else:
+            res = self.speller_result[self.curword]
+            newword = res["sug"][idx]
+            self.speller.ReplaceWord(res["idx"],newword)
+            self.sourceEditor.setText(self.speller.text)
         
     def fillSpellerMenu(self, start, end , parent):
         self.curword = unicode(self.sourceEditor.text())[start:end]        
@@ -269,6 +273,8 @@ class MainDialog(QDialog):
             for s in self.speller_result[self.curword]["sug"][:15]:
                 Menu.insertItem(s, idx)
                 idx += 1
+            Menu.insertSeparator()
+            Menu.insertItem("Add",99)
             self.connect(Menu, SIGNAL('activated(int)'), self.handleSpellMenu)
             parent.insertSeparator()
             parent.insertItem("Corrections",Menu)
@@ -295,10 +301,16 @@ class MainDialog(QDialog):
         self.password = password
         self.settings = settings        
         self.forms = forms
-        self.speller = Speller(self)
-        timer = QTimer( self )
-        self.connect( timer, SIGNAL("timeout()"), self.spellTimer )
-        timer.start( 5000 )        
+        if settings.Speller.Enabled and settings.UI_Settings.EnableQScintilla:
+            try:
+                import aspell
+                self.speller = Speller(settings)
+                timer = QTimer( self )
+                self.connect( timer, SIGNAL("timeout()"), self.spellTimer )
+                timer.start( 5000 )        
+            except Exception , e:
+                print "Asked to use ASpell when it's not installed! Disabling..."
+                settings.Speller.Enabled = 0                
         self.comboBlogs.clear()
         for blog in self.account.Blogs:
             self.comboBlogs.insertItem(blog.Name)

@@ -8,8 +8,8 @@
         <rect>
             <x>0</x>
             <y>0</y>
-            <width>402</width>
-            <height>355</height>
+            <width>423</width>
+            <height>330</height>
         </rect>
     </property>
     <property name="caption">
@@ -156,56 +156,169 @@
                         <property name="title">
                             <string>Event Notification Style</string>
                         </property>
-                        <widget class="QRadioButton">
+                        <vbox>
                             <property name="name">
-                                <cstring>rbOSD</cstring>
+                                <cstring>unnamed</cstring>
                             </property>
-                            <property name="geometry">
-                                <rect>
-                                    <x>11</x>
-                                    <y>53</y>
-                                    <width>334</width>
-                                    <height>23</height>
-                                </rect>
-                            </property>
-                            <property name="text">
-                                <string>On Screen Display</string>
-                            </property>
-                        </widget>
-                        <widget class="QRadioButton">
-                            <property name="name">
-                                <cstring>rbStatus</cstring>
-                            </property>
-                            <property name="geometry">
-                                <rect>
-                                    <x>11</x>
-                                    <y>24</y>
-                                    <width>334</width>
-                                    <height>23</height>
-                                </rect>
-                            </property>
-                            <property name="text">
-                                <string>Status Bar</string>
-                            </property>
-                        </widget>
+                            <widget class="QRadioButton">
+                                <property name="name">
+                                    <cstring>rbStatus</cstring>
+                                </property>
+                                <property name="text">
+                                    <string>Status Bar</string>
+                                </property>
+                            </widget>
+                            <widget class="QRadioButton">
+                                <property name="name">
+                                    <cstring>rbOSD</cstring>
+                                </property>
+                                <property name="text">
+                                    <string>On Screen Display</string>
+                                </property>
+                            </widget>
+                        </vbox>
                     </widget>
-                    <spacer>
+                    <widget class="QGroupBox">
                         <property name="name">
-                            <cstring>spacer17</cstring>
+                            <cstring>groupBox3</cstring>
                         </property>
-                        <property name="orientation">
-                            <enum>Vertical</enum>
+                        <property name="title">
+                            <string>Spell Checker</string>
                         </property>
-                        <property name="sizeType">
-                            <enum>Expanding</enum>
-                        </property>
-                        <property name="sizeHint">
-                            <size>
-                                <width>20</width>
-                                <height>141</height>
-                            </size>
-                        </property>
-                    </spacer>
+                        <vbox>
+                            <property name="name">
+                                <cstring>unnamed</cstring>
+                            </property>
+                            <widget class="QCheckBox">
+                                <property name="name">
+                                    <cstring>chkSpellEnable</cstring>
+                                </property>
+                                <property name="text">
+                                    <string>Enable Spell checker</string>
+                                </property>
+                            </widget>
+                            <widget class="QLayoutWidget">
+                                <property name="name">
+                                    <cstring>layout30</cstring>
+                                </property>
+                                <hbox>
+                                    <property name="name">
+                                        <cstring>unnamed</cstring>
+                                    </property>
+                                    <spacer>
+                                        <property name="name">
+                                            <cstring>spacer19</cstring>
+                                        </property>
+                                        <property name="orientation">
+                                            <enum>Horizontal</enum>
+                                        </property>
+                                        <property name="sizeType">
+                                            <enum>Fixed</enum>
+                                        </property>
+                                        <property name="sizeHint">
+                                            <size>
+                                                <width>51</width>
+                                                <height>20</height>
+                                            </size>
+                                        </property>
+                                    </spacer>
+                                    <widget class="QLabel">
+                                        <property name="name">
+                                            <cstring>textLabel9</cstring>
+                                        </property>
+                                        <property name="sizePolicy">
+                                            <sizepolicy>
+                                                <hsizetype>0</hsizetype>
+                                                <vsizetype>5</vsizetype>
+                                                <horstretch>0</horstretch>
+                                                <verstretch>0</verstretch>
+                                            </sizepolicy>
+                                        </property>
+                                        <property name="minimumSize">
+                                            <size>
+                                                <width>97</width>
+                                                <height>0</height>
+                                            </size>
+                                        </property>
+                                        <property name="text">
+                                            <string>Aspell prefix:</string>
+                                        </property>
+                                    </widget>
+                                    <widget class="QLineEdit">
+                                        <property name="name">
+                                            <cstring>edtSpellPrefix</cstring>
+                                        </property>
+                                        <property name="minimumSize">
+                                            <size>
+                                                <width>190</width>
+                                                <height>0</height>
+                                            </size>
+                                        </property>
+                                    </widget>
+                                </hbox>
+                            </widget>
+                            <widget class="QLayoutWidget">
+                                <property name="name">
+                                    <cstring>layout29</cstring>
+                                </property>
+                                <hbox>
+                                    <property name="name">
+                                        <cstring>unnamed</cstring>
+                                    </property>
+                                    <spacer>
+                                        <property name="name">
+                                            <cstring>spacer20</cstring>
+                                        </property>
+                                        <property name="orientation">
+                                            <enum>Horizontal</enum>
+                                        </property>
+                                        <property name="sizeType">
+                                            <enum>Fixed</enum>
+                                        </property>
+                                        <property name="sizeHint">
+                                            <size>
+                                                <width>51</width>
+                                                <height>20</height>
+                                            </size>
+                                        </property>
+                                    </spacer>
+                                    <widget class="QLabel">
+                                        <property name="name">
+                                            <cstring>textLabel10</cstring>
+                                        </property>
+                                        <property name="sizePolicy">
+                                            <sizepolicy>
+                                                <hsizetype>0</hsizetype>
+                                                <vsizetype>5</vsizetype>
+                                                <horstretch>0</horstretch>
+                                                <verstretch>0</verstretch>
+                                            </sizepolicy>
+                                        </property>
+                                        <property name="minimumSize">
+                                            <size>
+                                                <width>97</width>
+                                                <height>0</height>
+                                            </size>
+                                        </property>
+                                        <property name="text">
+                                            <string>Language:</string>
+                                        </property>
+                                    </widget>
+                                    <widget class="QLineEdit">
+                                        <property name="name">
+                                            <cstring>edtSpellLanguage</cstring>
+                                        </property>
+                                        <property name="minimumSize">
+                                            <size>
+                                                <width>190</width>
+                                                <height>0</height>
+                                            </size>
+                                        </property>
+                                    </widget>
+                                </hbox>
+                            </widget>
+                        </vbox>
+                    </widget>
                 </vbox>
             </widget>
             <widget class="QWidget">
@@ -219,26 +332,32 @@
                     <property name="name">
                         <cstring>unnamed</cstring>
                     </property>
-                    <property name="spacing">
-                        <number>12</number>
-                    </property>
                     <widget class="QLabel">
                         <property name="name">
                             <cstring>textLabel1_2</cstring>
                         </property>
                         <property name="sizePolicy">
                             <sizepolicy>
-                                <hsizetype>5</hsizetype>
+                                <hsizetype>1</hsizetype>
                                 <vsizetype>1</vsizetype>
                                 <horstretch>0</horstretch>
                                 <verstretch>0</verstretch>
                             </sizepolicy>
                         </property>
+                        <property name="maximumSize">
+                            <size>
+                                <width>320</width>
+                                <height>80</height>
+                            </size>
+                        </property>
                         <property name="text">
                             <string>&lt;b&gt;Please note:&lt;/b&gt; these options control the core of the application and therefor take effect only after restart!</string>
                         </property>
                         <property name="scaledContents">
-                            <bool>false</bool>
+                            <bool>true</bool>
+                        </property>
+                        <property name="alignment">
+                            <set>WordBreak|AlignTop</set>
                         </property>
                     </widget>
                     <widget class="QCheckBox">
@@ -677,6 +796,12 @@
         <receiver>SettingsDialog</receiver>
         <slot>lvPlugins_selectionChanged(QListViewItem*)</slot>
     </connection>
+    <connection>
+        <sender>chkSpellEnable</sender>
+        <signal>stateChanged(int)</signal>
+        <receiver>SettingsDialog</receiver>
+        <slot>chkSpellEnable_stateChanged(int)</slot>
+    </connection>
 </connections>
 <slots>
     <slot>btnAddAccount_clicked()</slot>
@@ -690,6 +815,7 @@
     <slot>lbAccounts_selected(int)</slot>
     <slot>chkKDE_stateChanged(int)</slot>
     <slot>lvPlugins_selectionChanged(QListViewItem*)</slot>
+    <slot>chkSpellEnable_stateChanged(int)</slot>
 </slots>
 <layoutdefaults spacing="6" margin="11"/>
 </UI>

@@ -21,7 +21,6 @@
 """
 Simple Spell Checker using ASpell
 """
-from qt import *
 import re,sys
 
 class Speller:
@@ -32,24 +31,10 @@ class Speller:
     _upperRegex = re.compile(r"[^A-Z]")
     _wordEx = re.compile(r"\b\w+\b", re.MULTILINE|re.UNICODE|re.LOCALE)
 
-    def __init__(self,parent):
-        self.parent = parent
-        self.notcapable = False
-        try:
-            import aspell
-        except:
-            QMessageBox.warning(None,
-                self.trUtf8("Error"),
-                self.trUtf8("""Seems like you don't have ASpell bindings installed!\nYou can get it from http://prdownloads.sourceforge.net/uncpythontools/aspell-1.0.zip?download"""))
-            self.notcapable = True
-            return
-        try:
-            self.speller = aspell.spell_checker(prefix='/usr')
-        except:
-            QMessageBox.warning(None,
-                self.trUtf8("Error"),
-                self.trUtf8("""ASpell module couldn't be initialized!"""))
-            self.notcapable = True
+    def __init__(self, settings):
+        import aspell
+        self.speller = aspell.spell_checker(prefix=settings.Speller.Prefix,
+                                            lang=settings.Speller.Language)
 
     def CalculateWords(self):
         """Calculates the words from the Text property"""
@@ -113,35 +98,6 @@ class Speller:
             self.keepChecking(ret)
 
 
+#    self.speller.add_to_personal(word)
 
-    def btnAdd_clicked(self):
-        self.speller.add_to_personal(self._words [ self.cur_word ].group(0))
-        self.cur_word += 1
-        self.viewText.setText(self.text)
-        self.keepChecking()
-
-    def btnReplace_clicked(self):
-        if unicode(self.editReplace.text()):
-            self.ReplaceWord(unicode(self.editReplace.text()))
-            self.cur_word += 1
-            self.viewText.setText(self.text)
-            self.keepChecking()
-
-    def btnReplaceAll_clicked(self):
-        if unicode(self.editReplace.text()):
-            d = self._words [ self.cur_word ].group(0)
-            self.btnReplace_clicked()
-            # check if the user made he's own replacement
-            if not self.listVariants.findItem(self.editReplace.text(),Qt.ExactMatch):
-                self.speller.store_replacement(d,unicode(self.editReplace.text()))
-            self.cur_word += 1
-            self.viewText.setText(self.text)
-            self.keepChecking()
-
-
-    def btnCancel_clicked(self):
-        self.reject()
-
-    def listVariants_doubleClicked(self,a0):
-        self.editReplace.setText(a0.text())
 

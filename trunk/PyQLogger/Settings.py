@@ -29,12 +29,18 @@ class UI(XMLObject):
     EnableQScintilla =  IntegerAttribute(default=1,optional=True)
     Notification = IntegerAttribute(default=0)
 
+class SpellerSettings(XMLObject):
+    Enabled  = IntegerAttribute(default=0)
+    Language = TextNode(default="en_US")
+    Prefix   = TextNode(default="/usr")
+
 class Settings(XMLObject):
     """ Class for storing and retrieving ALL information about PyQLogger """
         
-    UI_Settings = ItemNode('UI',optional=True) # GUI settings
-    Accounts = ListNode('Account')                  # list of accounts
+    UI_Settings = ItemNode('UI') # GUI settings
+    Accounts = ListNode('Account')             # list of accounts
     AutoLogin = TextNode(optional=True)        # which account to autologin
+    Speller   = ItemNode("SpellerSettings")
     
     def accountByName(self,name):
         """ searches the list of accouns, and returns one by it's .Name """
@@ -51,7 +57,7 @@ class Settings(XMLObject):
                 return XMLObject.instanceFromXml(open(file).read())
             except Exception, e:
                 print "Couldn't read settings. Either empty of borken! (%s)"%(str(e))
-        return Settings(UI_Settings=UI())
+        return Settings(UI_Settings=UI(),Speller=SpellerSettings())
             
     load = staticmethod(load)
     

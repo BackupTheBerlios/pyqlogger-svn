@@ -70,6 +70,10 @@ class SettingsDialog(QDialog):
         self.chkDCOP.setChecked(bool(settings.UI_Settings.EnableDCOP))
         self.chkTray.setChecked(bool(settings.UI_Settings.EnableTray))
         self.chkKDE_stateChanged(0)
+        self.chkSpellEnable.setChecked(bool(settings.Speller.Enabled))
+        self.edtSpellPrefix.setText(str(settings.Speller.Prefix))
+        self.edtSpellLanguage.setText(str(settings.Speller.Language))
+        self.chkSpellEnable_stateChanged(0)
         self.chkScintilla.setChecked(bool(settings.UI_Settings.EnableQScintilla))
         if settings.UI_Settings.Notification == 0:
             self.rbOSD.setChecked(True)
@@ -114,10 +118,17 @@ class SettingsDialog(QDialog):
     def chkKDE_stateChanged(self, ins):
         self.chkTray.setEnabled(self.chkKDE.isChecked())
         self.chkDCOP.setEnabled(self.chkKDE.isChecked())
+
+    def chkSpellEnable_stateChanged(self, ins):
+        self.edtSpellPrefix.setEnabled(self.chkSpellEnable.isChecked())
+        self.edtSpellLanguage.setEnabled(self.chkSpellEnable.isChecked())
         
     def accept(self):
         #update gui changes
         self.settings.UI_Settings.EnableKde = int(self.chkKDE.isChecked())
+        self.settings.Speller.Enables = int(self.chkSpellEnable.isChecked())
+        self.settings.Speller.Prefix = self.edtSpellPrefix.text()
+        self.settings.Speller.Language = self.edtSpellLanguage.text()
         self.settings.UI_Settings.EnableTray = int(self.chkTray.isChecked())
         self.settings.UI_Settings.EnableDCOP = int(self.chkDCOP.isChecked())
         self.settings.UI_Settings.EnableQScintilla = int(self.chkScintilla.isChecked())

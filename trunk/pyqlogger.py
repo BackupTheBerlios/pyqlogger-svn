@@ -26,7 +26,7 @@ try:
     import psyco
     psyco.profile()
 except:
-    print 'Psyco not found, ignoring it (though it''s highly recommended to install it!'
+    print 'Psyco not found, ignoring it (though it''s highly recommended to install it!)'
 
 try:
     from qt import QObject, SIGNAL, SLOT,QSplashScreen, QPixmap, qApp , Qt,QDialog,QMessageBox
