@@ -362,14 +362,6 @@
                     </widget>
                     <widget class="QCheckBox">
                         <property name="name">
-                            <cstring>chkScintilla</cstring>
-                        </property>
-                        <property name="text">
-                            <string>Enable QScintilla Support</string>
-                        </property>
-                    </widget>
-                    <widget class="QCheckBox">
-                        <property name="name">
                             <cstring>chkKDE</cstring>
                         </property>
                         <property name="text">
@@ -613,6 +605,112 @@
                     </widget>
                 </vbox>
             </widget>
+            <widget class="QWidget">
+                <property name="name">
+                    <cstring>pageTemplates</cstring>
+                </property>
+                <attribute name="title">
+                    <string>Templates</string>
+                </attribute>
+                <vbox>
+                    <property name="name">
+                        <cstring>unnamed</cstring>
+                    </property>
+                    <widget class="QLabel">
+                        <property name="name">
+                            <cstring>textLabel1_3</cstring>
+                        </property>
+                        <property name="text">
+                            <string>Available Templates:</string>
+                        </property>
+                    </widget>
+                    <widget class="QLayoutWidget">
+                        <property name="name">
+                            <cstring>layout24_2</cstring>
+                        </property>
+                        <hbox>
+                            <property name="name">
+                                <cstring>unnamed</cstring>
+                            </property>
+                            <widget class="QListBox">
+                                <property name="name">
+                                    <cstring>lbTemplates</cstring>
+                                </property>
+                            </widget>
+                            <widget class="QLayoutWidget">
+                                <property name="name">
+                                    <cstring>layout23_2</cstring>
+                                </property>
+                                <vbox>
+                                    <property name="name">
+                                        <cstring>unnamed</cstring>
+                                    </property>
+                                    <widget class="QLayoutWidget">
+                                        <property name="name">
+                                            <cstring>layout14_2</cstring>
+                                        </property>
+                                        <vbox>
+                                            <property name="name">
+                                                <cstring>unnamed</cstring>
+                                            </property>
+                                            <widget class="QPushButton">
+                                                <property name="name">
+                                                    <cstring>btnAddTpl</cstring>
+                                                </property>
+                                                <property name="text">
+                                                    <string>Add</string>
+                                                </property>
+                                                <property name="iconSet">
+                                                    <iconset>image0</iconset>
+                                                </property>
+                                            </widget>
+                                            <widget class="QPushButton">
+                                                <property name="name">
+                                                    <cstring>btnEditTpl</cstring>
+                                                </property>
+                                                <property name="text">
+                                                    <string>Edit</string>
+                                                </property>
+                                                <property name="iconSet">
+                                                    <iconset>image1</iconset>
+                                                </property>
+                                            </widget>
+                                            <widget class="QPushButton">
+                                                <property name="name">
+                                                    <cstring>btnDelTpl</cstring>
+                                                </property>
+                                                <property name="text">
+                                                    <string>Delete</string>
+                                                </property>
+                                                <property name="iconSet">
+                                                    <iconset>image2</iconset>
+                                                </property>
+                                            </widget>
+                                        </vbox>
+                                    </widget>
+                                    <spacer>
+                                        <property name="name">
+                                            <cstring>spacer7_2</cstring>
+                                        </property>
+                                        <property name="orientation">
+                                            <enum>Vertical</enum>
+                                        </property>
+                                        <property name="sizeType">
+                                            <enum>Expanding</enum>
+                                        </property>
+                                        <property name="sizeHint">
+                                            <size>
+                                                <width>20</width>
+                                                <height>81</height>
+                                            </size>
+                                        </property>
+                                    </spacer>
+                                </vbox>
+                            </widget>
+                        </hbox>
+                    </widget>
+                </vbox>
+            </widget>
         </widget>
         <widget class="QLayoutWidget">
             <property name="name">
@@ -665,9 +763,6 @@
                     </property>
                     <property name="text">
                         <string>&amp;OK</string>
-                    </property>
-                    <property name="accel">
-                        <string></string>
                     </property>
                     <property name="autoDefault">
                         <bool>true</bool>
@@ -802,6 +897,36 @@
         <receiver>SettingsDialog</receiver>
         <slot>chkSpellEnable_stateChanged(int)</slot>
     </connection>
+    <connection>
+        <sender>rbOSD</sender>
+        <signal>stateChanged(int)</signal>
+        <receiver>SettingsDialog</receiver>
+        <slot>rbOSD_stateChanged(int)</slot>
+    </connection>
+    <connection>
+        <sender>btnAddTpl</sender>
+        <signal>clicked()</signal>
+        <receiver>SettingsDialog</receiver>
+        <slot>btnAddTpl_clicked()</slot>
+    </connection>
+    <connection>
+        <sender>btnEditTpl</sender>
+        <signal>clicked()</signal>
+        <receiver>SettingsDialog</receiver>
+        <slot>btnEditTpl_clicked()</slot>
+    </connection>
+    <connection>
+        <sender>btnDelTpl</sender>
+        <signal>clicked()</signal>
+        <receiver>SettingsDialog</receiver>
+        <slot>btnDelTpl_clicked()</slot>
+    </connection>
+    <connection>
+        <sender>lbTemplates</sender>
+        <signal>selected(int)</signal>
+        <receiver>SettingsDialog</receiver>
+        <slot>lbTemplates_selected(int)</slot>
+    </connection>
 </connections>
 <slots>
     <slot>btnAddAccount_clicked()</slot>
@@ -816,6 +941,11 @@
     <slot>chkKDE_stateChanged(int)</slot>
     <slot>lvPlugins_selectionChanged(QListViewItem*)</slot>
     <slot>chkSpellEnable_stateChanged(int)</slot>
+    <slot>rbOSD_stateChanged(int)</slot>
+    <slot>btnAddTpl_clicked()</slot>
+    <slot>btnEditTpl_clicked()</slot>
+    <slot>btnDelTpl_clicked()</slot>
+    <slot>lbTemplates_selected(int)</slot>
 </slots>
 <layoutdefaults spacing="6" margin="11"/>
 </UI>

@@ -110,7 +110,7 @@ class MainDialog(QDialog):
         self.bMenu.setItemEnabled(2, a0 != None)
         self.bMenu.popup(a1)
 
-    
+
     def btnNewPost_clicked(self):
         if self.current_post:
             res = QMessageBox.question(self, "Question", 
@@ -121,25 +121,21 @@ class MainDialog(QDialog):
         self.editPostTitle.setText("")
         self.sourceEditor.setText("")
         self.current_post = None
-        
-    def accept(self):
-        self.reload = True
-        QDialog.accept(self)
-        
-    def reject(self):
+
+    def closeEvent(self, event):
+        print "inside closeevent"+str(self.sender())
+        self.reload = self.sender() == self.btnRelogin
         if self.current_post:
             res = QMessageBox.question(self, "Question", 
                                    "Current post is unsaved. Are you sure you want to exit?",
                                    QMessageBox.Yes, QMessageBox.No)
             if res == QMessageBox.No:
+                event.ignore()
                 return
         self.SaveAll()
-        QDialog.reject(self)
+        event.accept()
 
-
-
-
-    def btnPublish_clicked(self):       
+    def btnPublish_clicked(self):
         title = unicode(self.editPostTitle.text())
         content = unicode(self.sourceEditor.text())
         if content:
@@ -152,23 +148,23 @@ class MainDialog(QDialog):
                 QMessageBox.warning(self, "Warning", "You forgot the post's title!")
         else:
             QMessageBox.warning(self, "Warning", "You cannot post an empty item!")
-    
+
     def btnSavePost_clicked(self):
         title = unicode(self.editPostTitle.text())
         if title:
             listitem = QListBoxText(self.listSavedPosts, title)
-            item = Post(Created=date.today(), Title=title,Content=unicode(self.sourceEditor.text()))                
+            item = Post(Created=date.today(), Title=title,Content=unicode(self.sourceEditor.text()))
             self.account.Blogs[self.account.SelectedBlog].Drafts.Data += [ item ]
             self.SavedItems [ listitem ] = item
         else:
             QMessageBox.warning(self, "Warning", "You forgot the post's title!")
-        
+
     def btnRefreshBlogs_clicked(self):
         self.network.enqueue(netOp("Fetching blogs...",BG.startFetchingBlogs,BG.doneFetchingBlogs))
-    
+
     def btnSettings_clicked(self):
         wnd = self.forms["Settings"]
-        wnd["Impl"].init(self.settings,self.forms,self.manager)
+        wnd["Impl"].init(self.settings, self.forms, self.manager, self.templates)
         if wnd["Class"].exec_loop() == QDialog.Accepted:
             try:
                 self.settings.save()
@@ -183,8 +179,8 @@ class MainDialog(QDialog):
             webbrowser.open_new(url)
         else:
             QMessageBox.warning(self, "Warning", "You don't have homepage configured!\nYou can do that in the Setup dialog.")
-            
-        
+
+
     def btnReloadFeed_clicked(self):
         self.network.enqueue(netOp("Fetching posts...",BG.startFetchingPosts,BG.doneFetchingPosts))
     
@@ -215,7 +211,7 @@ class MainDialog(QDialog):
 
     def sourceEditor_textChanged(self):
         """ this even should be connected to plugins """
-        pass
+        self.statusBar().message("test")
 
     def SaveAll(self):
         try:
@@ -224,9 +220,22 @@ class MainDialog(QDialog):
             print "SaveAll: %s" % inst
             QMessageBox.critical(self, "Error", "Cannot write configuration!")
             
+    def usersel(self, name, idx):
+        for tpl in self.templates.List:
+            if tpl.Name == name:
+                self.sourceEditor.insert( tpl.Content )
+                break
+
+    def showUserList(self):
+        words = [tpl.Name for tpl in self.templates.List ]
+        if words:
+            words.sort()
+            #self.sourceEditor.SendScintilla(self.sourceEditor.SCI_AUTOCSETSEPARATOR,"|","|")
+            self.sourceEditor.SendScintilla(self.sourceEditor.SCI_USERLISTSHOW, 1, str(" ".join(words)))
+
     def init_ui(self, settings):
         UI.API.setPreviewWidget(self)
-        UI.API.setEditWidget(self)             
+        UI.API.setEditWidget(self)
         self.current_post = None
         self.cached_password = None
         self.cached_atomblog = None
@@ -236,7 +245,7 @@ class MainDialog(QDialog):
         tabLayout2 = QHBoxLayout(self.toolbarTab.page(1), 11, 6, "tabLayout2")
         tabLayout2.setAutoAdd( True )
         initToolbar(self, self.plugins)
-        self.notifier = Notifier(self, settings.UI_Settings.Notification)
+        self.notifier = Notifier(self, settings.UI.Notification)
         if self.notifier.mode != 1:
             self.statusFrame.hide()
         self.aMenu = QPopupMenu()
@@ -247,8 +256,9 @@ class MainDialog(QDialog):
         self.bMenu.insertItem("Export post", 2)        
         self.connect(self.aMenu, SIGNAL("activated(int)"), self.pubPopup)
         self.connect(self.bMenu, SIGNAL("activated(int)"), self.savePopup)
-        if settings.UI_Settings.EnableQScintilla:
-            self.connect(self.sourceEditor, PYSIGNAL("aboutToShowMenu"), self.showMenu)
+        self.connect(self.sourceEditor, PYSIGNAL("aboutToShowMenu"), self.showMenu)
+        self.connect(self.sourceEditor, PYSIGNAL("aboutToShowUserlist"), self.showUserList)
+        self.connect(self.sourceEditor, SIGNAL("SCN_USERLISTSELECTION(const char *, int)"), self.usersel)
         self.frameCat.hide()
         self.network = Network(self)
         self.network.start()
@@ -294,14 +304,15 @@ class MainDialog(QDialog):
         self.editMenu.popup(gpos)
         
     
-    def init(self, settings, forms, account, password, manager):
+    def init(self, settings, forms, account, password, manager, templates):
+        self.templates = templates
         self.manager = manager
         self.reload = False
         self.account = account
         self.password = password
         self.settings = settings        
         self.forms = forms
-        if settings.Speller.Enabled and settings.UI_Settings.EnableQScintilla:
+        if settings.Speller.Enabled:
             try:
                 import aspell
                 self.speller = Speller(settings)
@@ -328,8 +339,6 @@ class MainDialog(QDialog):
         self.listPublishedPosts.clear()
         self.listSavedPosts.clear()
         selectedblog = self.account.Blogs [ self.account.SelectedBlog ]
-        bydate = lambda x,y: time.mktime(time.strptime(x.Created,'%Y-%m-%dT%H:%M:%SZ')) - time.mktime(time.strptime(y.Created,'%Y-%m-%dT%H:%M:%SZ'))
-        selectedblog.Drafts.Data.sort(bydate)
         for post in selectedblog.Drafts.Data:
             self.SavedItems [ QListBoxText(self.listSavedPosts, post.Title) ] = post
 

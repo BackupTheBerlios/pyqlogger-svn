@@ -1,23 +1,24 @@
 #! /usr/bin/python
 ## This file is part of PyQLogger.
-## 
-## Copyright (c) 2004 Eli Yukelzon a.k.a Reflog         
+##
+## Copyright (c) 2004 Eli Yukelzon a.k.a Reflog
 ##
 ## PyQLogger is free software; you can redistribute it and/or modify
 ## it under the terms of the GNU General Public License as published by
 ## the Free Software Foundation; either version 2 of the License, or
 ## (at your option) any later version.
-## 
+##
 ## PyQLogger is distributed in the hope that it will be useful,
 ## but WITHOUT ANY WARRANTY; without even the implied warranty of
 ## MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 ## GNU General Public License for more details.
-## 
+##
 ## You should have received a copy of the GNU General Public License
 ## along with PyQLogger; if not, write to the Free Software
 ## Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 from PyQLogger import UI,qt_ui_loader
 from PyQLogger import Settings
+from PyQLogger.Templates import Templates
 from PyQLogger.Plugins.Manager import Manager
 
 import sys,os
@@ -29,7 +30,8 @@ except:
     print 'Psyco not found, ignoring it (though it''s highly recommended to install it!)'
 
 try:
-    from qt import QObject, SIGNAL, SLOT,QSplashScreen, QPixmap, qApp , Qt,QDialog,QMessageBox
+    from qt import QObject, SIGNAL, SLOT,QSplashScreen, \
+                   QPixmap, qApp, Qt, QDialog, QMessageBox
 except ImportError, e:
     print """Could not locate the PyQt module.  Please make sure that
 you have installed PyQt for the version of Python that you are running."""
@@ -89,8 +91,11 @@ def load_forms(splash,app,settings):
     wnd = PluginSettingsDialog.PluginSettingsDialog()
     wnd_c = qt_ui_loader.create( 'UI/pluginsettingsdialog.ui', wnd,None,True )
     __FORMS__["PluginSettings"] = { "Class": wnd_c , "Impl": wnd }
-
-
+    splash.message( "Loading form: Template settings",alignflag )
+    qApp.processEvents();
+    wnd = QDialog()
+    wnd_c = qt_ui_loader.create( 'UI/templatesettingsdialog.ui', wnd, None,True )
+    __FORMS__["TemplateSettings"] = { "Class": wnd_c , "Impl": wnd }
 
 def main():
     if not os.path.exists(os.path.expanduser("~/.pyqlogger")):
@@ -99,7 +104,6 @@ def main():
     UI.prepareModule(settings)
     app =  UI.API.KQApplication(sys.argv, None)
     stat = UI.API.prepareCommandLine()    
-    #QObject.connect(app, SIGNAL("lastWindowClosed()"), app, SLOT("quit()"))
     pixmap = QPixmap( "splash.png" )
     splash = QSplashScreen( pixmap )
     splash.show()
@@ -109,6 +113,9 @@ def main():
     splash.message( "Loading plugins...",alignflag )
     qApp.processEvents()
     manager = Manager.load(__FORMS__["Main"]["Impl"])
+    splash.message( "Loading templates...",alignflag )
+    qApp.processEvents()
+    templates = Templates.load()
     del splash
     acc = None
     pwd = None
@@ -122,13 +129,14 @@ def main():
             if wnd["Impl"].init(settings,__FORMS__,manager):
                 if wnd["Class"].exec_loop() == QDialog.Accepted:
                     acc = wnd["Impl"].acc
-                    pwd = str(wnd["Impl"].edtPassword.text())       
+                    pwd = str(wnd["Impl"].edtPassword.text())
         if not acc or not pwd:
             break
         else:
             wnd = __FORMS__["Main"]
             acc.init()
-            wnd["Impl"].init(settings,__FORMS__,acc,pwd,manager)
+            wnd["Impl"].init(settings,__FORMS__, acc, pwd,\
+                             manager, templates)
             app.setMainWidget(wnd["Class"])
             wnd["Class"].show()
             #splash.finish(wnd["Class"])
@@ -138,7 +146,7 @@ def main():
             else:
                 break
 
-    
+
 
 if __name__ == '__main__':
     main()

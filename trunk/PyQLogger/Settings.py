@@ -21,12 +21,11 @@ from Blog import Blog
 from EaseXML import  XMLObject,TextNode,ListNode, IntegerAttribute,ItemNode,ChoiceNode
 import os
 
-class UI(XMLObject):
+class UISettings(XMLObject):
     """ Subclass representing settings related to GUI """
-    EnableTray =  IntegerAttribute(default=1,optional=True)
-    EnableKde =  IntegerAttribute(default=1,optional=True)
-    EnableDCOP =  IntegerAttribute(default=1,optional=True)
-    EnableQScintilla =  IntegerAttribute(default=1,optional=True)
+    EnableTray =  IntegerAttribute(default=1)
+    EnableKde =  IntegerAttribute(default=1)
+    EnableDCOP =  IntegerAttribute(default=1)
     Notification = IntegerAttribute(default=0)
 
 class SpellerSettings(XMLObject):
@@ -37,10 +36,10 @@ class SpellerSettings(XMLObject):
 class Settings(XMLObject):
     """ Class for storing and retrieving ALL information about PyQLogger """
         
-    UI_Settings = ItemNode('UI') # GUI settings
-    Accounts = ListNode('Account')             # list of accounts
-    AutoLogin = TextNode(optional=True)        # which account to autologin
-    Speller   = ItemNode("SpellerSettings")
+    UI        = ItemNode('UISettings')      # GUI settings
+    Accounts  = ListNode('Account')         # list of accounts
+    AutoLogin = TextNode(optional=True)     # which account to autologin
+    Speller   = ItemNode("SpellerSettings") # speller settings
     
     def accountByName(self,name):
         """ searches the list of accouns, and returns one by it's .Name """
@@ -57,7 +56,7 @@ class Settings(XMLObject):
                 return XMLObject.instanceFromXml(open(file).read())
             except Exception, e:
                 print "Couldn't read settings. Either empty of borken! (%s)"%(str(e))
-        return Settings(UI_Settings=UI(),Speller=SpellerSettings())
+        return Settings(UI=UISettings(),Speller=SpellerSettings())
             
     load = staticmethod(load)
     

@@ -63,52 +63,104 @@ icon = \
     "\x8a\x95\xb5\x00\x00\x00\x00\x49\x45\x4e\x44\xae" \
     "\x42\x60\x82"
 
-from qt import QApplication,Qt
+from qt import QApplication,Qt,SIGNAL, QFont,PYSIGNAL
+from qtext import QextScintilla, QextScintillaLexerHTML
 from SyntaxHighlight import HTMLSyntax    
 
 # define default functions
-class API:
-    def setPreviewWidget(parent):
-        pass
-        
-    def setPreview(parent, text):
-        parent.sourcePreview.setText(text)
-        
-    def prepareCommandLine():
-        import optparse
-        parser = optparse.OptionParser(usage="%prog [options]")
-        parser.add_option("--statusbar", "-s",
-                      action = "store_true",
-              help = "Status bar (default = disabled)")
-        (opt, arg) = parser.parse_args()
-        stat = opt.statusbar
-        return stat == True
-        
-    def setupTray(app, wnd):
-        pass
+try:
+    class API:
+        class KQApplication(QApplication):
+            def __init__(self, argv, opts):
+                QApplication.__init__(self, argv)
     
-    def setupDCOP(app, wnd):
-        pass
+        class MyQextScintilla(QextScintilla):
+            def keyPressEvent( self, evt ):
+                if evt.key() == Qt.Key_J and  (evt.state() & Qt.ControlButton):
+                    self.emit(PYSIGNAL('aboutToShowUserlist'), (evt,))
+                else:
+                    QextScintilla.keyPressEvent( self, evt )
     
-    def setEditWidget(parent): 
-        parent.sh = HTMLSyntax(parent.sourceEditor)
-        parent.sourceEditor.setTextFormat(Qt.PlainText)
+            def contextMenuEvent(self, evt):
+                evt.accept()
+                self.emit(PYSIGNAL('aboutToShowMenu'), (evt,))
     
-    class KQApplication(QApplication):
-        def __init__(self, argv, opts):
-            QApplication.__init__(self, argv)
+            def fillDefaultMenu(self, parent):
+                self.undoid = parent.insertItem("Undo",self.undo)  
+                self.redoid = parent.insertItem("Redo",self.redo)  
+                self.cutid = parent.insertItem("Cut",self.cut)  
+                self.copyid = parent.insertItem("Copy",self.copy)  
+                parent.insertItem("Paste",self.paste)  
+    
+            def updateDefaultMenu(self, parent):
+                parent.setItemEnabled(self.undoid,self.isUndoAvailable())
+                parent.setItemEnabled(self.redoid,self.isRedoAvailable())
+                parent.setItemEnabled(self.copyid,self.hasSelectedText())
+                parent.setItemEnabled(self.cutid,self.hasSelectedText())
+                
+    
+        def setEditWidget(parent):
+            def setMonospaced(editor):
+                try:
+                    rangeLow = range(editor.STYLE_DEFAULT)
+                except AttributeError:
+                    rangeLow = range(32)
+                try:
+                    rangeHigh = range(editor.STYLE_LASTPREDEFINED + 1, editor.STYLE_MAX + 1)
+                except AttributeError:
+                    rangeHigh = range(40, 128)
+                try:
+                    font = QFont('Bitstream Vera Sans,11,-1,5,50,0,0,0,0,0')
+                except:
+                    return # no font. bail.
+                for style in rangeLow + rangeHigh:
+                    editor.SendScintilla(QextScintilla.SCI_STYLESETFONT, style, font.family().latin1())
+                    editor.SendScintilla(QextScintilla.SCI_STYLESETSIZE, style, font.pointSize())
+            parent.sourceEditor.hide()
+            parent.sourceEditor = API.MyQextScintilla(parent.Source)
+            parent.sourceEditor.setUtf8(1)
+            parent.sourceEditor.SendScintilla(QextScintilla.SCI_SETWRAPMODE, QextScintilla.SC_WRAP_WORD)
+            parent.sourceEditor.setLexer(QextScintillaLexerHTML(parent))
+            setMonospaced(parent.sourceEditor)
+            parent.Source.layout().addWidget(parent.sourceEditor)
+            parent.connect(parent.sourceEditor, SIGNAL("textChanged()"), parent.sourceEditor_textChanged)
 
-    setEditWidget = staticmethod(setEditWidget)
-    setupTray = staticmethod(setupTray)
-    setupDCOP = staticmethod(setupDCOP)
-    prepareCommandLine = staticmethod(prepareCommandLine)
-    setPreview = staticmethod(setPreview)
-    setPreviewWidget = staticmethod(setPreviewWidget)
+        def setPreviewWidget(parent):
+            pass
+            
+        def setPreview(parent, text):
+            parent.sourcePreview.setText(text)
+            
+        def prepareCommandLine():
+            import optparse
+            parser = optparse.OptionParser(usage="%prog [options]")
+            parser.add_option("--statusbar", "-s",
+                          action = "store_true",
+                  help = "Status bar (default = disabled)")
+            (opt, arg) = parser.parse_args()
+            stat = opt.statusbar
+            return stat == True
+            
+        def setupTray(app, wnd):
+            pass
+        
+        def setupDCOP(app, wnd):
+            pass
+        
+        setupTray = staticmethod(setupTray)
+        setupDCOP = staticmethod(setupDCOP)
+        prepareCommandLine = staticmethod(prepareCommandLine)
+        setPreview = staticmethod(setPreview)
+        setPreviewWidget = staticmethod(setPreviewWidget)
+        setEditWidget = staticmethod(setEditWidget)
 
+except ImportError,e:
+    print "Cannot initialize QScintilla. Bad!"
+    sys.exit()
 
 
 def prepareModule(settings):
-    if settings.UI_Settings.EnableKde:
+    if settings.UI.EnableKde:
         try:
             from kdecore import KApplication, KCmdLineArgs, KAboutData, KIconLoader,KLocale
             import sys
@@ -168,7 +220,7 @@ def prepareModule(settings):
             API.setPreview = staticmethod(_setPreview)
             API.setPreviewWidget = staticmethod(_setPreviewWidget)
             
-            if settings.UI_Settings.EnableTray:
+            if settings.UI.EnableTray:
                 def _setupTray(app, wnd):                
                     try:
                         icons = KIconLoader ()
@@ -182,7 +234,7 @@ def prepareModule(settings):
                         sys.stderr.write("setupKDE: cannot set tray, exception: %s\n" % inst)
                 API.setupTray = staticmethod(_setupTray)
                 
-            if settings.UI_Settings.EnableDCOP:
+            if settings.UI.EnableDCOP:
                 def _setupDCOP(app,wnd):
                     class PQDCOP (DCOPExObj):
                         def __init__ (self, parent, dcopid = 'PyQLogger'):
@@ -212,61 +264,7 @@ def prepareModule(settings):
                 API.setupDCOP = staticmethod(_setupDCOP)
         except ImportError,e:
             print "Although the settings asked us to use KDE, it's not available... Turning it off..."
-            settings.UI_Settings.EnableKde = 0
-            
-    if settings.UI_Settings.EnableQScintilla:
-        try:
-            from qt import SIGNAL, QFont,PYSIGNAL
-            from qtext import QextScintilla, QextScintillaLexerHTML
-            
-            class MyQextScintilla(QextScintilla):
-                def contextMenuEvent(self, evt):
-                    evt.accept()
-                    self.emit(PYSIGNAL('aboutToShowMenu'), (evt,))
-                    
-                def fillDefaultMenu(self, parent):
-                    self.undoid = parent.insertItem("Undo",self.undo)  
-                    self.redoid = parent.insertItem("Redo",self.redo)  
-                    self.cutid = parent.insertItem("Cut",self.cut)  
-                    self.copyid = parent.insertItem("Copy",self.copy)  
-                    parent.insertItem("Paste",self.paste)  
-                  
-                def updateDefaultMenu(self, parent):
-                    parent.setItemEnabled(self.undoid,self.isUndoAvailable())
-                    parent.setItemEnabled(self.redoid,self.isRedoAvailable())
-                    parent.setItemEnabled(self.copyid,self.hasSelectedText())
-                    parent.setItemEnabled(self.cutid,self.hasSelectedText())
+            settings.UI.EnableKde = 0
 
-            def setMonospaced(editor):
-                try:
-                    rangeLow = range(editor.STYLE_DEFAULT)
-                except AttributeError:
-                    rangeLow = range(32)
-                try:
-                    rangeHigh = range(editor.STYLE_LASTPREDEFINED + 1, editor.STYLE_MAX + 1)
-                except AttributeError:
-                    rangeHigh = range(40, 128)
-                try:
-                    font = QFont('Bitstream Vera Sans,11,-1,5,50,0,0,0,0,0')
-                except:
-                    return # no font. bail.
-                for style in rangeLow + rangeHigh:
-                    editor.SendScintilla(QextScintilla.SCI_STYLESETFONT, style, font.family().latin1())
-                    editor.SendScintilla(QextScintilla.SCI_STYLESETSIZE, style, font.pointSize())
-        
-            def _setEditWidget(parent):
-                parent.sourceEditor.hide()
-                parent.sourceEditor = MyQextScintilla(parent.Source)
-                parent.sourceEditor.setUtf8(1)
-                parent.sourceEditor.SendScintilla(QextScintilla.SCI_SETWRAPMODE, QextScintilla.SC_WRAP_WORD)
-                parent.sourceEditor.setLexer(QextScintillaLexerHTML(parent))
-                setMonospaced(parent.sourceEditor)
-                parent.Source.layout().addWidget(parent.sourceEditor)
-                parent.connect(parent.sourceEditor, SIGNAL("textChanged()"), parent.sourceEditor_textChanged)
-            API.setEditWidget = staticmethod(_setEditWidget)
-
-        except ImportError,e:
-            print "Although the settings asked us to use Scintilla, it's not available... Turning it off..."
-            settings.UI_Settings.EnableQScintilla = 0
         
         

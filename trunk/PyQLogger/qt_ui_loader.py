@@ -140,7 +140,8 @@ def create( ui_file, connector=None, parent=None, exportchildren=False ):
         export_children( widget, widget )
     
     # Mix widget and connector
-    mix_objects( connector, widget )
+    if connector:
+        mix_objects( connector, widget )
 
     for sender, signal, receiver, slot in connections:
         # get sender from widgets:
@@ -158,7 +159,7 @@ def create( ui_file, connector=None, parent=None, exportchildren=False ):
             s = getattr( connector, slot )
             if callable( s ):
                 if sender:
-			qt.QObject.connect( sender, signal, s )
+                    qt.QObject.connect( sender, signal, s )
         except AttributeError:
             pass
     # for connections
