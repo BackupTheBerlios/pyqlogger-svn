@@ -1,12 +1,11 @@
 try:
 	from kdecore import KApplication, KCmdLineArgs, KAboutData
     	import sys, os
-	from kdeui import KMainWindow,  KSystemTray 
+	from qt import QToolTip
+	from kdeui import KMainWindow,  KSystemTray , KHelpMenu,KAboutApplication
 	from khtml import KHTMLPart, KHTMLView
         from dcopexport import DCOPExObj
-
 	def isKde(): return 1    
-	
         def setPreviewWidget(parent):
                 parent.sourcePreview.hide() # hide default
                 parent.vp=KHTMLPart (parent.Preview, "HTMLPart", parent.Preview) #create
@@ -18,12 +17,16 @@ try:
 		parent.vp.write(text)
 		parent.vp.end()
 
+                
 	def setupKDE(app,wnd):
 		t = KSystemTray(wnd)
-		t.setPixmap (wnd.image0)		
+	        t.setPixmap( KSystemTray.loadIcon( "kedit" ) )
+	        #wnd.setPixmap( KSystemTray.loadIcon( "kedit" ) )
+		#t.setPixmap (wnd.image0)		
 		dcop  = app.dcopClient ()
 		appid = dcop.registerAs('pyqlogger')
 		parrot  = PQDCOP(wnd)
+		QToolTip.add(t,"PyQLogger - Blogger GUI")
 		t.show()
    
 	class PQDCOP (DCOPExObj):
@@ -47,12 +50,18 @@ try:
 		def __init__(self, argv, opts):
 		    sysargv = argv[:]
 		    from pyqlogger import VERSION
-                    aboutData = KAboutData("pyqlogger", "PyQLogger", VERSION,  "Blogger GUI", KAboutData.License_GPL, "(C) 2004, Eli Yukelzon", "http://pyqlogger.berlios.de")
+                    aboutData = KAboutData("pyqlogger", "PyQLogger", VERSION,  "Blogger GUI", KAboutData.License_GPL, "(C) 2004, Eli Yukelzon", "","http://pyqlogger.berlios.de","")
                     aboutData.addAuthor("Eli Yukelzon a.k.a Reflog",  "","reflog@gmail.com");
                     aboutData.addAuthor("Xander Soldaat a.k.a Mightor", "", "mightor@gmail.com");
-		    KCmdLineArgs.init(sysargv+['-caption','test'],  aboutData)
+		    try:
+		        KCmdLineArgs.init( argv, aboutData)
+		    except TypeError:
+		        KCmdLineArgs.init(sysargv, sysargv[0], '', '')
+		    if opts:
+		        KCmdLineArgs.addCmdLineOptions(opts)
+
 		    KApplication.__init__(self)
-	    
+
 except ImportError,e:
 	def isKde(): return 0    
 	def setPreviewWidget(parent): pass
@@ -64,8 +73,8 @@ except ImportError,e:
                 QApplication.__init__(self, argv)	
 
 try:
-    from qtext import QextScintilla,QextScintillaLexerHTML
     from qt import SIGNAL,QFont
+    from qtext import QextScintilla,QextScintillaLexerHTML
     def setMonospaced(e):
         try:
             rangeLow = range(e.STYLE_DEFAULT)
@@ -76,7 +85,10 @@ try:
         except AttributeError:
             rangeHigh = range(40, 128)
 
-	f = QFont('Bitstream Vera Sans,11,-1,5,50,0,0,0,0,0')
+        try:
+	    f = QFont('Bitstream Vera Sans,11,-1,5,50,0,0,0,0,0')
+	except:
+	    return # no font. bail.
 	for style in rangeLow + rangeHigh:
 	    e.SendScintilla(QextScintilla.SCI_STYLESETFONT,style,f.family().latin1())
             e.SendScintilla(QextScintilla.SCI_STYLESETSIZE,style,f.pointSize())
