@@ -117,11 +117,11 @@ class Manager(XMLObject):
                     return True
         return False
         
-    def fillMenu(self):
+    def fillMenu(self, parentMenu):
         """ Fills the editor menu with plugins of MenuPlugin type """
         for plug in self.Plugins:
             if issubclass(plug.__class__,MenuPlugin) and plug.Data.Enabled == 1 :
-                plug.getMenu()
+                plug.getMenu(self.parent, parentMenu)
         
     def load(parent):
         """ Create a fresh copy of initialized Manager class """

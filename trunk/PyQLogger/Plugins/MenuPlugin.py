@@ -22,8 +22,8 @@ from Plugin import Plugin
 class MenuPlugin (Plugin):
   """  Base class for plugins that provide a menu item  """
 
-  def getMenu(self):
-    """    Should return item that will be added to the popup menu    """
+  def getMenu(self, owner, parentMenu):
+    """    Should add itself to the popup menu    """
     pass
 
   def description(self):

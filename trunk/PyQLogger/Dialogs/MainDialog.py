@@ -219,7 +219,48 @@ class MainDialog(QDialog):
             print "SaveAll: %s" % inst
             QMessageBox.critical(self, "Error", "Cannot write configuration!")
             
+    class PublishMenuHanlder(QObject):
+        def Popup(self, idx):
+            chk = self.sender().isItemChecked(idx)            
+            #itemParameter
+            self.sender().setItemChecked(idx, not chk)
+            
+        def eventFilter(self, object, event):
+            if event.type() == QEvent.MouseButtonRelease:
+                if event.state() == (Qt.MidButton | Qt.ControlButton):
+                    self.Menu.popup(event.globalPos())
+                    return True
+            return False
 
+        def getTargets(self):
+            ret = {}
+            for acc in self.menus:
+                bidx = 0
+                ret [ acc ] = []
+                for b in acc.Blogs:
+                    if bool(self.menus[acc].isItemChecked(bidx)):
+                        ret [ acc ] += [ b ]
+                    bidx += 1
+            return ret 
+        
+        def buildAccountMenu(self, settings, account):
+            Menu = QPopupMenu()
+            aidx = 0
+            self.menus = {}
+            for a in settings.Accounts:
+                bidx = 0
+                subMenu = QPopupMenu(Menu)
+                for b in a.Blogs:
+                    subMenu.insertItem(b.Name, bidx)
+                    subMenu.setItemParameter(bidx, aidx)
+                    if bidx == a.SelectedBlog and a.Name == account.Name:
+                        subMenu.setItemChecked(bidx, True)
+                    bidx += 1            
+                self.connect(subMenu, SIGNAL("activated(int)"), self.Popup)
+                Menu.insertItem(a.Name, subMenu, aidx)
+                self.menus [a] = subMenu
+                aidx += 1
+            self.Menu = Menu
 
     def init_ui(self, settings):
         UI.API.setPreviewWidget(self)
@@ -239,7 +280,7 @@ class MainDialog(QDialog):
         self.aMenu.insertItem("Export post", 2)
         self.bMenu = QPopupMenu()
         self.bMenu.insertItem("Delete post", 1)
-        self.bMenu.insertItem("Export post", 2)        
+        self.bMenu.insertItem("Export post", 2)  
         self.connect(self.aMenu, SIGNAL("activated(int)"), self.pubPopup)
         self.connect(self.bMenu, SIGNAL("activated(int)"), self.savePopup)
         self.connect(self.sourceEditor, PYSIGNAL("aboutToShowMenu"), self.showMenu)                
@@ -261,7 +302,8 @@ class MainDialog(QDialog):
         
     def fillSpellerMenu(self, start, end , parent):
         self.curword = unicode(self.sourceEditor.text())[start:end]        
-        if self.speller_result.has_key(self.curword):
+        if hasattr(self,"speller_result") and \
+           self.speller_result.has_key(self.curword):
             idx = 0
             Menu = QPopupMenu(parent)
             for s in self.speller_result[self.curword]["sug"][:15]:
@@ -285,6 +327,8 @@ class MainDialog(QDialog):
             end = sci.SendScintilla( sci.SCI_WORDENDPOSITION , position, True)
             start = sci.SendScintilla( sci.SCI_WORDSTARTPOSITION , position, True)
             self.fillSpellerMenu(start,end,self.editMenu)
+        self.editMenu.insertSeparator()
+        self.manager.fillMenu(self.editMenu)
         self.editMenu.popup(gpos)
         
     
@@ -296,6 +340,9 @@ class MainDialog(QDialog):
         self.settings = settings        
         self.forms = forms
         self.sourceEditor.manager = manager
+        a = self.PublishMenuHanlder(self)
+        a.buildAccountMenu( settings , account )
+        self.btnPublish.installEventFilter(a)
         manager.fillToolbar()
         self.edtStylesheet.setText(self.settings.StyleSheet)
         self.edtStylesheet_textChanged('')
