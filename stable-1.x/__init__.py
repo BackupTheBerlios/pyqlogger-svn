@@ -1,2 +1,0 @@
-# $Id$
-all = ['PyQLogger']
