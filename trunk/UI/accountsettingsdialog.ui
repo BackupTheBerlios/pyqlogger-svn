@@ -1,0 +1,507 @@
+<!DOCTYPE UI><UI version="3.3" stdsetdef="1">
+<class>AccountSettingsDialog</class>
+<widget class="QDialog">
+    <property name="name">
+        <cstring>AccountSettingsDialog</cstring>
+    </property>
+    <property name="geometry">
+        <rect>
+            <x>0</x>
+            <y>0</y>
+            <width>379</width>
+            <height>472</height>
+        </rect>
+    </property>
+    <property name="caption">
+        <string>Account Settings</string>
+    </property>
+    <vbox>
+        <property name="name">
+            <cstring>unnamed</cstring>
+        </property>
+        <widget class="QLayoutWidget">
+            <property name="name">
+                <cstring>layout16</cstring>
+            </property>
+            <hbox>
+                <property name="name">
+                    <cstring>unnamed</cstring>
+                </property>
+                <widget class="QLabel">
+                    <property name="name">
+                        <cstring>textLabel7</cstring>
+                    </property>
+                    <property name="text">
+                        <string>Account &amp;Name:</string>
+                    </property>
+                    <property name="buddy" stdset="0">
+                        <cstring>edtName</cstring>
+                    </property>
+                </widget>
+                <widget class="QLineEdit">
+                    <property name="name">
+                        <cstring>edtName</cstring>
+                    </property>
+                    <property name="sizePolicy">
+                        <sizepolicy>
+                            <hsizetype>0</hsizetype>
+                            <vsizetype>0</vsizetype>
+                            <horstretch>0</horstretch>
+                            <verstretch>0</verstretch>
+                        </sizepolicy>
+                    </property>
+                    <property name="minimumSize">
+                        <size>
+                            <width>222</width>
+                            <height>0</height>
+                        </size>
+                    </property>
+                </widget>
+            </hbox>
+        </widget>
+        <widget class="QLayoutWidget">
+            <property name="name">
+                <cstring>layout17</cstring>
+            </property>
+            <hbox>
+                <property name="name">
+                    <cstring>unnamed</cstring>
+                </property>
+                <widget class="QLabel">
+                    <property name="name">
+                        <cstring>textLabel3</cstring>
+                    </property>
+                    <property name="text">
+                        <string>&amp;Type:</string>
+                    </property>
+                    <property name="buddy" stdset="0">
+                        <cstring>comboProviders</cstring>
+                    </property>
+                </widget>
+                <widget class="QComboBox">
+                    <property name="name">
+                        <cstring>comboProviders</cstring>
+                    </property>
+                    <property name="sizePolicy">
+                        <sizepolicy>
+                            <hsizetype>0</hsizetype>
+                            <vsizetype>0</vsizetype>
+                            <horstretch>0</horstretch>
+                            <verstretch>0</verstretch>
+                        </sizepolicy>
+                    </property>
+                    <property name="minimumSize">
+                        <size>
+                            <width>222</width>
+                            <height>0</height>
+                        </size>
+                    </property>
+                </widget>
+            </hbox>
+        </widget>
+        <widget class="QButtonGroup">
+            <property name="name">
+                <cstring>grpCommon</cstring>
+            </property>
+            <property name="title">
+                <string>Common Settings</string>
+            </property>
+            <vbox>
+                <property name="name">
+                    <cstring>unnamed</cstring>
+                </property>
+                <widget class="QLayoutWidget">
+                    <property name="name">
+                        <cstring>layout18</cstring>
+                    </property>
+                    <hbox>
+                        <property name="name">
+                            <cstring>unnamed</cstring>
+                        </property>
+                        <widget class="QLabel">
+                            <property name="name">
+                                <cstring>textLabel4</cstring>
+                            </property>
+                            <property name="sizePolicy">
+                                <sizepolicy>
+                                    <hsizetype>0</hsizetype>
+                                    <vsizetype>5</vsizetype>
+                                    <horstretch>0</horstretch>
+                                    <verstretch>0</verstretch>
+                                </sizepolicy>
+                            </property>
+                            <property name="minimumSize">
+                                <size>
+                                    <width>85</width>
+                                    <height>0</height>
+                                </size>
+                            </property>
+                            <property name="text">
+                                <string>&amp;Host:</string>
+                            </property>
+                            <property name="buddy" stdset="0">
+                                <cstring>edtHost</cstring>
+                            </property>
+                        </widget>
+                        <widget class="QLineEdit">
+                            <property name="name">
+                                <cstring>edtHost</cstring>
+                            </property>
+                        </widget>
+                    </hbox>
+                </widget>
+                <widget class="QLayoutWidget">
+                    <property name="name">
+                        <cstring>layout19</cstring>
+                    </property>
+                    <hbox>
+                        <property name="name">
+                            <cstring>unnamed</cstring>
+                        </property>
+                        <widget class="QLabel">
+                            <property name="name">
+                                <cstring>lbUsername</cstring>
+                            </property>
+                            <property name="sizePolicy">
+                                <sizepolicy>
+                                    <hsizetype>0</hsizetype>
+                                    <vsizetype>5</vsizetype>
+                                    <horstretch>0</horstretch>
+                                    <verstretch>0</verstretch>
+                                </sizepolicy>
+                            </property>
+                            <property name="minimumSize">
+                                <size>
+                                    <width>85</width>
+                                    <height>0</height>
+                                </size>
+                            </property>
+                            <property name="text">
+                                <string>&amp;Username:</string>
+                            </property>
+                            <property name="buddy" stdset="0">
+                                <cstring>edtUsername</cstring>
+                            </property>
+                        </widget>
+                        <widget class="QLineEdit">
+                            <property name="name">
+                                <cstring>edtUsername</cstring>
+                            </property>
+                        </widget>
+                    </hbox>
+                </widget>
+                <widget class="QLayoutWidget">
+                    <property name="name">
+                        <cstring>layout21</cstring>
+                    </property>
+                    <hbox>
+                        <property name="name">
+                            <cstring>unnamed</cstring>
+                        </property>
+                        <widget class="QLabel">
+                            <property name="name">
+                                <cstring>textlabel6</cstring>
+                            </property>
+                            <property name="sizePolicy">
+                                <sizepolicy>
+                                    <hsizetype>0</hsizetype>
+                                    <vsizetype>5</vsizetype>
+                                    <horstretch>0</horstretch>
+                                    <verstretch>0</verstretch>
+                                </sizepolicy>
+                            </property>
+                            <property name="minimumSize">
+                                <size>
+                                    <width>85</width>
+                                    <height>0</height>
+                                </size>
+                            </property>
+                            <property name="text">
+                                <string>&amp;Password:</string>
+                            </property>
+                            <property name="buddy" stdset="0">
+                                <cstring>edtPassword</cstring>
+                            </property>
+                        </widget>
+                        <widget class="QLineEdit">
+                            <property name="name">
+                                <cstring>edtPassword</cstring>
+                            </property>
+                            <property name="echoMode">
+                                <enum>Password</enum>
+                            </property>
+                        </widget>
+                    </hbox>
+                </widget>
+            </vbox>
+        </widget>
+        <widget class="QButtonGroup">
+            <property name="name">
+                <cstring>grpBlog</cstring>
+            </property>
+            <property name="title">
+                <string>Blog Settings</string>
+            </property>
+            <vbox>
+                <property name="name">
+                    <cstring>unnamed</cstring>
+                </property>
+                <widget class="QLayoutWidget">
+                    <property name="name">
+                        <cstring>layout7</cstring>
+                    </property>
+                    <hbox>
+                        <property name="name">
+                            <cstring>unnamed</cstring>
+                        </property>
+                        <widget class="QLabel">
+                            <property name="name">
+                                <cstring>textLabel1</cstring>
+                            </property>
+                            <property name="text">
+                                <string>&amp;Default Blog</string>
+                            </property>
+                            <property name="buddy" stdset="0">
+                                <cstring>comboBlogs</cstring>
+                            </property>
+                        </widget>
+                        <widget class="QComboBox">
+                            <property name="name">
+                                <cstring>comboBlogs</cstring>
+                            </property>
+                            <property name="sizePolicy">
+                                <sizepolicy>
+                                    <hsizetype>7</hsizetype>
+                                    <vsizetype>0</vsizetype>
+                                    <horstretch>0</horstretch>
+                                    <verstretch>0</verstretch>
+                                </sizepolicy>
+                            </property>
+                        </widget>
+                        <widget class="QPushButton">
+                            <property name="name">
+                                <cstring>btnFetchBlogs</cstring>
+                            </property>
+                            <property name="pixmap">
+                                <pixmap>image0</pixmap>
+                            </property>
+                        </widget>
+                    </hbox>
+                </widget>
+                <widget class="QLabel">
+                    <property name="name">
+                        <cstring>textLabel2</cstring>
+                    </property>
+                    <property name="text">
+                        <string>&amp;Blog Homepage</string>
+                    </property>
+                    <property name="buddy" stdset="0">
+                        <cstring>edtHomepage</cstring>
+                    </property>
+                </widget>
+                <widget class="QLayoutWidget">
+                    <property name="name">
+                        <cstring>layout9</cstring>
+                    </property>
+                    <hbox>
+                        <property name="name">
+                            <cstring>unnamed</cstring>
+                        </property>
+                        <widget class="QLineEdit">
+                            <property name="name">
+                                <cstring>edtHomepage</cstring>
+                            </property>
+                        </widget>
+                        <widget class="QPushButton">
+                            <property name="name">
+                                <cstring>btnFetchHome</cstring>
+                            </property>
+                            <property name="pixmap">
+                                <pixmap>image0</pixmap>
+                            </property>
+                        </widget>
+                    </hbox>
+                </widget>
+                <widget class="QLayoutWidget">
+                    <property name="name">
+                        <cstring>layout20</cstring>
+                    </property>
+                    <hbox>
+                        <property name="name">
+                            <cstring>unnamed</cstring>
+                        </property>
+                        <widget class="QLabel">
+                            <property name="name">
+                                <cstring>textLabel2_2</cstring>
+                            </property>
+                            <property name="text">
+                                <string>Operation Status:</string>
+                            </property>
+                        </widget>
+                        <widget class="QLabel">
+                            <property name="name">
+                                <cstring>lblStatus</cstring>
+                            </property>
+                            <property name="text">
+                                <string>&lt;font color="#ff0000"&gt;Stopped&lt;/font&gt;</string>
+                            </property>
+                            <property name="alignment">
+                                <set>WordBreak|AlignVCenter|AlignRight</set>
+                            </property>
+                        </widget>
+                    </hbox>
+                </widget>
+            </vbox>
+        </widget>
+        <widget class="QButtonGroup">
+            <property name="name">
+                <cstring>grpSettings</cstring>
+            </property>
+            <property name="title">
+                <string>Additional Settings</string>
+            </property>
+        </widget>
+        <widget class="QLayoutWidget">
+            <property name="name">
+                <cstring>Layout1</cstring>
+            </property>
+            <hbox>
+                <property name="name">
+                    <cstring>unnamed</cstring>
+                </property>
+                <property name="margin">
+                    <number>0</number>
+                </property>
+                <property name="spacing">
+                    <number>6</number>
+                </property>
+                <widget class="QPushButton">
+                    <property name="name">
+                        <cstring>buttonHelp</cstring>
+                    </property>
+                    <property name="text">
+                        <string>&amp;Help</string>
+                    </property>
+                    <property name="accel">
+                        <string>F1</string>
+                    </property>
+                    <property name="autoDefault">
+                        <bool>true</bool>
+                    </property>
+                    <property name="iconSet">
+                        <iconset>image1</iconset>
+                    </property>
+                </widget>
+                <spacer>
+                    <property name="name">
+                        <cstring>Horizontal Spacing2</cstring>
+                    </property>
+                    <property name="orientation">
+                        <enum>Horizontal</enum>
+                    </property>
+                    <property name="sizeType">
+                        <enum>Expanding</enum>
+                    </property>
+                    <property name="sizeHint">
+                        <size>
+                            <width>20</width>
+                            <height>20</height>
+                        </size>
+                    </property>
+                </spacer>
+                <widget class="QPushButton">
+                    <property name="name">
+                        <cstring>buttonOk</cstring>
+                    </property>
+                    <property name="text">
+                        <string>&amp;OK</string>
+                    </property>
+                    <property name="accel">
+                        <string></string>
+                    </property>
+                    <property name="autoDefault">
+                        <bool>true</bool>
+                    </property>
+                    <property name="default">
+                        <bool>true</bool>
+                    </property>
+                    <property name="iconSet">
+                        <iconset>image2</iconset>
+                    </property>
+                </widget>
+                <widget class="QPushButton">
+                    <property name="name">
+                        <cstring>buttonCancel</cstring>
+                    </property>
+                    <property name="text">
+                        <string>&amp;Cancel</string>
+                    </property>
+                    <property name="accel">
+                        <string></string>
+                    </property>
+                    <property name="autoDefault">
+                        <bool>true</bool>
+                    </property>
+                    <property name="iconSet">
+                        <iconset>image3</iconset>
+                    </property>
+                </widget>
+            </hbox>
+        </widget>
+    </vbox>
+</widget>
+<images>
+    <image name="image0">
+        <data format="PNG" length="1363">89504e470d0a1a0a0000000d4948445200000016000000160806000000c4b46c3b0000051a49444154388d7d954d6c5cd515c77ff7def7de7ccf388e3dd8900c0e264e214a1a1c65c106a1566d496115d14afdd8548d10ecd820f6a888158b8a45d55aaa94a695828422241644a4952a210ab4c1d48190849004db49ec99f17ccf9bf779ef653149dae22a473aababf3bb7f9df33f3a827bc4e20b2b2ed86930b3589b070bd8006b36ddb4d95888df8c4f9e3cf97f6bc53da08f033f057b08410de1160030d108abd7811561d2b70e267ff82008027dead4a97b83175f589907f122cafd79b1909f98992acbfb7666d9373520e76aaeb68b7cdd306c359ba6dd0b0293061fb876f89b47e23f7d1886617ae703e75bd00741bc81573e7ae8a11c3f3e52e2c06e4b7542a1e40e60dc8cce20e5da6655bebb1c16deffacf3c33810bb2f7b3f7b79aff9cb1920f91fc5b795be512c977ff4d4918a7c66d163b2a41002a238c55a8b520aa524528ccbfc50f38f8b234efdbd6d1badee154fb77fbd6778e2c3288af47f29b62fe1958efe60b1c2d38fb9b88e6063cb4727219e2bc9655ca2446370715c0fd79180e5c8de1c493a294efcd52c8c06fab942a1b092c964866aacf693c785cabcf6ddf972f6e8a28b9410c53195ac66cf0313ecaa96a8ee2c3059ce3059f6b8d94a8813439858e2d4325994f8b1c35a3399dbd2bb5766d5e5eb6af1f9732ef062a9547ae2fb870a624711822064b662d9b7679a8ce720a50440298952922b37034691254ac61926064fc55cab1bcf0fd344a5bdf71d601a38542e57e44436a5d3b7dc3f6198af4d03300c34cb5f0de90c34a5bcc418cbcdad847c76dceb7a2fe5dc7a858e9f6740511abafbfba25673805984ac4d9504416cc83896b9991c8e92748729ef7cd4268c0d008deed8155995323359e6c84291ac27f9d5efa1e9038e0342cda2bc9a03e4919942de4de8fa06cfb15427c7bb70a319d3f735c68ec7bbc3eb71606186a9b2c303d5e2b6a5124280cce484a174d715fdd0a5deb3e43ceef6b43d927cbc5a204a25471fedf2cba7beb30d668c050442dc36392030d2011b60a251ddcfe1eb2cd592a1de89d95dcd315576d0c2a13e52f493641b14a0eba7c4a94288b1fdd061286c1a49acd9c4eaf5dec8d08bb2ac753cfe7925411bcb23bb1c5e7956736097e5c2468eab377adbc09da1c6188b2b218e23b0ba218dbf29ddb4d9005688dac655168be2cc852c5737538480f9d90cafffc2f0ea4f12e67755b62b1e6ab01acfd188b8651cc22f27ecea865c88df8c8549dfd251afe7ea0ed3799f240af9e3df02be588b082283e73a4ced28612d0c43c36a2321880dd6426b602838235cddc1841d3fabeb672b6aabadce9f3fcf338bf2c62d0eee11363d5c9b76286752ac49b9b41ed2ec25b40729ebcd84cb37433ebae873f6df3e8d4e4cabafb9b016311cc5ac6fb488fcce9903e2ed1340e38e2bb432a3df0e06e2e1d55b3c79f0a1a2f4dcf1d3b58d88eb9b11428019db99ac0bd7eb31ab8d98284e59bd3534c37eef939de6e29f91d48140012c2f2ff3f4a2db6ad9dab95ee0ecef8fd2b952de65b2e4e0b912d711b84ae039ff4957c15637e1b36b3d369bfd73d3e9a7afd5e4f2bf802d40ab3b43387cf8b0ad72a9ddb2739ff602956ff692b9c128f5b24e2a0a3907474aa4006b35ad8ecfe75f8fcca5b5c1b0dbed9fd9a92ffcee36b401244b4b4bdb2fc8f1e3c72550f85c3cfbbd54168f19dcfd528ad9524ee50006810e8d360d87f0cbacae9fddcb7b1f1b63ea52ca9694325d5a5ababd24df8a63c78e512e9705e035e3fba67d31b3d70ab54f662a562a2f11368da4f13727ecea8617affbc6986e1445beb5363d7dfaf45dce371c9896f33fc3595d0000000049454e44ae426082</data>
+    </image>
+    <image name="image1">
+        <data format="PNG" length="688">89504e470d0a1a0a0000000d49484452000000100000001008060000001ff3ff610000027749444154388d7593cb4bd46114869fef771b674653236146b38b433a50d8409097a87fa0695594eedcb970e15e125a86e4c2b6b97095046da459b62c23d418246814532291c95b3a3a3ab7ef3b2d74462a3d7036e7f2bee79c97a338c3ba8624244254044a86d4dc884a9f56a7fe0ddc792a7d0a065d8758535d1105ac6cba1c1448963463f3a36ae25480bbc3526d84c950adc41f770b5dad8a5cbe8031e0ba36cbbf0cafde5b7c5d7512dad0bbf052ed03586500234cb65fd2f1e14770b5a144a158e05a938fb6661ff54145b84e78d663f320968d8b3059eeb3ca635fa896f8c34e8bed3d4d24641109fbd8c8c0cf2d3817b4b97ed947be60b87f3b40b451c72303d257015030d8d92aece714f9a270bec661f700a617e0cb32cc2ce601a80ddaa477207645233008e0740d49c8b189d5f815eb19f06c87950df8b60aeb194017b8d16800985d32bcfdac30e2515d45acb95f428e08d18067d839b4e0f0689ed71f8ef733399e74434bd8cfe29a616a168c1cddbdca052d1275b4016314e9dfffebdbd351a4255c436ad5f07c0a0ada421deb260808384648658b8acc01a00444210246a0b5c9235f8417ef1445ad70ed1382839c8048ca9a1b51e9fd4392c608160a4b816d816bc3ccb243620eb45178361547849dac24d7c69db405a00d635b7b8673012a5e53a5f1db392ed617a90bf2576e75b3848819abc8383faa267e6cda89ddcc61a5a8daa7b9d71ea4a3cd25547fd2bcb19d65294d626ddc9b0070ca3b6943eff477ffe4cd422e7e2b62e3063cde7c04cf01c782a093e7d3826676c54b80f49ef94c2d03d2e759a5c148432e160cf80121b39f65315d95cc95acb132f39900656bee97901689620490d4dab873ea3bff0189ee18bf277514f60000000049454e44ae426082</data>
+    </image>
+    <image name="image2">
+        <data format="PNG" length="485">89504e470d0a1a0a0000000d49484452000000100000001008060000001ff3ff61000001ac49444154388dc5d33f48550114c7f1cfbdefbee74309854786a939bc41086a10ca6a086c6fb3da424aa42982a09096a0a5cd96961a84a2a51603e135845b42ba54d01fb0a04c305e682fcb7cffaeb7a14093b4c1a1b39cdf19be1cf89ddf099224b19d0ab7452330a253dd47cbf88115d4112183f43a1dfd9e33f29906675329fb22b187eaaea0b0e5aa04ab76e38cbaa16a5d39889c08c338aca5b3e9bb6afa3605ab72b8dcd2d132d1d6d176cd8a5915c7f03c4c9692fbb9bdb95c764ff68eb2c3827570cd2eb173517bf4a4fd78fbf5e6cee6eee24cb1a0e2a4c01c444929995e2c2f56c3feb0c3a27bdeebc72b5503ba0c044782decc818cd2d392e5c2f2032943b24a6b260e6ad5a5e0821e458c7a67c582a30e3a849d18c3b81b1a5db5c3571964091a89ac2a7a6bca6b3dba714a5e28af0d35dc54376544836129f1468b42157c37ed8558110d68c207dcc28461894b7f8321f20db149cf2cd8af551a73185336e3bc26b7b78a5b2446ec8d392f7dd2aa8a715fccbaa8d1e8bfb21aa96115151326f599f7d9acd3228ffe38e9269592478044d9bc5e4b06451e0bac4577634ffdd2419ae0bf7fe34fae038bee04a5cacf0000000049454e44ae426082</data>
+    </image>
+    <image name="image3">
+        <data format="PNG" length="832">89504e470d0a1a0a0000000d49484452000000100000001008060000001ff3ff610000030749444154388d6d935b681c7518c57fdf7f66672fceee26bbd94b2eb268521a29c66d6a9ad2d482a62da808fa20484045305410abe8ab0f0a2a8214158b28a3155f048b3e68056d505a4a4b2f6993d4169b2c36b266a9b96cd84b361b77b333e3436c346d3ff8dece3970be733ee13673695bbfcf71dd3e07ba5c5c71916b655d1b1d3c7fa67a33566e229a02af7b5cf785a052e1c69d1d3402017c990c45db295585af8bbae7ed7de74eff798bc0a56dfd490527a289f8e6f0334fa3ed1a400b0501706b75aa63e354bef892f9cc547ed6ef7ff291d3274fac0b4cf46e3795c885b6dead9b7daf1c400f9ab77386b3daa0f0f961e67e3ab638699af70e9d3cfe9706b0bfb5fd9d5832f998ffa517d143269e9616eab91c4eb5babe28859188a3c56368bf4f0764762ea83dfaf088bad0dbe7f3c0f3de7d7bb12b15f468142d18c448a5a8cfe7a9cfe771566dfc9b36a10583b8b6833cb08b90e30c6d99c9b5e9409f691861bbb909279fa7f8e331c27b1ec24824b823dd43f5d72b04b7df0fc0e277df637efa19ede5255ca5ccce7265a70e74a94884463e8f681a28c5e2916f883cf138de8e768cbd0900960e7d4ce097e378979641c0a7697844ba7440b47a1d2d3b8318066218f8f20b30370f6fbdb976bdf1098247befd2f3757018223a2948b5c734a25a253192297afd07c718c402884f77f64b6a6e1c383ff0a08e81a35a7c18a484e95756db464db2511413485a47bd0de7b770d7ce05578f9b57511f7a3f7b1037e6c9f8f82ed2c5f8d348dabc1f367aa55e1f0ac12ca1d1d38cf3dbbe6f9e007146a350af77453f8c462752a83dcd74375cf20b34a58f0e847b3f1d8750118e91f688ed88dd1961d3b3a8d96e85a84d9ec2d453252292a17c758387b36f7735beb53d389d8e87a957f18d8dd99acd747c2e9f4dd667737221bc9ae0b95c9498a1313b953c9c4fedf92f15396659537c0bedafd606baabaf24620101832ee4a99dea666006ac502f53fb2cb85dadf47cf25e287a613b1cb966595373cd38d191e1e36b6cce4da3acb959d1e912e4744ad88e4ae469ac6b3f1d87560d1b2acfa0dfc3ff65f2612a288fa150000000049454e44ae426082</data>
+    </image>
+</images>
+<connections>
+    <connection>
+        <sender>comboProviders</sender>
+        <signal>activated(const QString&amp;)</signal>
+        <receiver>AccountSettingsDialog</receiver>
+        <slot>comboProviders_activated(const QString&amp;)</slot>
+    </connection>
+    <connection>
+        <sender>btnFetchHome</sender>
+        <signal>clicked()</signal>
+        <receiver>AccountSettingsDialog</receiver>
+        <slot>btnFetchHome_clicked()</slot>
+    </connection>
+    <connection>
+        <sender>btnFetchBlogs</sender>
+        <signal>clicked()</signal>
+        <receiver>AccountSettingsDialog</receiver>
+        <slot>btnFetchBlogs_clicked()</slot>
+    </connection>
+    <connection>
+        <sender>buttonOk</sender>
+        <signal>clicked()</signal>
+        <receiver>AccountSettingsDialog</receiver>
+        <slot>accept()</slot>
+    </connection>
+    <connection>
+        <sender>buttonCancel</sender>
+        <signal>clicked()</signal>
+        <receiver>AccountSettingsDialog</receiver>
+        <slot>reject()</slot>
+    </connection>
+</connections>
+<slots>
+    <slot>comboProviders_activated(const QString&amp;)</slot>
+    <slot>btnFetchHome_clicked()</slot>
+    <slot>btnFetchBlogs_clicked()</slot>
+    <slot>accept()</slot>
+    <slot>reject()</slot>
+</slots>
+<layoutdefaults spacing="6" margin="11"/>
+</UI>
