@@ -31,7 +31,7 @@ you have installed PyQt for the version of Python that you are running."""
 	sys.exit(1)
 
 
-VERSION = '1.3.1'
+VERSION = '1.3.2'
 
 def main():
 	a = QApplication(sys.argv)

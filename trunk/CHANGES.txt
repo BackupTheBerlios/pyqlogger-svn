@@ -7,6 +7,17 @@ CHANGELOG
 * changed
 ? info
 
+06/12/2004 - 1.3.2
+
++ Added a 'Listening To' plugin
++ Added optional status bar. PyOSD is optional now, if it's not found, status
+bar is used. It also can be turned on by the '-s' switch on the command line
++ Added some graceful error handling for plugins, so that plugin's error
+wouldn't kill the whole app
+* Plugins can now be stored in /usr/share/pyqlogger/plugins
++ Spec file for Mandrake added
++ Ebuild for Gentoo added
+
 02/12/2004 - 1.3.1
 
 * Unicode works as it should
