@@ -1,10 +1,8 @@
 # $Id$
 """PyQLogger: PyQt Blogger Client
 
-This is a QT GUI written in Python for posting to Blogger using
+User friendly and feature full Qt GUI written in Python for posting to Blogger using
 Atom API.
-Requires pyosd, pyqt
-Uses feedparser
 
 """
 
@@ -37,7 +35,7 @@ setup(name="PyQLogger",
       scripts=['pyqlogger.py'],
       packages=['PyQLogger'],
       maintainer_email="reflog@gmail.com",
-      url = "http://yukelzon.blogspot.com/",
+      url = "http://pyqlogger.berlios.de/",
       download_url = "http://download.berlios.de/pyqlogger/PyQLogger-%s.tar.gz"%(pyqlogger.VERSION),
       license = "GPL",
       platforms = ["any"],
