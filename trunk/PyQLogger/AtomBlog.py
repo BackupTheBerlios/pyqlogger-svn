@@ -24,11 +24,12 @@ __revision__ = "$Id$"
 import httplib, sha, base64, urllib2, time, random
 from xml.sax.saxutils import escape , unescape
 import feedparser, re
+from qtnetwork import QHttpRequestHeader
 
 class AtomBlog:
     """ Implementation of Atom API for posting to Blogger
         Written by Reflog, based on code from http://www.daikini.com 
-        This is an abstract class. Clients should introduct the following:
+        This is an abstract class. Clients should introduce the following:
         self.host = blog host
         self.path = blog atom endpoint
         self.feedpath = format for getting the feed
@@ -51,7 +52,7 @@ class AtomBlog:
         timestamp = time.strftime('%Y-%m-%dT%H:%M:%SZ', time.gmtime())
         return "%s %s" % (timestamp, sha.new("%s:%s" % (timestamp, private)).hexdigest())
 
-    def _makeCommonHeaders(self, date=None):
+    def _makeCommonHeaders(self, Req, date=None):
         """ Returns a dict with Nonce, Password Digest and other headers """
         nonce = self._getNonce()
         base64EncodedNonce = base64.encodestring(nonce).replace("\n", "")
@@ -62,24 +63,22 @@ class AtomBlog:
     
         passwordDigest = base64.encodestring(sha.new(nonce + created + self.password).digest()).replace("\n", "")
         authorizationHeader = 'UsernameToken Username="%s", PasswordDigest="%s", Created="%s", Nonce="%s"' % (self.username, passwordDigest, created, base64EncodedNonce)
-        headers = {
-            "Authorization": 'WSSE profile="UsernameToken"', 
-            "X-WSSE": authorizationHeader, 
-            "UserAgent": "Reflog's Blogger"
-            }
+        Req.setValue("Authorization", 'WSSE profile="UsernameToken"')
+        Req.setValue("X-WSSE", authorizationHeader)
+        Req.setValue("UserAgent", "PyQLogger")
+        Req.setValue("Host",self.host)
+        return created
         
-        return (created, headers)
-        
-    def getBlogs(self):
+    def startGetBlogs(self):
+        """ initialize GET request """
+        Req = QHttpRequestHeader("GET",self.path)
+        self._makeCommonHeaders(Req)
+        return Req
+
+    def endGetBlogs(self,result):    
         """ Returns dict where key is blog's name, and value is blog's properties dict """
-        (created, headers) = self._makeCommonHeaders()
-        conn = httplib.HTTPConnection(self.host)
-        conn.request("GET", self.path, "", headers)
-        response = conn.getresponse()
-        xml = response.read()
-        conn.close()
         ret = {}
-        for blog in feedparser.parse(xml)['feed']['links']:
+        for blog in feedparser.parse(result)['feed']['links']:
             ret [ blog["title"] ] = {
                 'id'   : self.id_re.search(blog['href']).group(1),
                 'href' : blog['href'],
@@ -88,39 +87,36 @@ class AtomBlog:
             } 
         return ret
 
-    def getPosts(self, blogId):
+    def startGetPosts(self, blogId ):
+        """ Initialize GET post request """
+        Req = QHttpRequestHeader("GET",  self.feedpath % (blogId))
+        self._makeCommonHeaders(Req)
+        return Req
+        
+    def endGetPosts(self, result):
         """ Returns posts Atom Feed """
-        (created, headers) = self._makeCommonHeaders()
-        conn = httplib.HTTPConnection(self.host)
-        path = self.feedpath % (blogId)
-        conn.request("GET", path, "", headers)
-        response = conn.getresponse()
-        xml = response.read()
-        conn.close()
         res = []
-        for post in feedparser.parse(xml)['entries']:
+        for post in feedparser.parse(result)['entries']:
             content = post['content'][0]['value']
             if post['content'][0]['mode'] == 'escaped':
                 unescape(content)
-            res += [ {
-                'title':post['title'],
-                'date':post['modified'],
-                'id':self.id_re.search( post['id'] ).group(1),
-                'content':content
+                res += [ {
+                    'title':post['title'],
+                    'date':post['modified'],
+                    'id':self.id_re.search( post['id'] ).group(1),
+                    'content':content
                 }]
         return res
 
-    def getPost(self, blogId, postId):
+    def startGetPost(self,  blogId, postId):
+        Req = QHttpRequestHeader("GET",self.postpath % (blogId, postId))
+        self._makeCommonHeaders(Req)
+        return Req
+        
+    def endGetPost(self,result):
         """ Returns a post """
-        (created, headers) = self._makeCommonHeaders()
-        conn = httplib.HTTPConnection(self.host)
-        path = self.postpath % (blogId, postId)
-        conn.request("GET", path, "", headers)
-        response = conn.getresponse()
-        xml = response.read()
-        conn.close()
         res = []
-        for post in feedparser.parse(xml)['entries']:
+        for post in feedparser.parse(result)['entries']:
             content = post['content'][0]['value']
             if post['content'][0]['mode'] == 'escaped':
                 unescape(content)
@@ -148,35 +144,27 @@ class AtomBlog:
         <content mode="escaped" type="text/html">%s</content>
         </entry>""" % (escape(title), created, catstr, escape(content))).encode("utf-8")
         
-    def newPost(self, blogId, title, content, date=None):
-        """ Make a new post to Blogger, returning it's ID """
+    def startNewPost(self,  blogId, title, content, date=None):
+        """ Make a new post to Blogger, returning it's body """
+        Req = QHttpRequestHeader("PUT",self.feedpath % (blogId))
+        created = self._makeCommonHeaders(Req,date)
+        Req.setContentType("application/atom+xml")
+        return (Req, self._makeBody(title, content, created))
         
-        (created, headers) = self._makeCommonHeaders(date)    
-        headers["Content-type"] = "application/atom+xml"
-        path = self.feedpath % (blogId)
-        body = self._makeBody(title, content, created)
-        conn = httplib.HTTPConnection(self.host)
-        conn.request("POST", path, body, headers)
-        response = conn.getresponse()
-        resp = response.read()
-        conn.close()
-        amatch = self.id_re.search(feedparser.parse(resp)['entries'][0]['id'])
+    def endNewPost(self, result):
+        """ Parse result, and return post's ID """
+        amatch = self.id_re.search(feedparser.parse(result)['entries'][0]['id'])
         if amatch:
             return amatch.group(1)
         return None
     
-    def editPost (self, blogId, entryId, title, content, date=None):
+    def startEditPost (self, blogId, entryId, title, content, date=None):
         """ Edits existing post on Blogger, returns new ID """        
-        path = self.postpath % (blogId, entryId)
-        (created, headers) = self._makeCommonHeaders(date)    
-        headers["Content-type"] = "application/atom+xml"
-        body = self._makeBody(title, content, created)
-        conn = httplib.HTTPConnection(self.host)
-        conn.request("PUT", path, body, headers)
-        response = conn.getresponse()
-        response.read() # error checking should be added here
-        conn.close()
-
+        Req = QHttpRequestHeader("PUT",self.postpath % (blogId, entryId))
+        created = self._makeCommonHeaders(Req,date)
+        Req.setContentType("application/atom+xml")
+        return (Req, self._makeBody(title, content, created))
+        
     def getCategories(self, blogId):
         """ Fetches the list of blog's categories """
         return None
@@ -185,14 +173,11 @@ class AtomBlog:
         """ Returns the homepage of the blog """
         return None
 
-    def deletePost(self, blogId, entryId):
+    def deletePost(self,  blogId, entryId):
         """ Deletes a post from specified Blog """
-        path = self.postpath % (blogId, entryId)
-        (created, headers) = self._makeCommonHeaders()    
-        conn = httplib.HTTPConnection(self.host)
-        conn.request("DELETE", path, "", headers)
-        response = conn.getresponse()
-        return bool(response.status == 410 or response.status == 200)
+        Req = QHttpRequestHeader("DELETE",self.postpath % (blogId, entryId))
+        created = self._makeCommonHeaders(Req)
+        return Req
 
 class GenericAtomClient(AtomBlog):
     """ Generic class for AtomAPI Handling """
@@ -220,9 +205,9 @@ class BloggerClient(GenericAtomClient):
             req.close()
             match = self.hp_re.search(lines)
             if match: 
-	        return match.group(1)
+                return match.group(1)
         except Exception , e:
-	    print "Exception while getting the homepage: " + str(e)
+            print "Exception while getting the homepage: " + str(e)
             return None
 
 

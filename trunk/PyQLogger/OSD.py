@@ -48,4 +48,8 @@ class OSD:
 
     def progress(self,completed,total):
         self.osd.set_colour('blue')
-        self.osd.display(int(completed/total*100), pyosd.TYPE_PERCENT, 1)
+        if total: 
+            pct = int(completed/total*100)
+        else:
+            pct = 100
+        self.osd.display(pct, pyosd.TYPE_PERCENT, 1)

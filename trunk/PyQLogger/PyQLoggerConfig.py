@@ -100,28 +100,24 @@ class PyQLoggerConfig (ConfigParser):
         self.remove_option("main", "blogs")
         self.remove_option("main", "selectedblog")
         
-    def addblogs(self, blogdict):
-        blogids = self.get("main", "blogs")
+    def addblogs(self, blogdict,selectedblog=None):
+        self.delblogs()
+        blogids = []
         if len(blogdict) < 1:
             return
-        for blogname in blogdict.keys():
-            blogentry = blogdict[blogname]
+        for (blogname,blogentry) in blogdict.items():
             blogid = blogentry["id"]
-            blogids = self.get("main", "blogs")
-            if blogids is None:
-                self.set("main", "blogs", blogid)
-            elif blogid in blogids.split(';'):
-                pass
-            elif len(blogids) > 0:
-                blogids += ";" + blogid
-                self.set("main", "blogs", blogids)
-            else:
-                print "PyQLoggerConfig.addblogs: shouldn't be here"
-
+            blogids += [ blogid ]
             self.set(blogid, "name", blogname)
             for blogkey in blogentry.keys():
                 self.set(blogid, blogkey, blogentry[blogkey])
-
+        self.set("main", "blogs", ";".join(blogids))
+        if selectedblog: # previously selected blog was passed
+            if selectedblog in blogids:
+                self.set("main", "selectedblog", selectedblog)
+            elif blogids:
+                self.set("main", "selectedblog", blogids[0])
+            
     def getblogID(self, blogname):
         if self.has_option("main", "blogs"):
             for blogid in self.get("main", "blogs").split(';'):

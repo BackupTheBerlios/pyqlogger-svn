@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file '/home/reflog/Personal/pyqlogger/trunk/PyQLogger/mainform.ui'
 #
-# Created: Sun Dec 19 09:49:20 2004
+# Created: Tue Dec 21 17:52:17 2004
 #      by: The PyQt User Interface Compiler (pyuic) 3.13
 #
 # WARNING! All changes made in this file will be lost!
@@ -1715,6 +1715,7 @@ class MainForm(QDialog):
         statusFrameLayout.addWidget(self.textLabel1_3)
 
         self.statusLabel = QLabel(self.statusFrame,"statusLabel")
+        self.statusLabel.setSizePolicy(QSizePolicy(7,5,0,0,self.statusLabel.sizePolicy().hasHeightForWidth()))
         self.statusLabel.setFrameShape(QLabel.StyledPanel)
         self.statusLabel.setFrameShadow(QLabel.Raised)
         statusFrameLayout.addWidget(self.statusLabel)

@@ -41,8 +41,7 @@ class MainForm_Impl(MainForm):
         self.notifymode = 0
         if statusbar:
             self.notifymode = 1
-        self.settings = PyQLoggerConfig.PyQLoggerConfig()
-        self.statusFrame.hide()
+        self.settings = PyQLoggerConfig.PyQLoggerConfig()        
         self.sh = HTMLSyntax(self.sourceEditor)
         self.sourceEditor.setTextFormat(Qt.PlainText)
         KdeQt.setPreviewWidget(self)
@@ -56,12 +55,10 @@ class MainForm_Impl(MainForm):
         tabLayout.setAutoAdd( True )
         tabLayout2 = QHBoxLayout(self.tab_2, 11, 6, "tabLayout2")
         tabLayout2.setAutoAdd( True )
-        self.statusProgress = QProgressBar(self.statusFrame)
-        self.statusFrame.layout().addWidget(self.statusProgress)
         initToolbar(self, self.plugins)
         self.notifier = Notifier(self, self.notifymode)
-        self.bg = BG.BackGround()
-        self.workers = BG.BackGround()
+        if self.notifier.mode != 1:
+            self.statusFrame.hide()
         self.uChecker = BG.updateCheckWorker(self.notifier)
         self.aMenu = QPopupMenu()
         self.aMenu.insertItem("Delete post", 1)
@@ -92,7 +89,7 @@ class MainForm_Impl(MainForm):
             res = QMessageBox.question(self, "Question", "Are you sure you want to delete this post?", QMessageBox.Yes, QMessageBox.No)
             if res == QMessageBox.Yes:
                 aBlog = self.__getAtomBlog()
-                self.workers.add(BG.postDeleteWorker(aBlog, self.notifier, self, "Deleting post...")) 
+                BG.PostEraser(aBlog, self.notifier, self)()
         elif(action == 2):
             filename = QFileDialog.getSaveFileName(os.path.expanduser("~"),
                                         "All files (*.*)",self,           
@@ -141,7 +138,8 @@ class MainForm_Impl(MainForm):
     
     def btnNewPost_clicked(self):
         if self.current_post:
-            res = QMessageBox.question(self, "Question", "Current post is unsaved. Are you sure you want to erase it?",
+            res = QMessageBox.question(self, "Question", 
+                                   "Current post is unsaved. Are you sure you want to erase it?",
                                    QMessageBox.Yes, QMessageBox.No)
             if res == QMessageBox.No:
                 return
@@ -151,7 +149,8 @@ class MainForm_Impl(MainForm):
         
     def btnExit_clicked(self):
         if self.current_post:
-            res = QMessageBox.question(self, "Question", "Current post is unsaved. Are you sure you want to exit?",
+            res = QMessageBox.question(self, "Question", 
+                                   "Current post is unsaved. Are you sure you want to exit?",
                                    QMessageBox.Yes, QMessageBox.No)
             if res == QMessageBox.No:
                 return
@@ -164,10 +163,10 @@ class MainForm_Impl(MainForm):
         if title:
             aBlog = self.__getAtomBlog()
             if self.current_post and self.current_post.has_key('id'):
-                bgWorker = BG.newPostWorker(aBlog, self.notifier, self, "Posting update to blog...")
+                bgWorker = BG.PostEditor(aBlog, self.notifier, self )
             else:
-                bgWorker = BG.newPostWorker(aBlog, self.notifier, self, "Posting to blog...")
-            self.workers.add(bgWorker, self.sender())
+                bgWorker = BG.PostCreator(aBlog, self.notifier, self )
+            bgWorker()
         else:
             QMessageBox.warning(self, "Warning", "You forgot the post's title!")
     
@@ -190,7 +189,8 @@ class MainForm_Impl(MainForm):
     def btnRefreshBlogs_clicked(self):      
         aBlog = self.__getAtomBlog()
         if aBlog:
-            self.workers.add(BG.blogFetchWorker(aBlog, self.notifier, self, "Fetching list of blogs..."), self.sender())
+            bg = BG.BlogFetcher(aBlog, self.notifier, self, self.sender())
+            bg()
     
     def btnSettings_clicked(self):
         wiz = SetupWizardForm_Impl(self)
@@ -213,7 +213,8 @@ class MainForm_Impl(MainForm):
     def btnReloadFeed_clicked(self):
         aBlog = self.__getAtomBlog()
         if aBlog:
-            self.workers.add(BG.postFetchWorker(aBlog, self.notifier,self, "Fetching posts..."),self.sender())
+            bg = BG.PostFetcher(aBlog, self.notifier, self, self.sender())
+            bg()
     
     def comboBlogs_activated(self, blogname):
         if len(blogname) > 0:

@@ -32,6 +32,7 @@ class Notifier:
                 qt.QMessageBox.warning(None,
                 self.parent.trUtf8("Warning"),
                 self.parent.trUtf8("""Seems like you don't have PyOSD installed!\nReverting to status bar notifications"""))
+                self.mode = 1
                 self.display  = Status.StatusNotifier(parent,args)
         elif mode == 1:
             self.display  = Status.StatusNotifier(parent,args)
@@ -40,3 +41,4 @@ class Notifier:
             sys.exit()
         for method in [mname for mname in dir(self.display) if len(mname)>2 and mname[:2] != '__' ]:
             setattr(self, method, getattr(self.display, method))
+        self.mode = mode
