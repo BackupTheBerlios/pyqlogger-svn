@@ -1,24 +1,25 @@
 ## $Id$
 ## This file is part of PyQLogger.
-## 
-## Copyright (c) 2004 Eli Yukelzon a.k.a Reflog 		
 ##
+## Copyright (c) 2004 Eli Yukelzon a.k.a Reflog
+##                    Xander Soldaat a.k.a. Mightor
 ## PyQLogger is free software; you can redistribute it and/or modify
 ## it under the terms of the GNU General Public License as published by
 ## the Free Software Foundation; either version 2 of the License, or
 ## (at your option) any later version.
-## 
+##
 ## PyQLogger is distributed in the hope that it will be useful,
 ## but WITHOUT ANY WARRANTY; without even the implied warranty of
 ## MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 ## GNU General Public License for more details.
-## 
+##
 ## You should have received a copy of the GNU General Public License
 ## along with PyQLogger; if not, write to the Free Software
 ## Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 import ToolBarManager
 from qt import QMessageBox
+
 class Listeningto_Plugin(ToolBarManager.ToolbarPlugin):
     tooltip = "Insert currently playing song artist and title"
 
@@ -155,42 +156,72 @@ class Listeningto_Plugin(ToolBarManager.ToolbarPlugin):
         "\x05\xf8\x0f\xbd\x53\x93\x3b\x27\x84\x0f\x77\x00" \
         "\x00\x00\x00\x49\x45\x4e\x44\xae\x42\x60\x82"
 
-    def on_click(self):
-        try:
-	    import xmms.control
-	    if xmms.is_running():
-		current_index = xmms.control.get_playlist_pos()
-		current_title = xmms.control.get_playlist_title(current_index)
-		if current_title:
-		    sourceEditor = self.parent.sourceEditor
-		    line, index = sourceEditor.getCursorPosition()
-		    sourceEditor.insertAt("Currently listening to: %s\n" % \
-			unicode(current_title), line, index)
-		else:
-		    QMessageBox.warning(None,
-			self.parent.trUtf8("Error"),
-			self.parent.trUtf8("""No songs loaded in playlist."""))
-		    
-	    else:
-		QMessageBox.warning(None,
-		    self.parent.trUtf8("Error"),
-		    self.parent.trUtf8("""XMMS is not running."""))
-	except:
-	    QMessageBox.warning(None,
-		self.parent.trUtf8("Error"),
-		self.parent.trUtf8("""Could not load the xmms control module.\nPlease ensure it is installed."""))
-	    return
 
+    def available(self,idx):
+        import commands
+        if(idx == 1):
+            try:
+                import xmms.control
+                if xmms.is_running(): return True
+            except:
+                pass
+            return False
+        elif(idx == 2):
+            out = commands.getoutput('dcop noatun')
+            return out and not  ( ("failed" in out) or ("No such application" in out))
+        elif(idx == 3):
+            out = commands.getoutput('dcop amarok')
+            return out and not  ( ("failed" in out) or ("No such application" in out))
+            
+    def getTitle(self,idx):
+        import commands
+        if(idx == 1):
+            current_index = xmms.control.get_playlist_pos()
+            current_title = xmms.control.get_playlist_title(current_index)                
+            return current_title
+        elif(idx == 2):
+            return commands.getoutput('dcop noatun Noatun title')
+        elif(idx == 3):
+            return commands.getoutput('dcop amarok player title')
+        
+        
+    def on_click(self):            
+            pass
+
+    def UpdateMenu(self):        
+        for i in range(1,4):    
+            self.Menu.setItemEnabled(i,self.available(i))
+
+    def Popup(self,idx):
+        current_title = self.getTitle(idx)
+        if current_title:
+            sourceEditor = self.parent.sourceEditor
+            line, index = sourceEditor.getCursorPosition()
+            sourceEditor.insertAt("Currently listening to: %s\n" % \
+            unicode(current_title), line, index)
+        else:
+            QMessageBox.warning(None,
+            self.parent.trUtf8("Error"),
+            self.parent.trUtf8("""No songs loaded in playlist."""))            
 
     def getWidget(self):
         page = self.parent.getPage("Plugins")
         button = QPushButton(page)
         bi = QPixmap()
         bi.loadFromData(self.image,"PNG")
+        self.Menu = QPopupMenu()
+        self.Menu.insertItem("XMMS",1)
+        self.Menu.insertItem("Noatun",2)
+        self.Menu.insertItem("Amarok",3)
+        self.parent.connect(self.Menu,SIGNAL("activated(int)"),self.Popup)  
+        self.parent.connect(self.Menu,SIGNAL( "aboutToShow()"),self.UpdateMenu)
+        button.setPopup(self.Menu)          
         button.setIconSet(QIconSet(bi))
         w = 32
         h = 32
         button.setMaximumSize(QSize(w,h))
-	QToolTip.add(button,self.tooltip)
+        QToolTip.add(button,self.tooltip)
         self.parent.connect(button,SIGNAL("clicked()"),self.on_click)
         button.show()
+        self.button = button
+
