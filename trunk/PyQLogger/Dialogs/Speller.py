@@ -92,7 +92,7 @@ class Speller:
             if self.CheckString(w,word):
                 sug = self.speller.suggest(word)
                 if sug != None:  # should we even check it?
-                    ret[word] =  { "word":w, "sug": sug, "idx":idx } 
+                    ret[w] =  { "sug": sug, "idx":idx } 
             idx += 1
         return ret
 

@@ -8,7 +8,7 @@ def netOp(status, code, callback):
     return { "Status":status, "Code":code, "Callback":callback } 
 
 class OpCompleteEvent(QEvent):
-    def __init__(self, method, parent, data):
+    def __init__(self, method, parent, data=None):
         QEvent.__init__(self, QEvent.User)
         self.parent = parent
         self.method = method

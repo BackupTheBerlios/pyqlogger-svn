@@ -21,11 +21,12 @@ __revision__ = "$Id$"
 
 """ Background workers """
 from qt import QTimer, SIGNAL, QListBoxText, QThread, \
-               QObject, QString
+               QObject, QString, QMutex
 from datetime import date
 from distutils.version import LooseVersion
 import sys, urllib2
 from PyQLogger.Plugins.EventPlugin import EventType
+from PyQLogger.Network import OpCompleteEvent
 
 ###########  Fetch Blogs ###################
 
@@ -119,3 +120,34 @@ def doneEditPost(self, res):
     else:
         self.notifier.error(res)
     self.btnPublish.setEnabled(True)
+
+###########  Speller ###################
+class SpellThread(QThread):
+    def __init__(self,parent):
+        self.parent = parent
+        self.mutex = QMutex()
+        QThread.__init__(self)
+                
+    def run(self):
+        self.mutex.lock()
+        scin = self.parent.sourceEditor
+        text = unicode ( scin.text() )
+        if text :
+            self.parent.speller_result = self.parent.speller.load( unicode ( text ) )
+        self.postEvent(self.parent, OpCompleteEvent(doneSpell,self.parent))
+        self.mutex.unlock()
+    
+def doneSpell(self, data=None):
+    scin = self.sourceEditor
+    text = unicode ( scin.text() )
+    # clear indicators
+    scin.SendScintilla(scin.SCI_STARTSTYLING, 0, scin.INDIC2_MASK)
+    scin.SendScintilla(scin.SCI_SETSTYLING , len(text), 0)
+    # set indicator to squigly
+    scin.SendScintilla(scin.SCI_INDICSETSTYLE,2,scin.INDIC_SQUIGGLE)
+    scin.SendScintilla(scin.SCI_INDICSETFORE,2,0x00ffff)
+    
+    for result in self.speller_result.keys():
+        scin.SendScintilla(scin.SCI_STARTSTYLING,result.start(), scin.INDIC2_MASK)
+        scin.SendScintilla(scin.SCI_SETSTYLING,result.end()-result.start(), scin.INDIC2_MASK)
+

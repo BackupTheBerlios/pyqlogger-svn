@@ -32,23 +32,13 @@ from Speller import Speller
 from PyQLogger.Plugins.EventPlugin import EventType
 from Logging import LoggerWidget
 from logging import Logger
-
+import thread
 class MainDialog(QMainWindow):
+    
     def spellTimer(self):
-        scin = self.sourceEditor
-        text = unicode ( scin.text() )
-        if text :
-            # clear indicators
-            scin.SendScintilla(scin.SCI_STARTSTYLING, 0, scin.INDIC2_MASK)
-            scin.SendScintilla(scin.SCI_SETSTYLING , len(text), 0)
-            # set indicator to squigly
-            scin.SendScintilla(scin.SCI_INDICSETSTYLE,2,scin.INDIC_SQUIGGLE)
-            scin.SendScintilla(scin.SCI_INDICSETFORE,2,0x00ffff)
-            self.speller_result = self.speller.load( unicode ( text ) )
-            for result in self.speller_result.values():
-                scin.SendScintilla(scin.SCI_STARTSTYLING,result["word"].start(), scin.INDIC2_MASK)
-                scin.SendScintilla(scin.SCI_SETSTYLING,result["word"].end()-result["word"].start(), scin.INDIC2_MASK)
-
+        if not self.spellthread.running():
+            self.spellthread.start()
+    
     def getPage(self, title):
         if not title: 
             return self.toolbarTab.page(0)
@@ -370,18 +360,25 @@ class MainDialog(QMainWindow):
         if idx == 99:
             self.speller.speller.add_to_personal(self.curword)
         else:
-            res = self.speller_result[self.curword]
+            for rez in self.speller_result.keys():
+                if rez.group(0) == self.curword:
+                    res = self.speller_result[rez]
             newword = res["sug"][idx]
             self.speller.ReplaceWord(res["idx"],newword)
             self.sourceEditor.setText(self.speller.text)
         
     def fillSpellerMenu(self, start, end , parent):
-        self.curword = unicode(self.sourceEditor.text())[start:end]        
-        if hasattr(self,"speller_result") and \
-           self.speller_result.has_key(self.curword):
+        self.curword = unicode(self.sourceEditor.text())[start:end]
+        res = None
+        if hasattr(self,"speller_result"):
+            for rez in self.speller_result.keys():
+                if rez.group(0) == self.curword:
+                    res = self.speller_result[rez]
+            
+        if res:
             idx = 0
             Menu = QPopupMenu(parent)
-            for s in self.speller_result[self.curword]["sug"][:15]:
+            for s in res["sug"][:15]:
                 Menu.insertItem(s, idx)
                 idx += 1
             Menu.insertSeparator()
@@ -414,6 +411,7 @@ class MainDialog(QMainWindow):
         self.password = password
         self.settings = settings        
         self.forms = forms
+        self.spellthread = BG.SpellThread(self)
         if not hasattr(self,"crossPostControls"):
             self.crossPostControls = []
         self.crossPost = {}
