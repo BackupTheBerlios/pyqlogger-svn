@@ -23,16 +23,16 @@ class StatusNotifier:
         self.parent = parent
         self.progressBar = ctrl
         
-    def error(self, msg):
+    def error(self, msg, hold=False):
         self.parent.statusBar.message("<font color='red'>%s</font>"%msg)
 
-    def info(self, msg):
+    def info(self, msg, hold=False):
         self.parent.statusBar.message(msg)
 
-    def warn(self, msg):
+    def warn(self, msg, hold=False):
         self.parent.statusBar.message(msg)
 
-    def status(self, msg):
+    def status(self, msg, hold=False):
         self.parent.statusBar.message(msg)
 
     def progress(self, completed, total):        

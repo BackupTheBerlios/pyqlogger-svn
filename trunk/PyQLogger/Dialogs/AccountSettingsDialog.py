@@ -77,28 +77,28 @@ class AccountSettingsDialog(QDialog):
                 self.comboProviders.insertItem(image,cla.name)
             else:
                 self.comboProviders.insertItem(cla.name)
-                
+
     def edtHomepage_textChanged(self, text):
         index = self.comboBlogs.currentItem()
         self.acc.Blogs [ index ].Url = str(text)
-        
+
     def comboBlogs_activated(self, index):
         self.edtHomepage.setText(self.acc.Blogs [ index ].Url)
-        
+
     def comboProviders_activated (self, item):
         if self.text_prov.has_key(str(item)):
             self.acc.Service = self.text_prov [ str(item) ]
             self.acc.init()
             self.updateButtons()
 
-    def init(self,acc=None):            
+    def init(self,acc=None):
         if not acc:
             self.acc = Account()
         else:
             self.acc = acc
             self.setFromAccount()
         self.updateButtons()
-        
+
     def updateButtons(self):
         done = False
         canFetchBlogs = False

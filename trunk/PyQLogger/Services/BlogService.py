@@ -16,7 +16,7 @@
 ## along with PyQLogger; if not, write to the Free Software
 ## Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 ##
-__revision__ = "$Id: BlogService.py 93 2004-12-22 15:59:53Z reflog $"
+__revision__ = "$Id$"
 
 import httplib, sha, base64, urllib2, time, random
 from xml.sax.saxutils import escape , unescape
@@ -36,7 +36,7 @@ class BlogService:
     def setOptions(self,hash):
         pass
         
-    def getEmpty(self):
+    def getEmpty():
         pass
         
     def getPixmap(self):

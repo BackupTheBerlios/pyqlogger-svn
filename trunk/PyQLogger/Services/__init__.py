@@ -1,5 +1,5 @@
 ##
-## $Id: __init__.py 43 2004-12-12 09:45:44Z reflog $
+## $Id$
 ##
-__all__ = ['Blogger','GenericAtom','LiveJournal','Metablog','MovableType','BlogService']
-BlogServices = ['Blogger.BloggerService','GenericAtom.GenericAtomService','LiveJournal.LiveJournalService','Metablog.MetablogService','MovableType.MovableTypeService']
+__all__ = ['Blogger','GenericAtom','LiveJournal','Metablog','MovableType','BlogService','Advogato']
+BlogServices = ['Blogger.BloggerService','GenericAtom.GenericAtomService','LiveJournal.LiveJournalService','Metablog.MetablogService','MovableType.MovableTypeService', 'Advogato.AdvogatoService' ]

@@ -24,21 +24,25 @@ from kdecore import KIconLoader, KIcon
 class KdePopupNotifier:
     def __init__(self, parent):
         self.parent = parent
-        self.PassivePopup = KPassivePopup()
+        self.PassivePopup = KPassivePopup()        
         IconLoader   = KIconLoader()        
         self.icoCancel = IconLoader.loadIcon('cancel', KIcon.Small)
         self.icoInfo = IconLoader.loadIcon('info', KIcon.Small)
         self.st = parent.systray
 
-    def error(self, msg):
-        self.PassivePopup.message("Notification", msg, self.icoCancel, self.st)
+    def error(self, msg, hold=False):
+        self.PassivePopup.setTimeout( (30,-1)[hold] )
+        self.PassivePopup.message("PyQLogger Status:", msg, self.icoCancel, self.st)
 
-    def info(self, msg):
-        self.PassivePopup.message("Notification", msg, self.icoInfo, self.st)
+    def info(self, msg, hold=False):
+        self.PassivePopup.setTimeout( (30,-1)[hold] )
+        self.PassivePopup.message("PyQLogger Status:", msg, self.icoInfo, self.st)
 
-    def warn(self, msg):
-        self.PassivePopup.message("Notification", msg, self.icoCancel, self.st)
+    def warn(self, msg, hold=False):
+        self.PassivePopup.setTimeout( (30,-1)[hold] )
+        self.PassivePopup.message("PyQLogger Status:", msg, self.icoCancel, self.st)
 
-    def status(self, msg):
-        self.PassivePopup.message("Notification", msg, self.icoInfo, self.st)
+    def status(self, msg, hold=False):
+        self.PassivePopup.setTimeout( (30,-1)[hold] )
+        self.PassivePopup.message("PyQLogger Status:", msg, self.icoInfo, self.st)
 

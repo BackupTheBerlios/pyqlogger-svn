@@ -30,19 +30,19 @@ class OSD:
         self.osd2.set_align(pyosd.ALIGN_LEFT)
         self.osd2.set_pos(pyosd.POS_BOT)
         
-    def error(self, msg):
+    def error(self, msg, hold=False):
         self.osd.set_colour('red')
         self.osd.display(msg, pyosd.TYPE_STRING, 1)
 
-    def info(self, msg):
+    def info(self, msg, hold=False):
         self.osd.set_colour('blue')
         self.osd.display(msg, pyosd.TYPE_STRING, 1)
 
-    def warn(self, msg):
+    def warn(self, msg, hold=False):
         self.osd.set_colour('yellow')
         self.osd.display(msg, pyosd.TYPE_STRING, 1)
 
-    def status(self, msg):
+    def status(self, msg, hold=False):
         self.osd2.set_colour('black')
         self.osd2.display(msg, pyosd.TYPE_STRING, 1)
 

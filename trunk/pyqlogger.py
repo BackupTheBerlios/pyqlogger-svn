@@ -131,18 +131,26 @@ def main():
         if not acc or not pwd:
             break
         else:
-            wnd = __FORMS__["Main"]
+            (acc.Password,oldpwd) = (pwd,acc.Password)            
             acc.init()
-            wnd["Impl"].init(settings,__FORMS__, acc, pwd,\
-                             manager)
-            app.setMainWidget(wnd["Class"])
-            wnd["Class"].show()
-            #splash.finish(wnd["Class"])
-            app.exec_loop()
-            if wnd["Impl"].reload:
+            logres = acc.login()
+            acc.Password = oldpwd
+            if not logres:
+                QMessageBox.warning(None,"Failed!","""Cannot login!""")
                 acc = None
             else:
-                break
+                wnd = __FORMS__["Main"]
+                acc.init()
+                wnd["Impl"].init(settings,__FORMS__, acc, pwd,\
+                                 manager)
+                app.setMainWidget(wnd["Class"])
+                wnd["Class"].show()
+                #splash.finish(wnd["Class"])
+                app.exec_loop()
+                if wnd["Impl"].reload:
+                    acc = None
+                else:
+                    break
 
 
 

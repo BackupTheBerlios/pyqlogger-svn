@@ -34,7 +34,7 @@ class UISettings(XMLObject):
 class SpellerSettings(XMLObject):
     Enabled  = IntegerAttribute(default=0)
     Language = TextNode(default="en_US")
-    Prefix   = TextNode(default="/usr")
+    Prefix   = TextNode(default="/usr/bin")
 
 class DialogSettings(XMLObject):
     UrlDialogTarget = TextNode(optional=True)

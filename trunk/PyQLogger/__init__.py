@@ -1,4 +1,4 @@
 ##
 ## $Id$
 ##
-__all__ = ['Account' , 'Blog', 'Post', 'Settings' , 'Network' , 'KdeQt']
+__all__ = ['Account' , 'Blog', 'Post', 'Settings' , 'Network' , 'KdeQt', 'Services']

@@ -2,11 +2,18 @@ from qt import *
 import sys
 from Queue import Queue
 
-__revision__ = "$Id:  $"
+__revision__ = "$Id$"
 
 def netOp(status, code, callback):
     return { "Status":status, "Code":code, "Callback":callback } 
 
+class OpCompleteEvent(QEvent):
+    def __init__(self, method, parent, data):
+        QEvent.__init__(self, QEvent.User)
+        self.parent = parent
+        self.method = method
+        self.data = data
+        
 class Network(QThread):
     def __init__(self,parent):
         self.Operations = Queue(0)
@@ -19,6 +26,6 @@ class Network(QThread):
     def run(self):
         while True:
             op = self.Operations.get()
-            self.parent.notifier.status(op["Status"])
+            self.parent.notifier.status(op["Status"],True)
             res = op["Code"](self.parent)
-            op["Callback"](self.parent, res)
+            self.postEvent(self.parent, OpCompleteEvent(op["Callback"],self.parent, res))

@@ -41,7 +41,6 @@ def doneFetchingBlogs(self, res):
     self.FetchBlogsAction.setEnabled(True)
     
 def startFetchingBlogs(self):
-    self.FetchBlogsAction.setEnabled(False)
     try:
         self.account.fetchBlogs()
     except Exception, e:
@@ -50,8 +49,7 @@ def startFetchingBlogs(self):
 
 ###########  Fetch Posts ###################
             
-def startFetchingPosts(self):
-    self.FetchPostsAction.setEnabled(False)
+def startFetchingPosts(self):    
     try:
         self.account.Blogs[self.account.SelectedBlog].reloadPosts()
     except Exception, e:
@@ -87,8 +85,7 @@ def donePublishPost(self, res):
         self.notifier.error(res)
     self.btnPublish.setEnabled(True)
     
-def startPublishPost(self):        
-    self.btnPublish.setEnabled(False)
+def startPublishPost(self):            
     try:
         title = unicode(self.editPostTitle.text())
         content = unicode(self.sourceEditor.text())
@@ -101,8 +98,7 @@ def startPublishPost(self):
         
 ###########  Edit Post ###################
 
-def startEditPost(self):
-    self.btnPublish.setEnabled(False)
+def startEditPost(self):    
     try:
         self.current_post.Title = unicode(self.editPostTitle.text())
         self.current_post.Content = unicode(self.sourceEditor.text())

@@ -46,20 +46,20 @@ class Notifier:
             self.mode = 1
             self.display  = Status.StatusNotifier(parent,args)
 
-    def error(self, msg):
-        self.display.error(msg)        
+    def error(self, msg, hold=False):
+        self.display.error(msg, hold)        
         self.parent.log.error(msg)
         
-    def info(self, msg):
-        self.display.info(msg)
+    def info(self, msg, hold=False):
+        self.display.info(msg, hold)
         self.parent.log.info(msg)
         
-    def warn(self, msg):
-        self.display.warn(msg)
+    def warn(self, msg, hold=False):
+        self.display.warn(msg, hold)
         self.parent.log.warning(msg)
         
-    def status(self, msg):
-        self.display.status(msg)
+    def status(self, msg, hold=False):
+        self.display.status(msg, hold)
         self.parent.log.info(msg)
         
         

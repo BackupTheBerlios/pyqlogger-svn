@@ -27,7 +27,7 @@ from PyQLogger.ToolBar import initToolbar
 from PyQLogger.Notifier import Notifier
 from PyQLogger.Post import Post
 from PyQLogger import BG, UI
-from PyQLogger.Network import Network, netOp
+from PyQLogger.Network import Network, netOp, OpCompleteEvent
 from Speller import Speller
 from PyQLogger.Plugins.EventPlugin import EventType
 from Logging import LoggerWidget
@@ -153,7 +153,7 @@ class MainDialog(QMainWindow):
         self.current_post = None
 
     def close_Event(self, event):
-        self.reload = self.sender() == self.btnRelogin or self.sender() == self.ReloginAction
+        print "in close_even"
         if self.proposeSavePost("exit"):
             return False
         self.SaveAll()
@@ -165,10 +165,12 @@ class MainDialog(QMainWindow):
         if content:
             if title:
                 if self.current_post and self.current_post.ID:
+                    self.btnPublish.setEnabled(False)
                     self.network.enqueue(netOp("Editing post...",BG.startEditPost,BG.doneEditPost))
                 else:
                     self.manager.handleEvent(EventType.BEFOREPUBLISH, None)
                     if self.getCrossBlogList():
+                        self.btnPublish.setEnabled(False)
                         self.network.enqueue(netOp("Publishing post...",BG.startPublishPost,BG.donePublishPost))
                     else:
                         QMessageBox.warning(self, "Warning", "You have to select at least one blog to post to!")
@@ -188,6 +190,7 @@ class MainDialog(QMainWindow):
             QMessageBox.warning(self, "Warning", "You forgot the post's title!")
 
     def FetchBlogsAction_activated(self):
+        self.FetchBlogsAction.setEnabled(False)
         self.network.enqueue(netOp("Fetching blogs...",BG.startFetchingBlogs,BG.doneFetchingBlogs))
 
     def SettingsAction_activated(self):
@@ -211,6 +214,7 @@ class MainDialog(QMainWindow):
 
 
     def FetchPostsAction_activated(self):
+        self.FetchPostsAction.setEnabled(False)
         self.network.enqueue(netOp("Fetching posts...",BG.startFetchingPosts,BG.doneFetchingPosts))
     
     def comboBlogs_activated(self, blogname):
@@ -283,9 +287,22 @@ class MainDialog(QMainWindow):
                     ctrl.setChecked(True)
                 bidx += 1
 
+    def close(self):
+        print "in close from:"+str(self.sender())
+        self.reload = self.sender() == self.btnRelogin or self.sender() == self.ReloginAction
+        self.forms["Main"]["Class"].close() 
+
+    def event(self, e):
+        if hasattr(e, "data") and isinstance(e.data(),OpCompleteEvent):
+            d = e.data()
+            d.method(d.parent, d.data)
+            return True
+        return False
+    
     def eventFilter(self, object, event):
         """ this is a dirty-ass hack to intercept the closeEvent fully """
         if event and event.type() == QEvent.Close and object != self:
+            print "in eventfilter from"+str(object)+" sender "+str(self.sender())
             if not self.close_Event(event):
                 return True
             else:
