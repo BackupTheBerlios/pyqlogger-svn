@@ -1,7 +1,8 @@
 ## $Id$
 ## This file is part of PyQLogger.
 ## 
-## Copyright (c) 2004 Eli Yukelzon a.k.a Reflog         
+## Copyright (c) 2004 Eli Yukelzon a.k.a Reflog &
+##                    Xander Soldaat a.k.a. Mightor       
 ##
 ## PyQLogger is free software; you can redistribute it and/or modify
 ## it under the terms of the GNU General Public License as published by
@@ -42,9 +43,9 @@ class MainForm_Impl(MainForm):
         self.statusFrame.hide()
         self.sh = HTMLSyntax(self.sourceEditor)
         self.sourceEditor.setTextFormat(Qt.PlainText)
-	KdeQt.setPreviewWidget(self)
-	KdeQt.setEditWidget(self)
-																  
+        KdeQt.setPreviewWidget(self)
+        KdeQt.setEditWidget(self)
+
         self.current_post = None
         self.cached_password = None
         self.cached_atomblog = None

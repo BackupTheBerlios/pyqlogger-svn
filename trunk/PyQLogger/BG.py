@@ -1,7 +1,8 @@
 ## $Id$
 ## This file is part of PyQLogger.
 ## 
-## Copyright (c) 2004 Eli Yukelzon a.k.a Reflog         
+## Copyright (c) 2004 Eli Yukelzon a.k.a Reflog &
+##                    Xander Soldaat a.k.a. Mightor     
 ##
 ## PyQLogger is free software; you can redistribute it and/or modify
 ## it under the terms of the GNU General Public License as published by
@@ -24,7 +25,6 @@ from datetime import date
 from time import sleep
 from distutils.version import LooseVersion
 import sys,urllib2,re
-import sys
 
 class BackGround:
     """ class that provides a timer that checks on background processes,

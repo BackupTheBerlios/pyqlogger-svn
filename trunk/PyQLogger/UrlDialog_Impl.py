@@ -1,7 +1,8 @@
 ## $Id$
 ## This file is part of PyQLogger.
 ##
-## Copyright (c) 2004 Xander Soldaat a.k.a. Mightor
+## Copyright (c) 2004 Eli Yukelzon a.k.a Reflog &
+##                    Xander Soldaat a.k.a. Mightor
 ##
 ## PyQLogger is free software; you can redistribute it and/or modify
 ## it under the terms of the GNU General Public License as published by
