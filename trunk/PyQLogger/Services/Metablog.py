@@ -20,16 +20,13 @@
 from BlogService import *
 
 class MetablogService (BlogService):
-
-  """
-  
-  :version:
-  :author:
-  """
-
-  def __init__(self):
-
-    pass
-
+    name = "MetaWeblog Provider"
+    def __init__(self,host,username,password):
+        BlogService.__init__(self,host,username,password)
+        
+    def getEmpty():
+        return MetablogService("","","")
+    getEmpty = staticmethod(getEmpty)
+    
 
 

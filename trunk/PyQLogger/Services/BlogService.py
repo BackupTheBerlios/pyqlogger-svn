@@ -22,6 +22,7 @@ import httplib, sha, base64, urllib2, time, random
 from xml.sax.saxutils import escape , unescape
 import feedparser, re
 from qtnetwork import QHttpRequestHeader
+from qt import QPixmap
 
 def makeNonce():
     """ Generate a random string 'Nonce' marked with timestamp """
@@ -42,4 +43,19 @@ class BlogService:
     def setOptions(self,hash):
         pass
         
+    def getEmpty(self):
+        pass
+        
+    def getPixmap(self):
+        image = None
+        if self.icon:                
+            if type(self.icon) == str:
+                image = QPixmap()
+                image.loadFromData(self.icon)
+            elif type(self.icon) == list:
+                image = QPixmap(self.icon)
+        return image
+        
+    getEmpty = staticmethod(getEmpty)
     name = "(none)"
+    icon = None
