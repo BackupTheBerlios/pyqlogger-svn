@@ -4,3 +4,6 @@ This is a list of stuff that we'd like to do at some point:
 * Support for multiple accounts with different blog providers
 * Allow enabling/disabling plugins
 * Progress bar when uploading a picture
+* Complete options dialog 
+* Options for each plugin separatly
+* Allow plugins to store settings in main config file
