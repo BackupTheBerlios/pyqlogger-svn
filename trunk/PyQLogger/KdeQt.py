@@ -20,13 +20,24 @@ try:
 
                 
     def setupKDE(app,wnd):
-        t = KSystemTray(wnd)
-        t.setPixmap( KSystemTray.loadIcon( "kedit" ) )
+        try:
+            t = KSystemTray(wnd)
+        except Exception, inst:
+            sys.stderr.write("setupKDE: exception: %s\n" % inst)
+            
+        if t:
+            t.setPixmap( KSystemTray.loadIcon( "kedit" ) )
+            QToolTip.add(t,"PyQLogger - Blogger GUI")
+            t.show()
+        else:
+            sys.stderr.write("setupKDE: t is None\n")
+            
         dcop  = app.dcopClient ()
-        appid = dcop.registerAs('pyqlogger')
-        parrot  = PQDCOP(wnd)
-        QToolTip.add(t,"PyQLogger - Blogger GUI")
-        t.show()
+        if dcop:
+            appid = dcop.registerAs('pyqlogger')
+            parrot  = PQDCOP(wnd)
+        else:
+            print "setupKDE: dcop is None"
 
     class PQDCOP (DCOPExObj):
         def __init__ (self, parent, id = 'PyQLogger'):

@@ -32,6 +32,7 @@ class SetupWizardForm_Impl(SetupWizardForm):
 
     def initValues(self,settings):
         self.settings = settings
+        self.blogs = ()
         if self.settings.has_option("main", "login"):
             self.editLogin.setText(self.settings.get("main", "login"))
         if self.settings.has_option("main", "url"):
@@ -63,47 +64,47 @@ class SetupWizardForm_Impl(SetupWizardForm):
                         self.comboBlogs.setCurrentItem( counter )
                 counter += 1
                         
-    def editLogin_textChanged(self,a0):
-        l = str(self.editLogin.text())
-        p = str(self.editPassword.text())
-        h = str(self.editHost.text())
-        u = str(self.editURL.text())
-        p1 = str(self.editEP.text())
-        p2 = str(self.editFP.text())
-        p3 = str(self.editPP.text())
-        i = self.comboBlogs.count() > 0
-        b = False # control next button
-        b2 = False #control fetch blogs button
-        b3 = False #control fetch url button
-        if l and p and u and i and h and p1 and p2 and p3: b = True
-        if l and p and h and p1 and p2 and p3: b2 = True
-        if l and p and h and i and p1 and p2 and p3: b3 = True
-        self.nextButton().setEnabled( b )
-        self.btnFetchBlogs.setEnabled( b2 )
+    def editLogin_textChanged(self,widgetName):
+        login = str(self.editLogin.text())
+        password = str(self.editPassword.text())
+        host = str(self.editHost.text())
+        url = str(self.editURL.text())
+        endpoint = str(self.editEP.text())
+        feedpath = str(self.editFP.text())
+        postpath = str(self.editPP.text())
+        numberblogs = self.comboBlogs.count() > 0
+        nextButtonEnable = False # control next button (b)
+        fetchBlogsEnable = False #control fetch blogs button (b2)
+        fetchUrl = False #control fetch url button (b3)
+        if login and password and url and numberblogs and host and endpoint and feedpath and postpath: nextButtonEnable = True
+        if login and password and host and endpoint and feedpath and postpath: fetchBlogsEnable = True
+        if login and password and host and numberblogs and endpoint and feedpath and postpath: fetchUrl = True
+        self.nextButton().setEnabled( nextButtonEnable )
+        self.btnFetchBlogs.setEnabled( fetchBlogsEnable )
         if self.comboProviders.currentItem() == 1:
-            self.btnFetchUrl.setEnabled( b3 )
+            self.btnFetchUrl.setEnabled( fetchUrl )
         
-    def comboBlogs_activated(self,a0):
+    def comboBlogs_activated(self,widgetName):
         self.editLogin_textChanged(None)
 
-    def comboProviders_activated(self,a0):
+    def comboProviders_activated(self,widgetName):
         """ generic/blogger/movable """
-        if self.comboProviders.text(0) == a0:
+        if self.comboProviders.text(0) == widgetName:
             self.frameGeneric.show()
-            host = ep = fp = pp = ""
-        elif self.comboProviders.text(1) == a0:
+            host = endpoint = feedpath = postpath = ""
+        elif self.comboProviders.text(1) == widgetName:
             self.frameGeneric.hide()
             host = "www.blogger.com"
-            (ep,fp,pp)  = BloggerClient.endpoints
-        elif self.comboProviders.text(2) == a0:
+            (endpoint, feedpath, postpath)  = BloggerClient.endpoints
+        elif self.comboProviders.text(2) == widgetName:
             self.frameGeneric.hide()
             host = ""
-            (ep,fp,pp)  = MovableTypeClient.endpoints
+            (endpoint, feedpath, postpath)  = MovableTypeClient.endpoints
             
         self.editHost.setText(host)
-        self.editEP.setText(ep)
-        self.editFP.setText(fp)
-        self.editPP.setText(pp)
+        self.editEP.setText(endpoint)
+        self.editFP.setText(feedpath)
+        self.editPP.setText(postpath)
     
     def btnFetchUrl_clicked(self):
         bc = BloggerClient(str(self.editHost.text()),str(self.editLogin.text()), str(self.editPassword.text()))
@@ -135,29 +136,18 @@ class SetupWizardForm_Impl(SetupWizardForm):
             QMessageBox.critical(self,"Error","Couldn't fetch list of blogs!")
 
 
-    def SetupWizardForm_selected(self,a0):
+    def SetupWizardForm_selected(self,widgetName):
 
-        if a0 == "Login Details":
+        if widgetName == "Login Details":
             self.editLogin_textChanged(None)
-        if a0 == "Final":
+        if widgetName == "Final":
             self.settings.set("main", "login", str(self.editLogin.text()))
             self.settings.set("main", "url", str(self.editURL.text()))
             self.settings.set("main", "host", str(self.editHost.text()))
             self.settings.set("main", "hosttype", self.comboProviders.currentItem())
-            for blog in self.blogs.keys():
-                currentblog = self.blogs[blog]
-                currentblogid = currentblog['id']
-                if self.settings.has_option("main", "blogs"):
-                    if currentblogid not in str(self.settings.get("main", "blogs")).split(';'):
-                        bloglist = self.settings.get("main", "blogs") + ";" + currentblogid
-                        self.settings.set("main", "blogs", str(bloglist))
-                else:
-                    self.settings.set("main", "blogs", str(currentblogid))
-
-                self.settings.set(currentblogid, "name", blog)
-                for blogkey in currentblog:
-                    self.settings.set(currentblogid, blogkey, unicode(currentblog[blogkey]))
-            self.settings.set("main", "selectedblog", self.blogs[unicode(self.comboBlogs.currentText())]['id'])
+            if len(self.blogs) > 0:
+                self.settings.addblogs(self.blogs)
+                self.settings.set("main", "selectedblog", self.blogs[unicode(self.comboBlogs.currentText())]['id'])
 
             if self.checkSave.isChecked():
                 self.settings.set("main", "password", str(self.editPassword.text()))

@@ -209,14 +209,15 @@ class MainForm_Impl(MainForm):
             b = postFetchWorker(at,self.notifier,self,"Fetching posts...")
             self.workers.add(b,self.sender())
     
-    def comboBlogs_activated(self,a0):
-        blogid = self.settings.getblogID(a0)
-        self.settings.set("main", "selectedblog", blogid)
-        self.populateLists()
+    def comboBlogs_activated(self,blogname):
+        if len(blogname) > 0:
+            blogid = self.settings.getblogID(blogname)
+            self.settings.set("main", "selectedblog", blogid)
+            self.populateLists()
     
-    def listPublishedPosts_doubleClicked(self,a0):
-        if self.PublishedItems.has_key(a0):
-            d = self.PublishedItems[a0]
+    def listPublishedPosts_doubleClicked(self,postitem):
+        if self.PublishedItems.has_key(postitem):
+            d = self.PublishedItems[postitem]
             self.current_post = d
             self.editPostTitle.setText(d["title"])
             self.sourceEditor.setText(d["content"])
@@ -339,6 +340,7 @@ class MainForm_Impl(MainForm):
                 QMessageBox.critical(self,"Error","Cannot procede without configuration!")
                 return False
         
+        self.comboBlogs.clear()
         for blogid in self.settings.get("main", "blogs").split(';'):
             self.comboBlogs.insertItem(self.settings.get(blogid, "name"))
             

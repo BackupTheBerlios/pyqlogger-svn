@@ -82,8 +82,11 @@ class PyQLoggerConfig (ConfigParser):
             ConfigParser.add_section(self, section)
     
     def set(self, section, option, value):
-        self.add_section(section)
-        ConfigParser.set(self, section, option, value)
+        if value or len(value) > 0:
+            self.add_section(section)
+            ConfigParser.set(self, section, option, value)
+        else:
+            print "PyQLoggerConfig.set(): NULL or 0 len value passed to section: %s, option: %s, value: %s" % (section, option, value)
             
     def savesettings(self, configfile):
         try:
@@ -91,7 +94,7 @@ class PyQLoggerConfig (ConfigParser):
             self.write(fd)
             fd.close()
         except Exception, inst:
-            print "savesettings: %s" % inst
+            print "PyQLoggerConfig.savesettings: %s" % inst
             # We need better error handling here, user needs to be notified
             pass
         return
@@ -100,31 +103,34 @@ class PyQLoggerConfig (ConfigParser):
         try:
             ConfigParser.remove_section(self, section)
         except Exception, inst:
-            print "remove_section: %s" % inst
+            print "PyQLoggerConfig.remove_section: %s" % inst
         
     def delblogs(self):
         blogids = str(self.get("main", "blogs"))
         if blogids:
             for blogid in blogids.split(';'):
                 self.remove_section(blogid)
-        self.set("main", "blogs", "")
-        self.set("main", "selectedblog", "")
-    
+        self.remove_option("main", "blogs")
+        self.remove_option("main", "selectedblog")
+        
     def addblogs(self, blogdict):
+        blogids = self.get("main", "blogs")
         if len(blogdict) < 1:
             return
         for blogname in blogdict.keys():
             blogentry = blogdict[blogname]
             blogid = blogentry["id"]
-            blogids = str(self.get("main", "blogs"))
-            if blogids and blogid in blogids.split(';'):
+            blogids = self.get("main", "blogs")
+            if blogids is None:
+                self.set("main", "blogs", blogid)
+            elif blogid in blogids.split(';'):
                 pass
+            elif len(blogids) > 0:
+                blogids += ";" + blogid
+                self.set("main", "blogs", blogids)
             else:
-                if blogids:
-                    blogids += ";" + blogid
-                    self.set("main", "blogs", blogids)
-                else:
-                    self.set("main", "blogs", blogid)
+                print "PyQLoggerConfig.addblogs: shouldn't be here"
+
             self.set(blogid, "name", blogname)
             for blogkey in blogentry.keys():
                 self.set(blogid, blogkey, blogentry[blogkey])
@@ -137,4 +143,3 @@ class PyQLoggerConfig (ConfigParser):
     
     def getblogName(self, blogid):
         return self.get(blogid, "name")
-        
