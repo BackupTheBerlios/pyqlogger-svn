@@ -9,7 +9,7 @@
             <x>0</x>
             <y>0</y>
             <width>453</width>
-            <height>167</height>
+            <height>187</height>
         </rect>
     </property>
     <property name="caption">
@@ -42,6 +42,12 @@
                             <property name="name">
                                 <cstring>labelUrl</cstring>
                             </property>
+                            <property name="minimumSize">
+                                <size>
+                                    <width>40</width>
+                                    <height>0</height>
+                                </size>
+                            </property>
                             <property name="text">
                                 <string>URL:</string>
                             </property>
@@ -68,6 +74,12 @@
                             <property name="name">
                                 <cstring>labelName</cstring>
                             </property>
+                            <property name="minimumSize">
+                                <size>
+                                    <width>40</width>
+                                    <height>0</height>
+                                </size>
+                            </property>
                             <property name="text">
                                 <string>Text:</string>
                             </property>
@@ -90,6 +102,12 @@
                         <widget class="QLabel">
                             <property name="name">
                                 <cstring>labelTitle</cstring>
+                            </property>
+                            <property name="minimumSize">
+                                <size>
+                                    <width>40</width>
+                                    <height>0</height>
+                                </size>
                             </property>
                             <property name="text">
                                 <string>Alt:</string>

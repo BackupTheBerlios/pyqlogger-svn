@@ -1,13 +1,14 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'urldialog.ui'
+# Form implementation generated from reading ui file '/home/reflog/Personal/pyqlogger/trunk/PyQLogger/urldialog.ui'
 #
-# Created: Wed Dec 1 16:32:16 2004
+# Created: Thu Dec 2 17:58:57 2004
 #      by: The PyQt User Interface Compiler (pyuic) 3.13
 #
 # WARNING! All changes made in this file will be lost!
 
 
+import sys
 from qt import *
 
 
@@ -27,6 +28,7 @@ class UrlDialog(QDialog):
         layout3 = QHBoxLayout(None,0,6,"layout3")
 
         self.labelUrl = QLabel(self,"labelUrl")
+        self.labelUrl.setMinimumSize(QSize(40,0))
         layout3.addWidget(self.labelUrl)
 
         self.editUrl = QLineEdit(self,"editUrl")
@@ -36,6 +38,7 @@ class UrlDialog(QDialog):
         layout4 = QHBoxLayout(None,0,6,"layout4")
 
         self.labelName = QLabel(self,"labelName")
+        self.labelName.setMinimumSize(QSize(40,0))
         layout4.addWidget(self.labelName)
 
         self.editName = QLineEdit(self,"editName")
@@ -45,6 +48,7 @@ class UrlDialog(QDialog):
         layout5 = QHBoxLayout(None,0,6,"layout5")
 
         self.labelTitle = QLabel(self,"labelTitle")
+        self.labelTitle.setMinimumSize(QSize(40,0))
         layout5.addWidget(self.labelTitle)
 
         self.editTitle = QLineEdit(self,"editTitle")
@@ -89,7 +93,7 @@ class UrlDialog(QDialog):
 
         self.languageChange()
 
-        self.resize(QSize(453,167).expandedTo(self.minimumSizeHint()))
+        self.resize(QSize(453,187).expandedTo(self.minimumSizeHint()))
         self.clearWState(Qt.WState_Polished)
 
         self.connect(self.buttonOk,SIGNAL("clicked()"),self.accept)
@@ -112,3 +116,11 @@ class UrlDialog(QDialog):
 
     def __tr(self,s,c = None):
         return qApp.translate("UrlDialog",s,c)
+
+if __name__ == "__main__":
+    a = QApplication(sys.argv)
+    QObject.connect(a,SIGNAL("lastWindowClosed()"),a,SLOT("quit()"))
+    w = UrlDialog()
+    a.setMainWidget(w)
+    w.show()
+    a.exec_loop()
