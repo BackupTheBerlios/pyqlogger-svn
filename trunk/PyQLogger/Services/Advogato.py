@@ -125,12 +125,12 @@ class AdvogatoService (BlogService):
     name = "Advogato.org"
     url = "http://www.advogato.org/XMLRPC"
     def __init__(self,host,username,password):
-        BlogService.__init__(self,self.url,username,password)
-        self.server = xmlrpclib.Server(self.url)
+        BlogService.__init__(self,self.url,username,password)        
         
     def login(self):    
         """ this should get the challenge and report if all is good """
         try:          
+            self.server = xmlrpclib.Server(self.url)
             self.cookie = self.server.authenticate(self.username, self.password)
         except:
             return False
@@ -150,7 +150,11 @@ class AdvogatoService (BlogService):
             ret += [ self.getPost(id, i) ]
             i+=1
         return ret
-            
+    
+    def deletePost(self, blogId, entryId):
+        """ not supported! """
+        return False
+    
     def getPost(self, blogid, postid):
         postid = int(postid)
         html = self.server.diary.get(self.username, postid)   
@@ -176,7 +180,7 @@ class AdvogatoService (BlogService):
         if not hasattr(self,"cookie"): 
             self.login()
         self.server.diary.set(self.cookie, post.ID, post.Content)
-        
+                
     def getEmpty():
         return AdvogatoService("","","")
     getEmpty = staticmethod(getEmpty)

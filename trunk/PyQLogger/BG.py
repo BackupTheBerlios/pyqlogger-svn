@@ -134,6 +134,8 @@ class SpellThread(QThread):
         text = unicode ( scin.text() )
         if text :
             self.parent.speller_result = self.parent.speller.load( unicode ( text ) )
+        else:
+            self.parent.speller_result = {}
         self.postEvent(self.parent, OpCompleteEvent(doneSpell,self.parent))
         self.mutex.unlock()
     
