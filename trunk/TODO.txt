@@ -10,3 +10,7 @@ This is a list of stuff that we'd like to do at some point:
 * Write plugin to auto substitute keywords with preconfigured values
 * Unified error/warning/info reporting mechanism, not just for Blogger status messages
 * Rename variables such as a0 and pp to more obvious ones
+* Make setpreview more efficient - it's updated on every key stroke, rather than 
+  only when the preview is being shown. This could be done using the tab widget's 
+  signal handlers
+* Better command line argument handling (none at the moment)

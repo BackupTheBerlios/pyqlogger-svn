@@ -77,29 +77,29 @@ class MainForm_Impl(MainForm):
                 return self.tabWidget3.page(i)
 
 
-    def pubPopup(self,i):
-        if(i == 1):
+    def pubPopup(self,action):
+        if(action == 1):
             res = QMessageBox.question(self,"Question","Are you sure you want to delete this post?",QMessageBox.Yes,QMessageBox.No)
             if res == QMessageBox.Yes:
                 ab = self._getAtomBlog()
                 b = postDeleteWorker(ab,self.notifier,self,"Deleting post...")
                 self.workers.add(b) 
-        elif(i == 2):
-            s = QFileDialog.getSaveFileName(os.path.expanduser("~"),
+        elif(action == 2):
+            filename = QFileDialog.getSaveFileName(os.path.expanduser("~"),
                                         "All files (*.*)",self,           
                                         "Export post dialog",
                                         "Choose a filename to save under")
-            if str(s):
+            if str(filename):
                 try:
-                    file = open(str(s),"w")
+                    file = open(str(filename),"w")
                     post = self.PublishedItems[ self.listPublishedPosts.selectedItem () ]
                     file.write(post['content'])
                     file.close()
                 except:
-                    QMessageBox.warning(self,"Warning","Cannot write post to file!")
+                    QMessageBox.warning(self,"Warning","Cannot write post to file %s" % filename)
 
-    def savePopup(self,i):
-        if(i == 1):
+    def savePopup(self,action):
+        if(action == 1):
             res = QMessageBox.question(self,"Question","Are you sure you want to delete this post?",QMessageBox.Yes,QMessageBox.No)
             if res == QMessageBox.Yes:
                 post = self.SavedItems [ self.listSavedPosts.selectedItem () ]
@@ -107,19 +107,19 @@ class MainForm_Impl(MainForm):
                 blogid = self.settings.get("main", "selectedblog")
                 self.SavedPosts[blogid].remove(post)
                 self.listSavedPosts.removeItem(self.listSavedPosts.currentItem())
-        elif(i == 2):
-            s = QFileDialog.getSaveFileName(os.path.expanduser("~"),
+        elif(action == 2):
+            filename = QFileDialog.getSaveFileName(os.path.expanduser("~"),
                                         "All files (*.*)",self,           
                                         "Export post dialog",
                                         "Choose a filename to save under")
-            if str(s):
+            if str(filename):
                 try:
-                    file = open(str(s),"w")
+                    file = open(str(filename),"w")
                     post = self.SavedItems [ self.listSavedPosts.selectedItem () ]
                     file.write(post['content'])
                     file.close()
                 except:
-                    QMessageBox.warning(self,"Warning","Cannot write post to file!")
+                    QMessageBox.warning(self,"Warning","Cannot write post to file %s!" % filename)
                 
     def listPublishedPosts_contextMenuRequested(self,a0,a1):
         self.aMenu.setItemEnabled(1,a0 != None)
@@ -156,7 +156,10 @@ class MainForm_Impl(MainForm):
         title = unicode(self.editPostTitle.text())
         if title:
             ab = self._getAtomBlog()
-            b = newPostWorker(ab,self.notifier,self,"Posting to blog...")
+            if self.current_post and self.current_post.has_key('id'):
+                b = newPostWorker(ab,self.notifier,self,"Posting update to blog...")
+            else:
+                b = newPostWorker(ab,self.notifier,self,"Posting to blog...")
             self.workers.add(b,self.sender())
         else:
             QMessageBox.warning(self,"Warning","You forgot the post's title!")
@@ -225,11 +228,11 @@ class MainForm_Impl(MainForm):
         else:
             QMessageBox.critical(self,"Error","Something is not right!")
     
-    def listSavedPosts_doubleClicked(self,a0):
-        if self.SavedItems.has_key(a0):
-            d = self.SavedItems[a0]
-            self.editPostTitle.setText(d["title"])
-            self.sourceEditor.setText(d["content"])
+    def listSavedPosts_doubleClicked(self, item):
+        if self.SavedItems.has_key(item):
+            currentItem = self.SavedItems[item]
+            self.editPostTitle.setText(currentItem["title"])
+            self.sourceEditor.setText(currentItem["content"])
             self.sender().setFocus()
         else:
             QMessageBox.critical(self,"Error","Something is not right!")

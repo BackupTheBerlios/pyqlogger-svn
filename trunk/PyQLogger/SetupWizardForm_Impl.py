@@ -117,15 +117,21 @@ class SetupWizardForm_Impl(SetupWizardForm):
             QMessageBox.critical(self,"Error","Couldn't fetch blog's URL!")
             pass
     
-    def btnFetchBlogs_clicked(self):    
-        (h,l,p) = (str(self.editHost.text()),str(self.editLogin.text()), str(self.editPassword.text()))
-        (ep,fp,pp) = (str(self.editEP.text()),str(self.editFP.text()),str(self.editPP.text()))
+    def btnFetchBlogs_clicked(self):
+        host = str(self.editHost.text())
+        login = str(self.editLogin.text())
+        password = str(self.editPassword.text())
+        endpoint = str(self.editEP.text())
+        feedpath = str(self.editFP.text())
+        postpath = str(self.editPassword.text())
+##        (h,l,p) = (str(self.editHost.text()),str(self.editLogin.text()), str(self.editPassword.text()))
+##        (ep,fp,pp) = (str(self.editEP.text()),str(self.editFP.text()),str(self.editPP.text()))
         if self.comboProviders.currentItem() == 0:
-            at = GenericAtomClient(h,l,p,ep,fp,pp)
+            at = GenericAtomClient(host, login, password, endpoint, feedpath, postpath)
         elif self.comboProviders.currentItem() == 1:
-            at = BloggerClient(h,l,p)
+            at = BloggerClient(host, login, password)
         elif self.comboProviders.currentItem() == 2:
-            at = MovableTypeClient(h,l,p)
+            at = MovableTypeClient(host, login, password)
         try:
             self.blogs = at.getBlogs()
             self.comboBlogs.clear()

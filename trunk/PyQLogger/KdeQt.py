@@ -1,5 +1,5 @@
 try:
-    from kdecore import KApplication, KCmdLineArgs, KAboutData
+    from kdecore import KApplication, KCmdLineArgs, KAboutData, KIconLoader
     import sys, os
     from qt import QToolTip
     from kdeui import KMainWindow,  KSystemTray , KHelpMenu,KAboutApplication
@@ -15,22 +15,30 @@ try:
 
     def setPreview(parent,text):
         parent.vp.begin()
+        sys.stderr.write("%s" % text)
         parent.vp.write(text)
         parent.vp.end()
 
                 
     def setupKDE(app,wnd):
-        try:
-            t = KSystemTray(wnd)
-        except Exception, inst:
-            sys.stderr.write("setupKDE: exception: %s\n" % inst)
-            
-        if t:
-            t.setPixmap( KSystemTray.loadIcon( "kedit" ) )
-            QToolTip.add(t,"PyQLogger - Blogger GUI")
-            t.show()
-        else:
-            sys.stderr.write("setupKDE: t is None\n")
+
+        icons = KIconLoader ()
+        systray = KSystemTray (wnd)
+        systray.setPixmap (icons.loadIcon("kedit", 0))
+        QToolTip.add(systray, "PyQLogger - Blogger GUI")
+        systray.show ()
+
+##        try:
+##            t = KSystemTray(wnd)
+##        except Exception, inst:
+##            sys.stderr.write("setupKDE: exception: %s\n" % inst)
+##            
+##        if t:
+##            t.setPixmap( KSystemTray.loadIcon( "kedit" ) )
+##            QToolTip.add(t,"PyQLogger - Blogger GUI")
+##            t.show()
+##        else:
+##            sys.stderr.write("setupKDE: t is None\n")
             
         dcop  = app.dcopClient ()
         if dcop:
