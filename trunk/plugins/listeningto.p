@@ -17,6 +17,7 @@
 ## along with PyQLogger; if not, write to the Free Software
 ## Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
+
 import ToolBarManager
 from qt import QMessageBox
 
@@ -188,11 +189,24 @@ class Listeningto_Plugin(ToolBarManager.ToolbarPlugin):
             return commands.getoutput('dcop amarok player title')
         
         
-    def on_click(self):            
-            pass
+    def on_click(self):
+        pos = self.parent.sender().cursor().pos()-self.parent.pos()+QPoint(32,32)
+        ec = ei = 0
+        for i in range(1,4):
+            if self.available(i):
+                ec += 1
+                ei = i
+        if ec == 1:
+            self.Popup(ei)
+        elif (ec == 0):
+            QMessageBox.warning(None,
+            self.parent.trUtf8("Error"),
+            self.parent.trUtf8("""No players detected!"""))           
+        else:
+            self.Menu.popup(pos)
 
     def UpdateMenu(self):        
-        for i in range(1,4):    
+        for i in range(1,4):
             self.Menu.setItemEnabled(i,self.available(i))
 
     def Popup(self,idx):
@@ -218,7 +232,7 @@ class Listeningto_Plugin(ToolBarManager.ToolbarPlugin):
         self.Menu.insertItem("Amarok",3)
         self.parent.connect(self.Menu,SIGNAL("activated(int)"),self.Popup)  
         self.parent.connect(self.Menu,SIGNAL( "aboutToShow()"),self.UpdateMenu)
-        button.setPopup(self.Menu)          
+        #button.setPopup(self.Menu)          
         button.setIconSet(QIconSet(bi))
         w = 32
         h = 32
@@ -227,4 +241,3 @@ class Listeningto_Plugin(ToolBarManager.ToolbarPlugin):
         self.parent.connect(button,SIGNAL("clicked()"),self.on_click)
         button.show()
         self.button = button
-
