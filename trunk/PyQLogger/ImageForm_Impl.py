@@ -54,7 +54,7 @@ class ImageForm_Impl(ImageForm):
     def __init__(self, parent = None, name = None, modal = 0, fl = 0):
         ImageForm.__init__(self, parent, name, modal, fl)
         self.comboAlign.insertItem('None')
-        self.notifier = Notifier(parent, 1,args=[self.progressBar])
+        self.notifier = Notifier(parent, 1,args=self.progressBar)
         self.alignList['Left'] = 'left'
         self.alignList['Right'] = 'right'
         self.alignList['Center'] = 'center'
