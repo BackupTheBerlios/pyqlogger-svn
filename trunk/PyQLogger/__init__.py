@@ -1,4 +1,4 @@
 ##
 ## $Id$
 ##
-__all__ = ['AtomBlog' , 'SetupWizardForm_Impl' , 'MainForm_Impl']
+__all__ = ['AtomBlog' , 'SetupWizardForm_Impl' , 'MainForm_Impl', 'KQApplication']
