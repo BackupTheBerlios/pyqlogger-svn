@@ -2,6 +2,9 @@
 ## 
 ## Copyright (c) 2004 Eli Yukelzon a.k.a Reflog 		
 ##
+## Modified by Xander Soldaat to include support for
+## adding URLs and Image tags
+##
 ## PyQLogger is free software; you can redistribute it and/or modify
 ## it under the terms of the GNU General Public License as published by
 ## the Free Software Foundation; either version 2 of the License, or
@@ -313,6 +316,8 @@ tbImg_image = \
 
 
 from ToolBarManager import *
+from UrlDialog_Impl import *
+from ImageDialog_Impl import *
 
 def initToolbar(self,plugs):
 	plugs.manualAdd( ToolbarPlugin.SimpleButton(self,"Bold",makeBold,None,tbBold_image) )
@@ -360,10 +365,31 @@ def insertHR():
 	self.sourceEditor.setCursorPosition(line+1,0)
 
 def insertUrl():
-	pass
+	self = qApp.mainWidget()
+	text = unicode(self.sourceEditor.selectedText())
+	urldialog = UrlDialog_Impl(self)
+	urldialog.initValues(text)
+	res = urldialog.exec_loop()
+	if res:
+		urltag = urldialog.urltag()
+		if urltag:
+			self.sourceEditor.removeSelectedText()
+			line, index = self.sourceEditor.getCursorPosition()
+			self.sourceEditor.insertAt('%s' % urltag, line, index)
 
 def insertImage():
-	pass
+	self = qApp.mainWidget()
+	imagedialog = ImageDialog_Impl(self)
+	res = imagedialog.exec_loop()
+	if res:
+		imagetag = imagedialog.imagetag()
+		if imagetag:
+			print "Image tag: %s" % imagetag
+			line, index = self.sourceEditor.getCursorPosition()
+			self.sourceEditor.insertAt('%s' % imagetag, line, index)
+	else:
+		print res
+
 
 def insertBR():
 	self = qApp.mainWidget()
