@@ -13,6 +13,9 @@ class ImageForm_Impl(ImageForm):
         self.alignList['Right'] = 'right'
         self.alignList['Center'] = 'center'
         self.btnUpload.setEnabled(False)
+	self.chkArk.setEnabled(False)
+	self.chkShack.setEnabled(False)
+	self.buttonOk.setEnabled(False)
         for key in self.alignList.keys():
             self.comboAlign.insertItem(key)
 
@@ -21,8 +24,12 @@ class ImageForm_Impl(ImageForm):
         image = str(self.editUrl.text())
         thumb = str(self.editThumb.text())
         title = str(self.editTitle.text())
-        width = int(self.editWidth.text())
-        height = int(self.editHeight.text())
+        if str(self.editWidth.text()): width = int(str(self.editWidth.text())) 
+	else: width = None
+        if str(self.editBorder.text()): border = int(str(self.editBorder.text())) 
+	else: border = None
+        if str(self.editHeight.text()): height = int(str(self.editHeight.text()))
+	else: height = None
         if not image: return None
         else:  
             if thumb:
@@ -33,6 +40,7 @@ class ImageForm_Impl(ImageForm):
                 imagetag += '<img src=\'%s\'' % image
 
         if width:  imagetag += ' width=\'%d\'' % width
+        if border:  imagetag += ' border=\'%d\'' % border
         if height:  imagetag += ' height=\'%d\'' % height
         if title:  imagetag += ' alt=\'%s\'' % title
         if self.alignList.has_key('%s' % self.comboAlign.currentText()):

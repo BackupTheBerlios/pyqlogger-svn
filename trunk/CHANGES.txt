@@ -5,7 +5,14 @@ CHANGELOG
 * changed
 ? info
 
-x/10/2004 - 1.3
+02/12/2004 - 1.3.1
+
+* Unicode works as it should
++ Added Smiley plugin. Read the plugin readme file.
++ Added ImageDialog (With Xander's help)
++ Added UrlDialog (Thanks Xander)
+
+07/11/2004 - 1.3
 
 * Updates changed to server side
 - Fixed the hanging of the application after GUI exit
