@@ -34,10 +34,10 @@ import PyQLoggerConfig
 
 class MainForm_Impl(MainForm):
 
-    def __init__(self,parent = None,name = None,fl = 0):
+    def __init__(self,parent = None,name = None,fl = 0,statusbar = False):
         MainForm.__init__(self,parent,name,fl)
         notifymode = 0
-        if len(sys.argv) > 1 and sys.argv[1] == '-s':
+        if statusbar:
             notifymode = 1
         self.settings = PyQLoggerConfig.PyQLoggerConfig()
         self.statusFrame.hide()

@@ -2,7 +2,7 @@
 ## $Id$
 ## This file is part of PyQLogger.
 ## 
-## Copyright (c) 2004 Eli Yukelzon a.k.a Reflog 		
+## Copyright (c) 2004 Eli Yukelzon a.k.a Reflog         
 ##
 ## PyQLogger is free software; you can redistribute it and/or modify
 ## it under the terms of the GNU General Public License as published by
@@ -22,39 +22,40 @@ import sys
 import os
 
 try:
-	from qt import *
+    from qt import *
 except:
-	print """Could not locate the PyQt module.  Please make sure that
+    print """Could not locate the PyQt module.  Please make sure that
 you have installed PyQt for the version of Python that you are running."""
-	sys.exit(1)
+    sys.exit(1)
 
 VERSION = '1.3.3'
 
 # I might enable this in future:
 #
 #try:
-#	from pycrash.utils import *
-#	class MyCrash(HTMLPyCrash):
-#		def onExit(self):
-#			self.saveToFile("/var/log/pyqlogger/crash.html")
-#	m = MyCrash({'AppName': 'PyQLogger', 'Version':VERSION, 'SendTo': 'Reflog <reflog@gmail.com>'})
-#	m.enable()
+#   from pycrash.utils import *
+#   class MyCrash(HTMLPyCrash):
+#       def onExit(self):
+#           self.saveToFile("/var/log/pyqlogger/crash.html")
+#   m = MyCrash({'AppName': 'PyQLogger', 'Version':VERSION, 'SendTo': 'Reflog <reflog@gmail.com>'})
+#   m.enable()
 #except ImportError:
-#	print "pycrash module not found.  For best debug info please install it"
+#   print "pycrash module not found.  For best debug info please install it"
 
 
 def main():
-	a =  KdeQt.KQApplication(sys.argv,None)
-	QObject.connect(a,SIGNAL("lastWindowClosed()"),a,SLOT("quit()"))
-	w = MainForm_Impl.MainForm_Impl()
-	if w.init():
-		a.setMainWidget(w)
-		KdeQt.setupKDE(a,w)
-		w.show()
-		res = a.exec_loop()
-		sys.exit(res)
+    a =  KdeQt.KQApplication(sys.argv,None)    
+    stat = KdeQt.prepareCommandLine()    
+    QObject.connect(a,SIGNAL("lastWindowClosed()"),a,SLOT("quit()"))
+    w = MainForm_Impl.MainForm_Impl(statusbar=stat)
+    if w.init():
+        a.setMainWidget(w)
+        KdeQt.setupKDE(a,w)
+        w.show()
+        res = a.exec_loop()
+        sys.exit(res)
 
 
 if __name__ == '__main__':
-	main()
+    main()
 

@@ -13,4 +13,4 @@ This is a list of stuff that we'd like to do at some point:
 * Make setpreview more efficient - it's updated on every key stroke, rather than 
   only when the preview is being shown. This could be done using the tab widget's 
   signal handlers
-* Better command line argument handling (none at the moment)
+* Better command line argument handling (done. should be refined in kde)

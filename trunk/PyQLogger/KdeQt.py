@@ -19,7 +19,10 @@ try:
         parent.vp.write(text)
         parent.vp.end()
 
-                
+    def prepareCommandLine(): 
+        args = KCmdLineArgs.parsedArgs()
+        return args.isSet ( "statusbar")or args.isSet ( "s")
+        
     def setupKDE(app,wnd):
 
         icons = KIconLoader ()
@@ -72,7 +75,12 @@ try:
             aboutData.addAuthor("Eli Yukelzon a.k.a Reflog",  "","reflog@gmail.com");
             aboutData.addAuthor("Xander Soldaat a.k.a Mightor", "", "mightor@gmail.com");
             try:
+                options =  [
+                   ("s", "Status bar (default = disabled)"),
+                   ("statusbar", "Status bar (default = disabled)")
+                ]
                 KCmdLineArgs.init( argv, aboutData)
+                KCmdLineArgs.addCmdLineOptions( options )
             except TypeError:
                 KCmdLineArgs.init(sysargv, sysargv[0], '', '')
             if opts:
@@ -83,6 +91,14 @@ except ImportError,e:
     def isKde(): return 0    
     def setPreviewWidget(parent): pass
     def setPreview(parent,text): parent.sourcePreview.setText(text)
+    def prepareCommandLine():
+        import optparse
+        parser = optparse.OptionParser(usage="%prog [options]")
+        parser.add_option("--statusbar","-s",action="store_true",help="Status bar (default = disabled)")
+        (opt,arg) = parser.parse_args()
+        stat = opt.statusbar
+        return stat == True
+        
     def setupKDE(app,wnd): pass
     from qt import QApplication
     class KQApplication(QApplication):
