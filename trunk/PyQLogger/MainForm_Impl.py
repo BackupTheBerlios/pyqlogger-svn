@@ -192,7 +192,9 @@ class MainForm_Impl(MainForm):
         if res:
             self.settings = wiz.settings
             try:
-                self.settings.write(os.path.expanduser("~/.pyqlogger/settings.ini"))
+                fd = open(os.path.expanduser("~/.pyqlogger/settings.ini"), "w")
+                self.settings.write(fd)
+                fd.close()
                 self.init()
             except Exception, inst: 
                 print "btnSettings_clicked: %s" % inst
@@ -265,7 +267,9 @@ class MainForm_Impl(MainForm):
 
     def SaveAll(self):
         try:
-            self.settings.write(os.path.expanduser("~/.pyqlogger/settings.ini"))
+            fd = open(os.path.expanduser("~/.pyqlogger/settings.ini"), "w")
+            self.settings.write(fd)
+            fd.close()
             self.WriteSettings(os.path.expanduser("~/.pyqlogger/drafts"),self.SavedPosts)
             self.WriteSettings(os.path.expanduser("~/.pyqlogger/posts"),self.PublishedPosts)
         except Exception, inst:
