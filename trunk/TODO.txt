@@ -14,3 +14,37 @@ This is a list of stuff that we'd like to do at some point:
   only when the preview is being shown. This could be done using the tab widget's 
   signal handlers (done)
 * Better command line argument handling (done. should be refined in kde)
+
+* Proposed data schema for multiple accounts/blogs
+  +--------------+       +------------+
+  | Name         |       | Name       |
+  | Host         +-------+ URL        |
+  | Hosttype     |       | Rel        |
+  | URL          |       | Type       |
+  | Login        |       | ID         |
+  | Password     |       | Account Nr |
+  | Blogs        |       +------------+
+  | Selectedblog |
+  | Account NR   |
+  +--------------+ 
+     Account                Blog
+  
+  The Application can hold multiple Account objects which in turn can own 
+  multiple Blog objects. The Blog objects themselves should be able to 
+  provide the application with an interface like:
+  Post()
+  fetchPosts()
+  Update()
+  getTitle()
+  getBody()
+  ..
+  
+  Accounts should have an interface that can do things like:
+  Login()
+  FetchBlogs()
+  ..
+  
+  The Application itself should hold the information regarding the current
+  selected blog. 
+
+  That's about all I can come up with at 6:15AM. I need to make my lunch.
