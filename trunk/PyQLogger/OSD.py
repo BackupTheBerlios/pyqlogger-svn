@@ -1,7 +1,6 @@
-## $Id$
 ## This file is part of PyQLogger.
 ## 
-## Copyright (c) 2004 Eli Yukelzon a.k.a Reflog 		
+## Copyright (c) 2004 Eli Yukelzon a.k.a Reflog         
 ##
 ## PyQLogger is free software; you can redistribute it and/or modify
 ## it under the terms of the GNU General Public License as published by
@@ -17,30 +16,31 @@
 ## along with PyQLogger; if not, write to the Free Software
 ## Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 """ Wrapper module for PyOSD """
-import sys
+
+__revision__ = "$Id$"
 import pyosd
 
 class OSD:
-	def __init__(self,font='-adobe-*-*-*-*-*-60-*-*-*-*-*-*-*'):
-		self.osd = pyosd.osd(font)
-		self.osd2 = pyosd.osd(font)
-		self.osd.set_align(pyosd.ALIGN_CENTER)
-		self.osd.set_pos(pyosd.POS_MID)
-		self.osd2.set_align(pyosd.ALIGN_LEFT)
-		self.osd2.set_pos(pyosd.POS_BOT)
-		
-	def error(self,msg):
-		self.osd.set_colour('red')
-		self.osd.display(msg,pyosd.TYPE_STRING,1)
+    def __init__(self, font='-adobe-*-*-*-*-*-60-*-*-*-*-*-*-*'):
+        self.osd = pyosd.osd(font)
+        self.osd2 = pyosd.osd(font)
+        self.osd.set_align(pyosd.ALIGN_CENTER)
+        self.osd.set_pos(pyosd.POS_MID)
+        self.osd2.set_align(pyosd.ALIGN_LEFT)
+        self.osd2.set_pos(pyosd.POS_BOT)
+        
+    def error(self, msg):
+        self.osd.set_colour('red')
+        self.osd.display(msg, pyosd.TYPE_STRING, 1)
 
-	def info(self,msg):
-		self.osd.set_colour('blue')
-		self.osd.display(msg,pyosd.TYPE_STRING,1)
+    def info(self, msg):
+        self.osd.set_colour('blue')
+        self.osd.display(msg, pyosd.TYPE_STRING, 1)
 
-	def warn(self,msg):
-		self.osd.set_colour('yellow')
-		self.osd.display(msg,pyosd.TYPE_STRING,1)
+    def warn(self, msg):
+        self.osd.set_colour('yellow')
+        self.osd.display(msg, pyosd.TYPE_STRING, 1)
 
-	def status(self,msg):
-		self.osd2.set_colour('black')
-		self.osd2.display(msg,pyosd.TYPE_STRING,1)
+    def status(self, msg):
+        self.osd2.set_colour('black')
+        self.osd2.display(msg, pyosd.TYPE_STRING, 1)

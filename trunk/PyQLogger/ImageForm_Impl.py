@@ -1,4 +1,3 @@
-## $Id$
 ## This file is part of PyQLogger.
 ## 
 ## Copyright (c) 2004 Eli Yukelzon a.k.a Reflog         
@@ -17,15 +16,16 @@
 ## along with PyQLogger; if not, write to the Free Software
 ## Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-from qt import QPixmap,QFileDialog,QMessageBox
-from qtnetwork import QHttp,QHttpRequestHeader
+__revision__ = "$Id$"
+from qt import QPixmap, QFileDialog, QMessageBox
+from qtnetwork import QHttp, QHttpRequestHeader
 from imageform import ImageForm
-import urllib2,PatchedClientForm,re,os
+import urllib2, PatchedClientForm, re, os
 
 class ImageForm_Impl(ImageForm):
     alignList = {}
-    def __init__(self,parent = None,name = None,modal = 0,fl = 0):
-        ImageForm.__init__(self,parent,name,modal,fl)
+    def __init__(self, parent = None, name = None, modal = 0, fl = 0):
+        ImageForm.__init__(self, parent, name, modal, fl)
         self.comboAlign.insertItem('None')
         self.alignList['Left'] = 'left'
         self.alignList['Right'] = 'right'
@@ -83,12 +83,12 @@ class ImageForm_Impl(ImageForm):
                     self.editHeight.setText(str(p.height()))
                 self.previewImage.setPixmap(p)
             except:
-                QMessageBox.warning(self,"Warning","Cannot open the image url!")                
+                QMessageBox.warning(self, "Warning", "Cannot open the image url!")                
 
-    def editUrl_textChanged(self,a0):
+    def editUrl_textChanged(self, a0):
         self.buttonOk.setEnabled(str(self.editUrl.text())!='')
 
-    def chk_stateChanged(self,a0):
+    def chk_stateChanged(self, a0):
         if self.chkUrl.isChecked():
             self.widgetStack2.raiseWidget(self.pageUrl)
             self.buttonOk.setEnabled(str(self.editUrl.text())!='')
@@ -96,50 +96,50 @@ class ImageForm_Impl(ImageForm):
             self.widgetStack2.raiseWidget(self.pageUpload)
             self.buttonOk.setEnabled(False)
 
-    def chkThumb_toggled(self,a0):
+    def chkThumb_toggled(self, a0):
         pass
 
-    imgre = re.compile('\[img\](.*?)\[/img\]',re.IGNORECASE)
+    imgre = re.compile('\[img\](.*?)\[/img\]', re.IGNORECASE)
     
-    def uploadArk(self,afile):
+    def uploadArk(self, afile):
         try:
             c = PatchedClientForm.ParseResponse(urllib2.urlopen("http://www.imageark.net"))
             c[0].referer = 'http://www.imageark.net'
-            c[0].find_control("userfile").add_file(open(afile,"rb"),filename= os.path.basename(afile))
+            c[0].find_control("userfile").add_file(open(afile,"rb"), filename = os.path.basename(afile))
             req = c[0].click()
             content = urllib2.urlopen(req).read()
             m = self.imgre.search(content)
             if m:
                 return m.group(1)
-        except Exception,e:
+        except Exception, e:
             print "Upload exception: " + str(e)
             return None
 
-    def uploadShack(self,afile):
+    def uploadShack(self, afile):
         try:
             c =PatchedClientForm.ParseResponse(urllib2.urlopen("http://imageshack.us/index2.php"))
             c[0].referer = 'http://imageshack.us/index2.php'
-            c[0].find_control("fileupload").add_file(open(afile,"rb"),filename= os.path.basename(afile))
+            c[0].find_control("fileupload").add_file(open(afile,"rb"), filename = os.path.basename(afile))
             content = urllib2.urlopen(c[0].click()).read()
             m = self.imgre.search(content)
             if m:
                 return m.group(1)
-        except Exception,e:
+        except Exception, e:
             print "Upload exception: " + str(e)
             return None
 
-    def __generateThumb(self,filename):
+    def __generateThumb(self, filename):
         if not self.chkThumb.isChecked(): return None
         try:            
             p = self.previewImage
-            fn = os.tmpnam()+os.path.basename(filename)
+            fn = os.tmpnam() + os.path.basename(filename)
             w = p.width()
             h = p.height()
             if w > 120: w = 120
             if h > 120: h = 120
             # if the image is smaller than the thumb, don't create the thumb
             if h < 120 and w < 120: return None
-            os.system("convert -geometry %dx%d  %s  %s"%(w,h,filename,fn))
+            os.system("convert -geometry %dx%d  %s  %s" % (w,h,filename,fn))
             if os.path.exists(fn): return fn
         except:
             pass
@@ -160,7 +160,7 @@ class ImageForm_Impl(ImageForm):
         if r: self.editUrl.setText(r)
         if r2: self.editThumb.setText(r2)
 
-    def __open(self,txt,btn):
+    def __open(self, txt, btn):
         s = str(QFileDialog.getOpenFileName(None , \
             "Images (*.png *.jpg *.gif)", \
             self, \
@@ -181,13 +181,13 @@ class ImageForm_Impl(ImageForm):
         except:            
             ok = False
         if not ok:
-            QMessageBox.warning(self,"Warning","Cannot open the image file!")
+            QMessageBox.warning(self, "Warning", "Cannot open the image file!")
             self.previewImage.setPixmap(QPixmap())
             btn.setEnabled(False)
         
-    def editFile_textChanged(self,a0):
+    def editFile_textChanged(self, a0):
         self.btnUpload.setEnabled( os.path.exists(str(a0)) )
 
     def btnOpen_clicked(self):
-        self.__open(self.editFile,self.btnUpload)
+        self.__open(self.editFile, self.btnUpload)
         

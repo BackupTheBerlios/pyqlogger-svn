@@ -1,4 +1,3 @@
-## $Id$
 ## This file is part of PyQLogger.
 ## 
 ## Copyright (c) 2004 Eli Yukelzon a.k.a Reflog         
@@ -16,27 +15,27 @@
 ## You should have received a copy of the GNU General Public License
 ## along with PyQLogger; if not, write to the Free Software
 ## Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+__revision__ = "$Id$"
 """ Wrapper module for displaying notifications """
 
-import Status
-import qt
+import Status, qt , sys
 
 class Notifier:
-    def __init__(self,parent,mode):
+    def __init__(self, parent, mode):
         self.parent = parent
         if mode == 0 :
-	    try:
-		import OSD
-		self.display = OSD.OSD()
-	    except:
-		qt.QMessageBox.warning(None,
-		    self.parent.trUtf8("Warning"),
-		    self.parent.trUtf8("""Seems like you don't have PyOSD installed!\nReverting to status bar notifications"""))
-		self.display  = Status.StatusNotifier(parent)
+            try:
+                import OSD
+                self.display = OSD.OSD()
+            except:
+                qt.QMessageBox.warning(None,
+                self.parent.trUtf8("Warning"),
+                self.parent.trUtf8("""Seems like you don't have PyOSD installed!\nReverting to status bar notifications"""))
+                self.display  = Status.StatusNotifier(parent)
         elif mode == 1:
             self.display  = Status.StatusNotifier(parent)
         else:
             print "What the hell?"
             sys.exit()
-        for m in filter(lambda x: len(x)>2 and x[:2] != '__' , dir(self.display)):
-            setattr(self,m,getattr(self.display,m))
+        for method in [mname for mname in dir(self.display) if len(mname)>2 and mname[:2] != '__' ]:
+            setattr(self, method, getattr(self.display, method))

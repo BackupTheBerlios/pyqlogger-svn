@@ -1,4 +1,3 @@
-## $Id$
 ## This file is part of PyQLogger.
 ## 
 ## Copyright (c) 2004 Eli Yukelzon a.k.a Reflog         
@@ -17,19 +16,21 @@
 ## along with PyQLogger; if not, write to the Free Software
 ## Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
+__revision__ = "$Id$"
+
 class StatusNotifier:
-    def __init__(self,parent):
+    def __init__(self, parent):
         self.parent = parent
         self.parent.statusFrame.show()
         
-    def error(self,msg):
+    def error(self, msg):
         self.parent.statusLabel.setText(msg)
 
-    def info(self,msg):
+    def info(self, msg):
         self.parent.statusLabel.setText(msg)
 
-    def warn(self,msg):
+    def warn(self, msg):
         self.parent.statusLabel.setText(msg)
 
-    def status(self,msg):
+    def status(self, msg):
         self.parent.statusLabel.setText(msg)

@@ -1,4 +1,3 @@
-## $Id$
 ## This file is part of PyQLogger.
 ## 
 ## Copyright (c) 2004 Eli Yukelzon a.k.a Reflog &
@@ -18,13 +17,14 @@
 ## along with PyQLogger; if not, write to the Free Software
 ## Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
+__revision__ = "$Id$"
+
 """ Background workers """
-from qt import *
-from threading import *
+from qt import QTimer, SIGNAL
+from threading import Thread
 from datetime import date
-from time import sleep
 from distutils.version import LooseVersion
-import sys,urllib2,re
+import sys, urllib2
 
 class BackGround:
     """ class that provides a timer that checks on background processes,
@@ -46,10 +46,10 @@ class BackGround:
             else:
                 self.workers[worker].status()
 
-    def add(self,worker,sender=None):
+    def add(self, worker, sender=None):
         if self.workers.has_key(str(worker)): # only add unique workers!
             return False
-        worker.THREAD = Thread(args=[worker],target=worker.bg)
+        worker.THREAD = Thread(args = [worker], target = worker.bg)
         worker.THREAD.start()
         if sender:
             sender.setEnabled(False)            
@@ -59,7 +59,7 @@ class BackGround:
     
 
 class bgWorker:
-    def __init__(self,atomBlog,notifier,parent,statusmsg=None):
+    def __init__(self, atomBlog, notifier, parent, statusmsg=None):
         self.notifier = notifier
         self.parent = parent
         self.atomBlog = atomBlog
@@ -73,7 +73,7 @@ class bgWorker:
 class blogFetchWorker(bgWorker):
     """ class for fetching list of blogs in background """
 
-    def bg(self,*args):
+    def bg(self, *args):
         p = self.parent
         blogs = None
         try:
@@ -97,7 +97,7 @@ class blogFetchWorker(bgWorker):
                 if p.comboBlogs.text(counter) == selectedblogname:
                     p.comboBlogs.setCurrentItem( counter )
                     break
-            self.notifier.info("%d Blogs fetched!"%(self.result))
+            self.notifier.info("%d Blogs fetched!" % self.result)
         else:
             self.notifier.error("Couldn't fetch blogs!")
 
@@ -105,7 +105,7 @@ class blogFetchWorker(bgWorker):
 
 class postFetchWorker(bgWorker):
     """ class for fetching list of posts in background """
-    def bg(self,*args):
+    def bg(self, *args):
         p = self.parent
         try:
             blogid = p.settings.get("main", "selectedblog")
@@ -120,7 +120,7 @@ class postFetchWorker(bgWorker):
             p.PublishedItems = {}
             p.PublishedPosts[p.settings.get("main", "selectedblog")] = self.PublishedPosts
             p.populateLists()
-            self.notifier.info("%d posts fetched!"%(len(self.PublishedPosts)))
+            self.notifier.info("%d posts fetched!" % len(self.PublishedPosts ))
             self.parent.SaveAll()
         else:
             self.notifier.error("Couldn't fetch posts from blog!")
@@ -128,7 +128,7 @@ class postFetchWorker(bgWorker):
 
 class postDeleteWorker(bgWorker):
     """ class for deleting current post in background """
-    def bg(self,*args):
+    def bg(self, *args):
         p = self.parent
         try:
             post = p.PublishedItems [ p.listPublishedPosts.selectedItem () ]
@@ -147,11 +147,11 @@ class postDeleteWorker(bgWorker):
             p.listPublishedPosts.removeItem(i)
             self.notifier.info("Post deleted!")
         else:
-            self.notifier.error("Couldn't fetch posts from blog! Error:"+self.result)
+            self.notifier.error("Couldn't fetch posts from blog! Error:" + self.result)
 
 class newPostWorker(bgWorker):
     """ class for posting new blog item (or reposting) in background """
-    def bg(self,*args):
+    def bg(self, *args):
         p = self.parent
         self.item_to_update = None
         self.result = False
@@ -174,7 +174,7 @@ class newPostWorker(bgWorker):
                     
         else: #no, we are creating
             try:
-                idx = self.atomBlog.newPost(int(blogId),title,content)
+                idx = self.atomBlog.newPost(int(blogId), title, content)
                 if idx:
                     self.result = True
                     item = {
@@ -183,7 +183,7 @@ class newPostWorker(bgWorker):
                         "title":title,
                         "content":content,
                         }
-                    i = QListBoxText(p.listPublishedPosts,title)
+                    i = QListBoxText(p.listPublishedPosts, title)
                     p.PublishedPosts[p.settings.get("main", "selectedblog")] += [ item ]
                     p.PublishedItems [ i ] = item
             except Exception, inst:
@@ -205,7 +205,7 @@ class newPostWorker(bgWorker):
 
 class updateCheckWorker:
     """ class that provides new version checking in background """
-    def __init__(self,notifier):
+    def __init__(self, notifier):
         from pyqlogger import VERSION
         self.notifier = notifier
         self.notified = LooseVersion(VERSION)
