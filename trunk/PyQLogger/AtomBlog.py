@@ -15,6 +15,10 @@
 ## You should have received a copy of the GNU General Public License
 ## along with PyQLogger; if not, write to the Free Software
 ## Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+##
+## Changes:
+## 15/10/2004 - added new function getPost for single post fetching
+##            - added optional date passing for newPost and editPost
 
 import httplib,sha,sha,base64
 import time, random
@@ -38,11 +42,14 @@ class AtomBlog:
 		timestamp = time.strftime('%Y-%m-%dT%H:%M:%SZ', time.gmtime())
 		return "%s %s" % (timestamp, sha.new("%s:%s" % (timestamp, private)).hexdigest())
 
-	def _makeCommonHeaders(self):
+	def _makeCommonHeaders(self,date=None):
 		""" Returns a dict with Nonce, Password Digest and other headers """
 		nonce = self._getNonce()
 		base64EncodedNonce = base64.encodestring(nonce).replace("\n", "")
-		created = time.strftime('%Y-%m-%dT%H:%M:%SZ', time.gmtime())
+		if not date:
+			created = time.strftime('%Y-%m-%dT%H:%M:%SZ', time.gmtime())
+		else:
+			created = date
 	
 		passwordDigest = base64.encodestring(sha.new(nonce + created + self.password).digest()).replace("\n", "")
 		authorizationHeader = 'UsernameToken Username="%s", PasswordDigest="%s", Created="%s", Nonce="%s"' % (self.username, passwordDigest, created, base64EncodedNonce)
@@ -92,9 +99,31 @@ class AtomBlog:
 				'id':self.id_re.search( en['id'] ).group(1),
 				'content':s
 				}]
-		
 		return res
 
+	def getPost(self,blogId,postId):
+		""" Returns a post """
+		(created,headers) = self._makeCommonHeaders()
+		conn = httplib.HTTPConnection(self.host)
+		path = "%s/%s/%s" % (self.path , blogId, postId)
+		conn.request("GET", path, "", headers)
+		response = conn.getresponse()
+		xml = response.read()
+		conn.close()
+		res = []
+		for en in feedparser.parse(xml)['entries']:
+			s = en['content'][0]['value']
+			if en['content'][0]['mode'] == 'escaped':
+				unescape(s)
+			res += [ {
+				'title':en['title'],
+				'date':en['modified'],
+				'id':self.id_re.search( en['id'] ).group(1),
+				'content':s
+				}]
+		if res:
+			return res[0]
+			
 	def _makeBody(self,title,content,created):
 		""" generate body of post entry based on parameters """
 		return """<?xml version="1.0" encoding="UTF-8" ?>
@@ -105,10 +134,10 @@ class AtomBlog:
 		<content mode="escaped" type="text/html">%s</content>
 		</entry>""" % (escape(title),created,escape(content))
 		
-	def newPost(self,blogId,title,content):
+	def newPost(self,blogId,title,content,date=None):
 		""" Make a new post to Blogger, returning it's ID """
 		
-		(created,headers) = self._makeCommonHeaders()	
+		(created,headers) = self._makeCommonHeaders(date)	
 		headers["Content-type"] = "application/atom+xml"
 		path = "%s/%s" % (self.path,blogId)
 		body = self._makeBody(title,content,created)
@@ -122,11 +151,10 @@ class AtomBlog:
 			return m.group(1)
 	
 	
-	def editPost (self,blogId,entryId,title,content):
-		""" Edits existing post on Blogger, returns new ID """
-		
+	def editPost (self,blogId,entryId,title,content,date=None):
+		""" Edits existing post on Blogger, returns new ID """		
 		path = "%s/%s/%s" % (self.path , blogId, entryId)
-		(created,headers) = self._makeCommonHeaders()	
+		(created,headers) = self._makeCommonHeaders(date)	
 		headers["Content-type"] = "application/atom+xml"
 		body = self._makeBody(title,content,created)
 		conn = httplib.HTTPConnection(self.host)
