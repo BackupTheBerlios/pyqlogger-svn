@@ -2,7 +2,6 @@ try:
 	from kdecore import KApplication, KCmdLineArgs, KAboutData
     	import sys, os
 	from kdeui import KMainWindow,  KSystemTray 
-	from pyqlogger import VERSION
 	from khtml import KHTMLPart, KHTMLView
         from dcopexport import DCOPExObj
 
@@ -47,6 +46,7 @@ try:
         class KQApplication(KApplication):
 		def __init__(self, argv, opts):
 		    sysargv = argv[:]
+		    from pyqlogger import VERSION
                     aboutData = KAboutData("pyqlogger", "PyQLogger", VERSION,  "Blogger GUI", KAboutData.License_GPL, "(C) 2004, Eli Yukelzon", "http://pyqlogger.berlios.de")
                     aboutData.addAuthor("Eli Yukelzon a.k.a Reflog",  "","reflog@gmail.com");
                     aboutData.addAuthor("Xander Soldaat a.k.a Mightor", "", "mightor@gmail.com");
@@ -65,13 +65,29 @@ except ImportError,e:
 
 try:
     from qtext import QextScintilla,QextScintillaLexerHTML
-    from qt import SIGNAL
+    from qt import SIGNAL,QFont
+    def setMonospaced(e):
+        try:
+            rangeLow = range(e.STYLE_DEFAULT)
+	except AttributeError:
+            rangeLow = range(32)
+	try:
+            rangeHigh = range(e.STYLE_LASTPREDEFINED + 1,e.STYLE_MAX + 1)
+        except AttributeError:
+            rangeHigh = range(40, 128)
+
+	f = QFont('Bitstream Vera Sans,11,-1,5,50,0,0,0,0,0')
+	for style in rangeLow + rangeHigh:
+	    e.SendScintilla(QextScintilla.SCI_STYLESETFONT,style,f.family().latin1())
+            e.SendScintilla(QextScintilla.SCI_STYLESETSIZE,style,f.pointSize())
+
     def setEditWidget(parent):
         parent.sourceEditor.hide()
         parent.sourceEditor = QextScintilla(parent.Source)
 	parent.sourceEditor.setUtf8(1)
 	parent.sourceEditor.setWrapMode( QextScintilla.SC_WRAP_WORD )
 	parent.sourceEditor.setLexer(QextScintillaLexerHTML(parent))
+	setMonospaced(parent.sourceEditor)
         parent.Source.layout().addWidget(parent.sourceEditor)
 	parent.connect(parent.sourceEditor,SIGNAL("textChanged()"),parent.sourceEditor_textChanged)
 	

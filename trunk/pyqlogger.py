@@ -17,7 +17,6 @@
 ## You should have received a copy of the GNU General Public License
 ## along with PyQLogger; if not, write to the Free Software
 ## Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-import  PyQLogger.KdeQt 
 from PyQLogger import *
 import sys
 import os
@@ -33,12 +32,12 @@ you have installed PyQt for the version of Python that you are running."""
 VERSION = '1.3.2'
 
 def main():
-	a =  PyQLogger.KdeQt.KQApplication(sys.argv,None)
+	a =  KdeQt.KQApplication(sys.argv,None)
 	QObject.connect(a,SIGNAL("lastWindowClosed()"),a,SLOT("quit()"))
 	w = MainForm_Impl.MainForm_Impl()
 	if w.init():
 		a.setMainWidget(w)
-		PyQLogger.KdeQt.setupKDE(a,w)
+		KdeQt.setupKDE(a,w)
 		w.show()
 		res = a.exec_loop()
 		sys.exit(res)
