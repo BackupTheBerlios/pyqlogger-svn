@@ -105,8 +105,7 @@ class MainForm_Impl(MainForm):
                 post = self.SavedItems [ self.listSavedPosts.selectedItem () ]
                 del self.SavedItems [ self.listSavedPosts.selectedItem () ]
                 blogid = self.settings.get("main", "selectedblog")
-                blogname = self.settings.get(blogid, "name")
-                self.SavedPosts[blogname].remove(post)
+                self.SavedPosts[blogid].remove(post)
                 self.listSavedPosts.removeItem(self.listSavedPosts.currentItem())
         elif(i == 2):
             s = QFileDialog.getSaveFileName(os.path.expanduser("~"),
@@ -239,16 +238,22 @@ class MainForm_Impl(MainForm):
         """ pickles the current settings hash to specified file """
         if not os.path.exists(os.path.dirname(filename)):
             os.mkdir(os.path.dirname(filename))
+        if not hash.has_key("newstyle"):
+            hash["newstyle"] = 1
         f =  open(filename, 'w')
         pickle.dump(hash, f)
         f.close()
         
     def ReadSettings(self,filename):
         """ unpickles the specified file into a hash """
+        h = ()
         try:
-            f = open(filename)
-            h = pickle.load(f)
-            f.close()
+            if os.path.exists(filename):
+                f = open(filename)
+                h = pickle.load(f)
+                f.close()
+            else:
+                return None
         except Exception, inst:
             print "ReadSettings: %s" % inst
             return None
@@ -262,6 +267,7 @@ class MainForm_Impl(MainForm):
                     h[blogname] = None
             h = new_hash
             h["newstyle"] = 1
+            self.WriteSettings(filename, h)
         return h
 
     def SaveAll(self):
@@ -317,6 +323,12 @@ class MainForm_Impl(MainForm):
             return self.cached_atomblog
             
     def init(self):
+        self.SavedPosts = ()
+        self.PublishedPosts = ()
+        
+        if not os.path.exists(os.path.expanduser("~/.pyqlogger")):
+            os.mkdir(os.path.expanduser("~/.pyqlogger"))
+
         self.settings.read(os.path.expanduser("~/.pyqlogger/settings.ini"))
         self.SavedPosts = self.ReadSettings(os.path.expanduser("~/.pyqlogger/drafts"))
         self.PublishedPosts = self.ReadSettings(os.path.expanduser("~/.pyqlogger/posts"))
