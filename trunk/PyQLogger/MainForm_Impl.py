@@ -172,8 +172,7 @@ class MainForm_Impl(MainForm):
                 "content":unicode(self.sourceEditor.text()),
                 }   
             blogid = self.settings.get("main", "selectedblog")
-            blogname = self.settings.get(blogid, "name")
-            self.SavedPosts[blogname] += [ item ]
+            self.SavedPosts[blogid] += [ item ]
             self.SavedItems [ i ] = item
         else:
             QMessageBox.warning(self,"Warning","You forgot the post's title!")
