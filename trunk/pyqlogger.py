@@ -28,8 +28,20 @@ except:
 you have installed PyQt for the version of Python that you are running."""
 	sys.exit(1)
 
+VERSION = '1.3.3'
 
-VERSION = '1.3.2'
+# I might enable this in future:
+#
+#try:
+#	from pycrash.utils import *
+#	class MyCrash(HTMLPyCrash):
+#		def onExit(self):
+#			self.saveToFile("/var/log/pyqlogger/crash.html")
+#	m = MyCrash({'AppName': 'PyQLogger', 'Version':VERSION, 'SendTo': 'Reflog <reflog@gmail.com>'})
+#	m.enable()
+#except ImportError:
+#	print "pycrash module not found.  For best debug info please install it"
+
 
 def main():
 	a =  KdeQt.KQApplication(sys.argv,None)

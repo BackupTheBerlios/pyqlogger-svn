@@ -7,6 +7,20 @@ CHANGELOG
 * changed
 ? info
 
+15/12/2004 - 1.3.3
+
++ New configuration system. The settings are stored in human readable INI
+format. Fully backwards compatible. (Xander)
++ Optional KDE Support. If PyKDE is available, you'll be treated to full-blown
+KHTML based post preview, tray icon and dcop interface. If not - nothing is
+changed. (thanks Detliev (eric3) for the idea)
++ Option QScintilla support. If QScintilla is available, it will be used
+instead of default ugly post editor. Antialiased fonts are bonus :)
++ PyQLogger is now more distribution friendly. It installs .desktop file, so
+now it should appear in Network menu in gnome/kde. Until we have a proper
+icon, I'm using kedit's
+- Some minor bugfixes
+
 06/12/2004 - 1.3.2
 
 + Added a 'Listening To' plugin
