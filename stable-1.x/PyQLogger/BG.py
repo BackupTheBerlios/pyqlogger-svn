@@ -191,7 +191,9 @@ class newPostWorker(bgWorker):
                         "title":title,
                         "content":content,
                         }
-                    i = QListBoxText(p.listPublishedPosts, title)
+                    i = QListBoxText(title)
+                    p.listPublishedPosts.insertItem(i,0)
+                    #i = QListBoxText(p.listPublishedPosts, title)
                     p.PublishedPosts[p.settings.get("main", "selectedblog")] += [ item ]
                     p.PublishedItems [ i ] = item
             except Exception, inst:

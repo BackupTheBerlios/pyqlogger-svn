@@ -173,16 +173,27 @@ class MainForm_Impl(MainForm):
     
     def btnSavePost_clicked(self):
         title = unicode(self.editPostTitle.text())
+        blogid = self.settings.get("main", "selectedblog")
         if title:
+	    tmpi = self.listSavedPosts.findItem(title)
+	    if tmpi:	    
+                res = QMessageBox.question(self, "Question", "This will overwrite previous '%s' draft. Are you sure?"%(title), QMessageBox.Yes, QMessageBox.No)
+                if res == QMessageBox.No:
+		    return
+	        self.listSavedPosts.takeItem(tmpi)
+	        tmpp = self.SavedItems [ tmpi ]
+		del self.SavedItems [ tmpi ]
+		self.SavedPosts[blogid].remove(tmpp)
+	        del tmpi
             listitem = QListBoxText(self.listSavedPosts, title)
             item = { 
                 "date":date.today(),
                 "title":title,
                 "content":unicode(self.sourceEditor.text()),
                 }   
-            blogid = self.settings.get("main", "selectedblog")
             self.SavedPosts[blogid] += [ item ]
             self.SavedItems [ listitem ] = item
+	    self.listSavedPosts.triggerUpdate(True)
         else:
             QMessageBox.warning(self, "Warning", "You forgot the post's title!")
 
