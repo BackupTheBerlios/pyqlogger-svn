@@ -55,15 +55,13 @@ class ImageForm_Impl(ImageForm):
             return None
         else:  
             if thumb:
-                width = 40
-                height = 40
                 imagetag += "<a href='%s'><img src='%s'" % (image,thumb)
             else:
                 imagetag += '<img src=\'%s\'' % image
+	        if width:  imagetag += ' width=\'%d\'' % width
+    		if height:  imagetag += ' height=\'%d\'' % height
 
-        if width:  imagetag += ' width=\'%d\'' % width
         if border:  imagetag += ' border=\'%d\'' % border
-        if height:  imagetag += ' height=\'%d\'' % height
         if title:  imagetag += ' alt=\'%s\'' % title
         if self.alignList.has_key('%s' % self.comboAlign.currentText()):
             align = self.alignList['%s' % self.comboAlign.currentText()]
