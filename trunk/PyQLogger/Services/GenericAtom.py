@@ -1,3 +1,4 @@
+#! /usr/bin/python
 ## This file is part of PyQLogger.
 ## 
 ## Copyright (c) 2004 Eli Yukelzon a.k.a Reflog         
@@ -15,41 +16,24 @@
 ## You should have received a copy of the GNU General Public License
 ## along with PyQLogger; if not, write to the Free Software
 ## Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-##
-## Changes:
-## 15/10/2004 - added new function getPost for single post fetching
-##            - added optional date passing for newPost and editPost
-__revision__ = "$Id$"
 
-import httplib, sha, base64, urllib2, time, random
-from xml.sax.saxutils import escape , unescape
-import feedparser, re
-from qtnetwork import QHttpRequestHeader
+from BlogService import BlogService
 
-def makeNonce():
-    """ Generate a random string 'Nonce' marked with timestamp """
-    private = base64.encodestring(str(random.random()))
-    timestamp = time.strftime('%Y-%m-%dT%H:%M:%SZ', time.gmtime())
-    return "%s %s" % (timestamp, sha.new("%s:%s" % (timestamp, private)).hexdigest())
-
-class AtomBlog:
-    """ Implementation of Atom API for posting to Blogger
-        Written by Reflog, based on code from http://www.daikini.com 
+class GenericAtomService (BlogService):
+    """ Implementation of Atom API
         This is an abstract class. Clients should introduce the following:
         self.host = blog host
         self.path = blog atom endpoint
         self.feedpath = format for getting the feed
         self.postpath = format for getting the post    
     """
-        
-    def __init__(self, host, username, password):
+    endpoints = ("", "", "")        
+    def __init__(self, host, username, password, path, feedpath, postpath):
         self.id_re = re.compile(r'(\d+)$')
-        self.username = username
-        self.password = password
-        self.host = host
-        self.path = ""
-        self.feedpath = ""
-        self.postpath = ""
+        BlogService.__init__(self,host, username, password)
+        self.path = path
+        self.feedpath = feedpath
+        self.postpath = postpath
 
     def _makeCommonHeaders(self, Req, date=None):
         """ Returns a dict with Nonce, Password Digest and other headers """
@@ -180,55 +164,3 @@ class AtomBlog:
         Req = QHttpRequestHeader("DELETE",self.postpath % (blogId, entryId))
         created = self._makeCommonHeaders(Req)
         return Req
-
-class GenericAtomClient(AtomBlog):
-    """ Generic class for AtomAPI Handling """
-    endpoints = ("", "", "")
-    def __init__(self, host, username, password, path, feedpath, postpath):
-        AtomBlog.__init__(self, host, username, password)
-        self.path = path
-        self.feedpath = feedpath
-        self.postpath = postpath
-
-
-class BloggerClient(GenericAtomClient):
-    """ Wrapper for Blogger.com """
-    endpoints = ("/atom", "/atom/%s", "/atom/%s/%s")
-    def __init__(self, host, username, password):
-        GenericAtomClient.__init__(self, host, username, password, "/atom", "/atom/%s", "/atom/%s/%s")
-        self.hp_re = re.compile(r'<homePageLink>(.*)</homePageLink>', re.MULTILINE)        
-
-    def getHomepage(self, blogid):
-        """ Returns the homepage of the blog """
-        req_url = "http://www.blogger.com/rsd.pyra?blogID=%s" % blogid
-        try:
-            req = urllib2.urlopen(req_url)
-            lines = req.read()
-            req.close()
-            match = self.hp_re.search(lines)
-            if match: 
-                return match.group(1)
-        except Exception , e:
-            print "Exception while getting the homepage: " + str(e)
-            return None
-
-
-class MovableTypeClient(GenericAtomClient):
-    """ Wrapper for MovableType servers """
-    def __init__(self, host, username, password):
-        GenericAtomClient.__init__(self, host, username, password,
-            "/mt-atom.cgi/weblog", "/mt-atom.cgi/weblog/blog_id=%s", "/mt-atom.cgi/weblog/blog_id=%s/entry_id=%s")
-
-    endpoints = ("/mt-atom.cgi/weblog", "/mt-atom.cgi/weblog/blog_id=%s", "/mt-atom.cgi/weblog/blog_id=%s/entry_id=%s")
-
-    def getCategories(self, blogId):
-        """ Fetches the list of blog's categories """
-        path = self.feedpath+"/svc=categories" % blogId
-        (created, headers) = self._makeCommonHeaders()
-        conn = httplib.HTTPConnection(self.host)
-        conn.request("GET", path, "", headers)
-        response = conn.getresponse()
-        xml = response.read()
-        conn.close()
-        return feedparser.parse(xml)['categories']
-

@@ -27,7 +27,7 @@ import os, pickle, webbrowser
 from mainform import MainForm
 from SetupWizardForm_Impl import SetupWizardForm_Impl
 from datetime import date
-from AtomBlog import MovableTypeClient, BloggerClient, GenericAtomClient
+from AtomBlog import MovableTypeClient, BloggerClient, GenericAtomClient,LiveJournalClient
 from ToolBar import initToolbar
 from Notifier import Notifier
 from SyntaxHighlight import HTMLSyntax
@@ -323,9 +323,11 @@ class MainForm_Impl(MainForm):
                     postpath = self.settings.get("main", "pp")
                     self.cached_atomblog = GenericAtomClient(host, login, psw, endpoint, feedpath, postpath)
                 elif self.settings.getint("main", "hosttype") == 1:
-                    self.cached_atomblog = BloggerClient(host, login, psw)
+                    self.cached_atomblog = BloggerClient(login, psw)
                 elif self.settings.getint("main", "hosttype") == 2:
                     self.cached_atomblog = MovableTypeClient(host, login, psw)
+                elif self.settings.getint("main", "hosttype") == 3:
+                    self.cached_atomblog = LiveJournalClient(login, psw)
                 return self.cached_atomblog
             else:
                 QMessageBox.warning(self, "Error", "Cannot work online without a password!")
@@ -362,7 +364,7 @@ class MainForm_Impl(MainForm):
                 self.comboBlogs.setCurrentItem( counter )
                 break
         
-        if self.settings.getint("main", "hosttype") != 1:
+        if self.settings.getint("main", "hosttype") == 2:
             self.frameCat.show()
         self.populateLists()
         

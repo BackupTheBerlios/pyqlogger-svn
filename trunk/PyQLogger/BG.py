@@ -88,9 +88,13 @@ class BlogFetcher(bgOperation):
     """ class for fetching list of blogs in background """
     statusmsg =  "Fetching list of blogs..."    
     errormsg =  "Cannot fetch list of blogs!"
-    
+    codes = [ 200 ]
+
     def ui(self,result):
-        blogs = self.atomBlog.endGetBlogs(result)
+        if type(self.req) == list:
+            blogs = self.req
+        else:
+            blogs = self.atomBlog.endGetBlogs(result)
         parent = self.parent()
         selectedblog = parent.settings.get("main", "selectedblog")
         parent.settings.addblogs(blogs,selectedblog)
@@ -107,7 +111,10 @@ class BlogFetcher(bgOperation):
         
     def __call__(self):
         self.req = self.atomBlog.startGetBlogs()
-        self.begin()
+        if type(self.req) == list:
+            self.ui(None)
+        else:
+            self.begin()
 
 class PostFetcher(bgOperation):
     """ class for fetching list of posts in background """
@@ -133,7 +140,7 @@ class PostEraser(bgOperation):
     """ class for deleting current post in background """
     errormsg = "Couldn't delete post from blog!"
     statusmsg = "Deleting post..."
-    codes = [ 410 ]
+    codes = [ 410,  200]
     def __call__(self):
         p = self.parent()
         post = p.PublishedItems [ p.listPublishedPosts.selectedItem () ]
@@ -154,7 +161,7 @@ class PostCreator(bgOperation):
     """ class for posting new blog item (or reposting) in background """
     statusmsg = "Posting to blog..."
     errormsg = "Couldn't post to blog..."
-    
+    codes = [ 201 ]
     def __call__(self):
         p = self.parent()
         blogId = p.settings.get("main", "selectedblog")
@@ -189,6 +196,7 @@ class PostEditor(bgOperation):
     """ class for posting new blog item (or reposting) in background """
     errormsg = "Couldn't update post!"
     statusmsg = "Posting update to blog..."
+    codes  = [ 205 ]
     def __call__(self):
         p = self.parent()
         blogId = p.settings.get("main", "selectedblog")
