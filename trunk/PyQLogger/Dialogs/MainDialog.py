@@ -31,6 +31,7 @@ from PyQLogger.Notifier import Notifier
 from PyQLogger.Post import Post
 from PyQLogger.ToolBarManager import PluginFactory
 from PyQLogger import BG, KdeQt
+from PyQLogger.Network import Network, netOp
 
 class MainDialog(QDialog):
     def getPage(self, title):
@@ -144,17 +145,31 @@ class MainDialog(QDialog):
         if title:
             listitem = QListBoxText(self.listSavedPosts, title)
             item = Post(Created=date.today(), Title=title,Content=unicode(self.sourceEditor.text()))                
-            self.account.Blogs[self.account.SelectedBlog].Drafts += [ item ]
+            self.account.Blogs[self.account.SelectedBlog].Drafts.Data += [ item ]
             self.SavedItems [ listitem ] = item
         else:
             QMessageBox.warning(self, "Warning", "You forgot the post's title!")
 
-    
-    def btnRefreshBlogs_clicked(self):      
-        aBlog = self.__getAtomBlog()
-        if aBlog:
-            bg = BG.BlogFetcher(aBlog, self.notifier, self, self.sender())
-            bg()
+    def doneFetchingBlogs(self,res):
+        if not res:
+            self.comboBlogs.clear()
+            for blog in self.account.Blogs:            
+                self.comboBlogs.insertItem(blog.Name)
+            self.comboBlogs.setCurrentItem( self.account.SelectedBlog )
+            self.notifier.info("%d Blogs fetched!" % len(self.account))        
+            self.btnRefreshBlogs.setEnabled(True)
+        else:
+            self.notifier.error(res)
+        
+    def startFetchingBlogs(self):
+        self.btnRefreshBlogs.setEnabled(False)
+        try:
+            self.account.fetchBlogs()
+        except Exception, e:
+            return str(e)
+        
+    def btnRefreshBlogs_clicked(self):
+        self.network.enqueue(netOp("Fetching blogs...",self.startFetchingBlogs,self.doneFetchingBlogs))
     
     def btnSettings_clicked(self):
         wnd = self.forms["Settings"]
@@ -173,23 +188,35 @@ class MainDialog(QDialog):
             webbrowser.open_new(url)
         else:
             QMessageBox.warning(self, "Warning", "You don't have homepage configured!\nYou can do that in the Setup dialog.")
-    
+            
+    def doneFetchingPosts(self,res):
+        if not res:
+            self.populateLists()
+            self.btnFetchPosts.setEnabled(True)
+            self.notifier.info("%d posts fetched!" % len( self.account.Blogs[self.account.SelectedBlog] ))
+            self.SaveAll()
+        else:
+            self.notifier.error(res)
+            
+    def startFetchingPosts(self):
+        self.btnFetchPosts.setEnabled(False)
+        try:
+            self.account.Blogs[self.account.SelectedBlog].reloadPosts()
+        except Exception, e:
+            return str(e)
+        
     def btnReloadFeed_clicked(self):
-        aBlog = self.__getAtomBlog()
-        if aBlog:
-            bg = BG.PostFetcher(aBlog, self.notifier, self, self.sender())
-            bg()
+        self.network.enqueue(netOp("Fetching posts...",self.startFetchingPosts,self.doneFetchingPosts))
     
     def comboBlogs_activated(self, blogname):
-        if blogname:
-            self.account.SelectedBlog =  self.account.blogById(self.account.blogByName(blogname).ID)
-            self.populateLists()
+        self.account.SelectedBlog =  self.account.blogById(self.account.blogByName(blogname).ID)
+        self.populateLists()
     
     def listPublishedPosts_doubleClicked(self, postitem):
         if self.PublishedItems.has_key(postitem):
             post = self.PublishedItems[postitem]
             self.current_post = post
-            self.editPostTitle.setText(post.Ttitle)
+            self.editPostTitle.setText(post.Title)
             self.sourceEditor.setText(post.Content)
             self.editorTab.setCurrentPage(0)            
             self.sender().setFocus()
@@ -241,23 +268,20 @@ class MainDialog(QDialog):
         self.connect(self.aMenu, SIGNAL("activated(int)"), self.pubPopup)
         self.connect(self.bMenu, SIGNAL("activated(int)"), self.savePopup)
         self.frameCat.hide()
+        self.network = Network(self.notifier)
+        self.network.start()
         
-    def init(self, settings, account, password):
-        print settings
+    def init(self, settings, forms, account, password):
         self.reload = False
         self.account = account
         self.password = password
         self.settings = settings        
+        self.forms = forms
         self.comboBlogs.clear()
         for blog in self.account.Blogs:
             self.comboBlogs.insertItem(blog.Name)
             
-        selectedblog = self.account.Blogs [ self.account.SelectedBlog ]
-
-        for counter in range(0, self.comboBlogs.count()):
-            if self.comboBlogs.text(counter) == selectedblog.Name:
-                self.comboBlogs.setCurrentItem( counter )
-                break
+        self.comboBlogs.setCurrentItem( self.account.SelectedBlog )
         
 ##        if self.settings.getint("main", "hosttype") == 2:
 ##            self.frameCat.show()
@@ -271,9 +295,9 @@ class MainDialog(QDialog):
         self.listSavedPosts.clear()
         selectedblog = self.account.Blogs [ self.account.SelectedBlog ]
         
-        for post in selectedblog.Drafts:
+        for post in selectedblog.Drafts.Data:
             self.SavedItems [ QListBoxText(self.listSavedPosts, post.Title) ] = post
 
-        for post in selectedblog.Posts:
-            self.PublishedItems [ QListBoxText(self.listSavedPosts, post.Title) ] = post
+        for post in selectedblog.Posts.Data:
+            self.PublishedItems [ QListBoxText(self.listPublishedPosts, post.Title) ] = post
 

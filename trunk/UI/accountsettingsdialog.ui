@@ -282,6 +282,9 @@
                             <property name="name">
                                 <cstring>btnFetchBlogs</cstring>
                             </property>
+                            <property name="text">
+                                <string></string>
+                            </property>
                             <property name="pixmap">
                                 <pixmap>image0</pixmap>
                             </property>
@@ -315,6 +318,9 @@
                         <widget class="QPushButton">
                             <property name="name">
                                 <cstring>btnFetchHome</cstring>
+                            </property>
+                            <property name="text">
+                                <string></string>
                             </property>
                             <property name="pixmap">
                                 <pixmap>image0</pixmap>
@@ -495,6 +501,36 @@
         <receiver>AccountSettingsDialog</receiver>
         <slot>reject()</slot>
     </connection>
+    <connection>
+        <sender>edtName</sender>
+        <signal>textChanged(const QString&amp;)</signal>
+        <receiver>AccountSettingsDialog</receiver>
+        <slot>_textChanged(const QString&amp;)</slot>
+    </connection>
+    <connection>
+        <sender>edtHost</sender>
+        <signal>textChanged(const QString&amp;)</signal>
+        <receiver>AccountSettingsDialog</receiver>
+        <slot>_textChanged(const QString&amp;)</slot>
+    </connection>
+    <connection>
+        <sender>edtUsername</sender>
+        <signal>textChanged(const QString&amp;)</signal>
+        <receiver>AccountSettingsDialog</receiver>
+        <slot>_textChanged(const QString&amp;)</slot>
+    </connection>
+    <connection>
+        <sender>edtPassword</sender>
+        <signal>textChanged(const QString&amp;)</signal>
+        <receiver>AccountSettingsDialog</receiver>
+        <slot>_textChanged(const QString&amp;)</slot>
+    </connection>
+    <connection>
+        <sender>comboBlogs</sender>
+        <signal>activated(int)</signal>
+        <receiver>AccountSettingsDialog</receiver>
+        <slot>comboBlogs_activated(int)</slot>
+    </connection>
 </connections>
 <slots>
     <slot>comboProviders_activated(const QString&amp;)</slot>
@@ -502,6 +538,9 @@
     <slot>btnFetchBlogs_clicked()</slot>
     <slot>accept()</slot>
     <slot>reject()</slot>
+    <slot>_textChanged(const QString&amp;)</slot>
+    <slot>comboBlogs_activated(const QString&amp;)</slot>
+    <slot>comboBlogs_activated(int)</slot>
 </slots>
 <layoutdefaults spacing="6" margin="11"/>
 </UI>

@@ -18,7 +18,7 @@
 ## Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 from GenericAtom import GenericAtomService
-import re
+import re,urllib2
 endpoints = ("/atom", "/atom/%s", "/atom/%s/%s")
 
 class BloggerService (GenericAtomService):

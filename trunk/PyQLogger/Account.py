@@ -31,12 +31,12 @@ class Account(XMLObject):
     Username = TextNode() #  Login name
     Password = TextNode(optional=True) # Top Secret!
     Host = TextNode() # Account's host
-    SelectedBlog = IntegerAttribute() # id of currently selected blog
+    SelectedBlog = IntegerAttribute(default=0) # id of currently selected blog
     Service = StringAttribute() #What Blogging API Is used
     Blogs = ListNode('Blog')
     
     def serviceByName(self,name):
-        assert(name)
+        assert  name , "Name cannot be empty"
         for b in BlogServices:            
             (s_module,s_class) = b.split('.')
             if name == s_class:
@@ -45,6 +45,7 @@ class Account(XMLObject):
         
     def blogByName(self,name):
         """ searches the list of accouns, and returns one by it's .Name """
+        assert  name , "Name cannot be empty"
         for a in self.Blogs:
             if a.Name == name:
                 return a
@@ -52,6 +53,7 @@ class Account(XMLObject):
 
   
     def blogById(self,blogId):
+        assert  blogId , "Id cannot be empty"
         cnt = 0
         for blog in self.Blogs:
             if blog.ID == blogId:
@@ -76,7 +78,7 @@ class Account(XMLObject):
         """
         blogs = self.BlogService.getBlogs() # fetch blogs from server        
         for b in blogs:
-            if not [ bb for bb in self.Blogs if bb.Name == b.name ]: # it's new! add it
+            if not [ bb for bb in self.Blogs if bb.Name == b.Name ]: # it's new! add it
                 self.Blogs += [ b ]
     
     def __len__(self):

@@ -18,20 +18,26 @@
 ## Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 from Post import Post
-from EaseXML import  XMLObject,TextNode,ListNode,StringAttribute
+from EaseXML import  XMLObject,TextNode,ListNode,StringAttribute,ItemNode
+
+class Drafts(XMLObject):
+    Data = ListNode('Post',main=True)
+    
+class Posts(XMLObject):
+    Data = ListNode('Post',main=True)
 
 class Blog(XMLObject):
     """
     Base class for Blogs.
     """
 
-    Url = TextNode(optional=True) #Url used for preview
+    Url = StringAttribute(optional=True) #Url used for preview
     Name = StringAttribute() #Visible blog's name
     ID = StringAttribute() #Internal blog id
-    Posts = ListNode('Post') #List of posts in the blog
-    Drafts = ListNode('Post') #List of posts in the blog
+    Posts = ItemNode('Posts') #List of posts in the blog
+    Drafts = ItemNode('Drafts') #List of drafts in the blog
     def __postById(self,postNr):
-        for post in Posts:
+        for post in Posts.Data:
             if post.ID == postNr:
                 return post
         raise Exception("Invalid post number %s !"%postNr)
@@ -51,11 +57,11 @@ class Blog(XMLObject):
     
     def reloadPosts(self):
         """   fetch the list of posts in a blog   """
-        self.Posts = self.Service.getPosts(self.ID)
+        self.Posts.Data = self.Service.getPosts(self.ID)
     
     def __len__(self):
         """   return the amount of posts in a blog     """
-        return len(self.Posts)
+        return len(self.Posts.Data)
     
     def __getitem__(self, postNr):
         """    return a post by it's id     """

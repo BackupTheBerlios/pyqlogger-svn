@@ -21,7 +21,6 @@ class SettingsDialog(QDialog):
             self.lbAccounts.setCurrentItem(0)
         else: #if empty, disable controls
             self.btnEditAccount.setEnabled(False)
-            self.btnAddAccount.setEnabled(False)
             self.btnDelAccount.setEnabled(False)
         
     def init(self,settings,forms):
@@ -76,4 +75,5 @@ class SettingsDialog(QDialog):
         else:
             self.settings.UI_Settings.Notification = 1
         #update plugin changes
+        self.settings.save()
         QDialog.accept(self)

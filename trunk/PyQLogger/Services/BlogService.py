@@ -24,13 +24,6 @@ import feedparser, re
 from qtnetwork import QHttpRequestHeader
 from qt import QPixmap
 
-def makeNonce():
-    """ Generate a random string 'Nonce' marked with timestamp """
-    private = base64.encodestring(str(random.random()))
-    timestamp = time.strftime('%Y-%m-%dT%H:%M:%SZ', time.gmtime())
-    return "%s %s" % (timestamp, sha.new("%s:%s" % (timestamp, private)).hexdigest())
-
-
 class BlogService:
     def __init__(self,host,username,password):
         self.host = host

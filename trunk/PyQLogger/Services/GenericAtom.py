@@ -17,8 +17,13 @@
 ## along with PyQLogger; if not, write to the Free Software
 ## Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-from BlogService import BlogService,makeNonce
-import re
+from BlogService import BlogService
+from PyQLogger.Post import Post
+from PyQLogger.Blog import Blog
+import httplib, sha, base64, urllib2, time, random
+from xml.sax.saxutils import escape , unescape
+import feedparser, re
+
 class GenericAtomService (BlogService):
     """ Implementation of Atom API
         This is an abstract class. Clients should introduce the following:
@@ -199,6 +204,12 @@ class GenericAtomService (BlogService):
         self.feedpath = feedpath
         self.postpath = postpath
         
+    def _getNonce(self):
+        """ Generate a random string 'Nonce' marked with timestamp """
+        private = base64.encodestring(str(random.random()))
+        timestamp = time.strftime('%Y-%m-%dT%H:%M:%SZ', time.gmtime())
+        return "%s %s" % (timestamp, sha.new("%s:%s" % (timestamp, private)).hexdigest())
+        
     def getOptions(self):
         return { "Atom Endpoint":self.path , "Blog Atom Feed Path":self.feedpath, "Post Atom Url Path ":self.postpath }
             
@@ -207,9 +218,9 @@ class GenericAtomService (BlogService):
         self.feedpath = hash["Blog Atom Feed Path"]
         self.postpath = hash["Post Atom Url Path "]
     
-    def _makeCommonHeaders(self, Req, date=None):
+    def _makeCommonHeaders(self, date=None):
         """ Returns a dict with Nonce, Password Digest and other headers """
-        nonce = makeNonce()
+        nonce = self._getNonce()
         base64EncodedNonce = base64.encodestring(nonce).replace("\n", "")
         if not date:
             created = time.strftime('%Y-%m-%dT%H:%M:%SZ', time.gmtime())
@@ -218,69 +229,89 @@ class GenericAtomService (BlogService):
     
         passwordDigest = base64.encodestring(sha.new(nonce + created + self.password).digest()).replace("\n", "")
         authorizationHeader = 'UsernameToken Username="%s", PasswordDigest="%s", Created="%s", Nonce="%s"' % (self.username, passwordDigest, created, base64EncodedNonce)
-        Req.setValue("Authorization", 'WSSE profile="UsernameToken"')
-        Req.setValue("X-WSSE", authorizationHeader)
-        Req.setValue("UserAgent", "PyQLogger")
-        Req.setValue("Host",self.host)
-        return created
+        headers = {
+            "Authorization": 'WSSE profile="UsernameToken"', 
+            "X-WSSE": authorizationHeader, 
+            "UserAgent": "Reflog's Blogger"
+            }
         
-    def startGetBlogs(self):
-        """ initialize GET request """
-        Req = QHttpRequestHeader("GET",self.path)
-        self._makeCommonHeaders(Req)
-        return Req
-
-    def endGetBlogs(self,result):    
+        return (created, headers)
+    badcodes = [ 401 ]
+    status = {
+        401:"Invalid username or password!",
+        200:"Operation succeded!"
+    }
+    
+    def getBlogs(self):
         """ Returns dict where key is blog's name, and value is blog's properties dict """
-        ret = {}
-        for blog in feedparser.parse(result)['feed']['links']:
-            ret [ blog["title"] ] = {
-                'id'   : self.id_re.search(blog['href']).group(1),
-                'href' : blog['href'],
-                'rel'  : blog['rel'] ,
-                'type' : blog['type'],
-            } 
+        (created, headers) = self._makeCommonHeaders()
+        conn = httplib.HTTPConnection(self.host)
+        try:
+            conn.request("GET", self.path, "", headers)
+            response = conn.getresponse()
+        except Exception,e:
+            raise Exception("Network operation failed: "+str(e))
+        if response.status in self.badcodes:
+            raise Exception("Couldn't fetch blogs.\nReason: " + self.status[response.status])
+        xml = response.read()
+        conn.close()
+        ret = []
+        try:
+            for blog in feedparser.parse(xml)['feed']['links']:
+                if blog['rel'] == u'service.feed':
+                    ret += [  Blog(Name= blog["title"], ID=self.id_re.search(blog['href']).group(1) ) ]
+        except:
+            raise Exception("Couldn't parse the response from the server! Bad xml?")
         return ret
 
-    def startGetPosts(self, blogId ):
-        """ Initialize GET post request """
-        Req = QHttpRequestHeader("GET",  self.feedpath % (blogId))
-        self._makeCommonHeaders(Req)
-        return Req
-        
-    def endGetPosts(self, result):
+    def getPosts(self, blogId):
         """ Returns posts Atom Feed """
+        (created, headers) = self._makeCommonHeaders()
+        conn = httplib.HTTPConnection(self.host)
+        path = self.feedpath % (blogId)
+        try:
+            conn.request("GET", path, "", headers)
+            response = conn.getresponse()
+        except Exception,e:
+            raise Exception("Network operation failed: "+str(e))
+        xml = response.read()
+        conn.close()
         res = []
-        for post in feedparser.parse(result)['entries']:
-            content = post['content'][0]['value']
-            if post['content'][0]['mode'] == 'escaped':
-                unescape(content)
-            res += [ {
-                'title':post['title'],
-                'date':post['modified'],
-                'id':self.id_re.search( post['id'] ).group(1),
-                'content':content
-            }]
+        try:
+            for post in feedparser.parse(xml)['entries']:
+                content = post['content'][0]['value']
+                if post['content'][0]['mode'] == 'escaped':
+                    unescape(content)
+                thepost = Post()
+                thepost.Title = post['title']
+                thepost.Created = post['modified']
+                thepost.ID = self.id_re.search( post['id'] ).group(1)
+                thepost.Content = content
+                res += [ thepost ]
+        except:
+            raise Exception("Couldn't parse the response from the server! Bad xml?")
         return res
 
-    def startGetPost(self,  blogId, postId):
-        Req = QHttpRequestHeader("GET",self.postpath % (blogId, postId))
-        self._makeCommonHeaders(Req)
-        return Req
-        
-    def endGetPost(self,result):
+    def getPost(self, blogId, postId):
         """ Returns a post """
+        (created, headers) = self._makeCommonHeaders()
+        conn = httplib.HTTPConnection(self.host)
+        path = self.postpath % (blogId, postId)
+        conn.request("GET", path, "", headers)
+        response = conn.getresponse()
+        xml = response.read()
+        conn.close()
         res = []
-        for post in feedparser.parse(result)['entries']:
+        for post in feedparser.parse(xml)['entries']:
             content = post['content'][0]['value']
             if post['content'][0]['mode'] == 'escaped':
                 unescape(content)
-            res += [ {
-                'title':post['title'],
-                'date':post['modified'],
-                'id':self.id_re.search( post['id'] ).group(1),
-                'content':content
-                }]
+            thepost = Post()
+            thepost.Title = post['title']
+            thepost.Created = post['modified']
+            thepost.ID = self.id_re.search( post['id'] ).group(1)
+            thepost.Content = content
+            res += [ thepost ]
         if res:
             return res[0]
         return None
@@ -299,39 +330,51 @@ class GenericAtomService (BlogService):
         <content mode="escaped" type="text/html">%s</content>
         </entry>""" % (escape(title), created, catstr, escape(content))).encode("utf-8")
         
-    def startNewPost(self,  blogId, title, content, date=None):
-        """ Make a new post to Blogger, returning it's body """
-        Req = QHttpRequestHeader("POST",self.feedpath % (blogId))
-        created = self._makeCommonHeaders(Req,date)
-        Req.setContentType("application/atom+xml")
-        return (Req, self._makeBody(title, content, created))
+    def newPost(self, blogId, title, content, date=None):
+        """ Make a new post to Blogger, returning it's ID """
         
-    def endNewPost(self, result):
-        """ Parse result, and return post's ID """
-        try:
-            res = feedparser.parse(result)['entries'][0]['id']
-            amatch = self.id_re.search(res)
-            if amatch:
-                return amatch.group(1)
-        except:
-            return None
+        (created, headers) = self._makeCommonHeaders(date)    
+        headers["Content-type"] = "application/atom+xml"
+        path = self.feedpath % (blogId)
+        body = self._makeBody(title, content, created)
+        conn = httplib.HTTPConnection(self.host)
+        conn.request("POST", path, body, headers)
+        response = conn.getresponse()
+        resp = response.read()
+        conn.close()
+        amatch = self.id_re.search(feedparser.parse(resp)['entries'][0]['id'])
+        if amatch:
+            return Post(ID=amatch.group(1),Title=title,Content=content,Created=created)
+        return None
     
-    def startEditPost (self, blogId, entryId, title, content, date=None):
+    def editPost (self, blogId, entryId, title, content, date=None):
         """ Edits existing post on Blogger, returns new ID """        
-        Req = QHttpRequestHeader("PUT",self.postpath % (blogId, entryId))
-        created = self._makeCommonHeaders(Req,date)
-        Req.setContentType("application/atom+xml")
-        return (Req, self._makeBody(title, content, created))
-        
+        path = self.postpath % (blogId, entryId)
+        (created, headers) = self._makeCommonHeaders(date)    
+        headers["Content-type"] = "application/atom+xml"
+        body = self._makeBody(title, content, created)
+        conn = httplib.HTTPConnection(self.host)
+        conn.request("PUT", path, body, headers)
+        response = conn.getresponse()
+        response.read() # error checking should be added here
+        conn.close()
+
     def getCategories(self, blogId):
         """ Fetches the list of blog's categories """
         return None
 
-    def deletePost(self,  blogId, entryId):
+    def getHomepage(self, blogid):
+        """ Returns the homepage of the blog """
+        return None
+
+    def deletePost(self, blogId, entryId):
         """ Deletes a post from specified Blog """
-        Req = QHttpRequestHeader("DELETE",self.postpath % (blogId, entryId))
-        created = self._makeCommonHeaders(Req)
-        return Req
+        path = self.postpath % (blogId, entryId)
+        (created, headers) = self._makeCommonHeaders()    
+        conn = httplib.HTTPConnection(self.host)
+        conn.request("DELETE", path, "", headers)
+        response = conn.getresponse()
+        return bool(response.status == 410 or response.status == 200)
         
     def getEmpty():
         return GenericAtomService("","","","","","")

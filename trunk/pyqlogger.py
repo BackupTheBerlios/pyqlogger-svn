@@ -109,7 +109,7 @@ def main():
             break
         else:
             wnd = __FORMS__["Main"]
-            wnd["Impl"].init(settings,acc,pwd)
+            wnd["Impl"].init(settings,__FORMS__,acc,pwd)
             app.setMainWidget(wnd["Class"])
             wnd["Class"].show()
             splash.finish(wnd["Class"])
