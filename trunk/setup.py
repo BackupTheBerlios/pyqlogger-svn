@@ -17,7 +17,7 @@ Topic :: Internet
 Topic :: Software Development :: Libraries :: Python Modules
 Operating System :: Unix
 """
-import sys,os
+import sys,os,glob
 from distutils.core import setup
 import pyqlogger
 
@@ -33,6 +33,7 @@ doclines = __doc__.split("\n")
 setup(name="PyQLogger",
       version=pyqlogger.VERSION,
       maintainer="reflog",
+      data_files=[('share/pyqlogger/plugins',glob.glob('plugins/*'))],
       scripts=['pyqlogger.py'],
       packages=['PyQLogger'],
       maintainer_email="reflog@gmail.com",
