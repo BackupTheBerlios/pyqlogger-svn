@@ -1,0 +1,13 @@
+CHANGELOG
+
++ new
+- fixed
+* changed
+? info
+
+08/11/2004 - 1.0
+
++ First release, two plugins added:
++ ASpell GUI
++ Textile processor
+
