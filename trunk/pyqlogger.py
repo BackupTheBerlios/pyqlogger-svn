@@ -83,6 +83,12 @@ def load_forms(splash,app,settings):
     wnd = UrlDialog.UrlDialog()
     wnd_c = qt_ui_loader.create( 'UI/urldialog.ui', wnd,None,True )
     __FORMS__["Url"] = { "Class": wnd_c , "Impl": wnd }
+    splash.message( "Loading form: Plugin settings",alignflag )
+    qApp.processEvents();
+    from PyQLogger.Dialogs import PluginSettingsDialog
+    wnd = PluginSettingsDialog.PluginSettingsDialog()
+    wnd_c = qt_ui_loader.create( 'UI/pluginsettingsdialog.ui', wnd,None,True )
+    __FORMS__["PluginSettings"] = { "Class": wnd_c , "Impl": wnd }
 
 
 

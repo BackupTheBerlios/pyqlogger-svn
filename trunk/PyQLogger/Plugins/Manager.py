@@ -17,7 +17,7 @@
 ## Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 from EaseXML import XMLObject,ListNode
-from Plugin import Plugin
+from Plugin import Plugin , PluginData, Option
 from EventPlugin import EventPlugin, EventType
 from ToolbarPlugin import ToolbarPlugin
 from MenuPlugin import MenuPlugin
@@ -50,50 +50,59 @@ def importClasses(folders):
                     g = globals()
                     l = {} # locals
                     exec lines in g, l
-                    for k, v in l.items():
+                    for kName, kClass in l.items():
                         # check if provided class can be applied
-                        if issubclass(v, Plugin):
+                        if issubclass(kClass, Plugin) and len(kName)>7 and kName[-6:] == 'Plugin':
                             # don't load duplicate plugins
-                            if not [ aplugin for aplugin in PluginClasses if str(v) in str(aplugin)]:
-                                PluginClasses += [ v ]
-                                g[k] = v
+                            if not [ aplugin for aplugin in PluginClasses if kName == aplugin.__name__]:
+                                PluginClasses += [ kClass ]
+                                g[ kName ] = kClass
+                        else:
+                            print "Cannot load plugin: %s is a bad plugin name or unkown parent class!" % kName
                 except Exception,  e:
                     print "Exception on loading plugin: " + str(e)
     return PluginClasses
 
 class Manager(XMLObject):
     """ Plugin manager for keeping the list, loading/unloading and etc """
-    Plugins = ListNode('Plugin')
+    PluginData = ListNode('PluginData') # data hashes
+    Plugins = [] # instances
+    Plugin2Data = {} # lookup hash
     
     def init(self, parent, PluginClasses):
         """ 
         most of the plugins are already initialized by now,
         so only add the new ones
         """
-        import_plugin_classes()
         self.parent = parent
         for plug in PluginClasses:
-            exists = [ p for p in self.Plugins if type(p) == plug ]
-            if not exists:
-                self.Plugins += [ plug() ] # add to the list
+            exists = [ p for p in self.PluginData if p.Class == plug.__name__ ]
+            inst = plug()
+            if not exists: # no data created yet. make one    
+                inst.Data = PluginData(Class=plug.__name__,Options=inst.defaultOptions())
+                self.PluginData += [ inst.Data ]
+            else: # use existing data
+                inst.Data = exists[0]                
+            self.Plugins += [ inst ] # add to the list            
+            self.Plugin2Data [ inst ] = inst.Data # link for lookup
             
     def fillToolbar(self, panel):
         """ Fills the provided panel with plugins of ToolbarPlugin type """
         for plug in self.Plugins:
-            if issubclass(plug.__class__,ToolbarPlugin) and plug.Enabled == 1 :
+            if issubclass(plug.__class__,ToolbarPlugin) and plug.Data.Enabled == 1 :
                 panel.layout().addWidget(plug.getWidget())
     
     def handleEvent(self, eventType):
         """ For supplied event, execute all plugins handling it """
         for plug in self.Plugins:
-            if issubclass(plug.__class__, EventPlugin) and plug.Enabled == 1 \
+            if issubclass(plug.__class__, EventPlugin) and plug.Data.Enabled == 1 \
                and plug.EventType == eventType:
                 plug.getHandler()
         
     def fillMenu(self):
         """ Fills the editor menu with plugins of MenuPlugin type """
         for plug in self.Plugins:
-            if issubclass(plug.__class__,MenuPlugin) and plug.Enabled == 1 :
+            if issubclass(plug.__class__,MenuPlugin) and plug.Data.Enabled == 1 :
                 plug.getMenu()
         
     def load(parent):
@@ -106,7 +115,7 @@ class Manager(XMLObject):
             except Exception, e:
                 print "Couldn't read plugin data. Either empty of borken! (%s)"%(str(e))
         else:
-            m = Manager(Plugins=[])
+            m = Manager(PluginData=[])
         m.init(parent,l)
         return m
             

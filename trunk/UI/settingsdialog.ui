@@ -416,6 +416,9 @@
                                 <property name="name">
                                     <cstring>lvPlugins</cstring>
                                 </property>
+                                <property name="allColumnsShowFocus">
+                                    <bool>true</bool>
+                                </property>
                             </widget>
                             <widget class="QLayoutWidget">
                                 <property name="name">
@@ -668,6 +671,12 @@
         <receiver>SettingsDialog</receiver>
         <slot>chkKDE_stateChanged(int)</slot>
     </connection>
+    <connection>
+        <sender>lvPlugins</sender>
+        <signal>selectionChanged(QListViewItem*)</signal>
+        <receiver>SettingsDialog</receiver>
+        <slot>lvPlugins_selectionChanged(QListViewItem*)</slot>
+    </connection>
 </connections>
 <slots>
     <slot>btnAddAccount_clicked()</slot>
@@ -680,6 +689,7 @@
     <slot>btnDisablePlug_clicked()</slot>
     <slot>lbAccounts_selected(int)</slot>
     <slot>chkKDE_stateChanged(int)</slot>
+    <slot>lvPlugins_selectionChanged(QListViewItem*)</slot>
 </slots>
 <layoutdefaults spacing="6" margin="11"/>
 </UI>

@@ -18,10 +18,21 @@
 ## Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 from EaseXML import XMLObject,ItemNode,TextNode,RawNode,ListNode,IntegerAttribute
-from OptionStorage import OptionStorage,Option
 from qt import QPixmap
 
-class Plugin(XMLObject):
+
+class Option(XMLObject):
+  Type = TextNode() # one of : 'Integer','String','Boolean','List'
+  Name = TextNode()
+  Value = TextNode(default='',optional=True)
+
+class PluginData(XMLObject):
+  # Indication of plugin's status (0 - disable, 1 - enable)
+  Enabled = IntegerAttribute(default=0)
+  Options = ListNode('Option')
+  Class = TextNode()
+
+class Plugin:
   """
   Base class for all plugins
   """
@@ -29,13 +40,16 @@ class Plugin(XMLObject):
   Name = None
   # Who's responsible for this???
   Author = None
-  # Option storage class instance    
-  Options = ListNode('Option') 
   # Byte array of the icon. (used in menu and toolbar)
   Icon = None
-  # Indication of plugin's status (0 - disable, 1 - enable)
-  Enabled = IntegerAttribute(default=0)
+  # Additional information
+  Info = None
+  # This should be an instance of PluginData type
+  Data = None
   
   def description(self):
     return "Unkown plugin type"
+
+  def defaultOptions(self):
+    return []
   

@@ -25,15 +25,37 @@ class SettingsDialog(QDialog):
             self.btnDelAccount.setEnabled(False)
     
     def statusPixmap(self, plugin):
-        if plugin.Enabled and plugin.Enabled == 1:
+        if plugin.Data.Enabled and plugin.Data.Enabled == 1:
             return self.btnLoad.iconSet().pixmap()
         return self.btnUnload.iconSet().pixmap()
         
     def fillPlugins(self):
         self.lvPlugins.clear()
+        self.li2pl = {}
+        First = True
         for plug in self.manager.Plugins:
             li = QListViewItem(self.lvPlugins,str(plug.Name), plug.description())
             li.setPixmap(0,self.statusPixmap(plug))
+            self.li2pl[li] = plug
+            if First:
+                li.setSelected(True)
+                self.lvPlugins_selectionChanged(li)
+                First = False
+                
+    def lvPlugins_selectionChanged(self, listItem):
+        en = bool(self.li2pl[listItem].Data.Enabled)
+        self.btnLoad.setEnabled(not en)
+        self.btnUnload.setEnabled(en)
+    
+    def btnLoad_clicked(self, val = 1):
+        li = self.lvPlugins.selectedItem()
+        pl = self.li2pl [ li ]
+        pl.Data.Enabled = val
+        li.setPixmap(0,self.statusPixmap(pl))
+        self.lvPlugins_selectionChanged(li)
+        
+    def btnUnload_clicked(self):
+        self.btnLoad_clicked(0)
         
     def init(self,settings,forms,manager):
         self.settings = settings
@@ -76,7 +98,12 @@ class SettingsDialog(QDialog):
                 self.settings.save()
                 self.fillList()  
 
-
+    def btnConfigPlug_clicked(self):
+        wnd = self.forms["PluginSettings"]
+        pl = self.li2pl [ self.lvPlugins.selectedItem() ]
+        wnd["Impl"].init(self.manager,pl)
+        wnd["Class"].exec_loop()
+        
 
     def btnEditAccount_clicked(self):
         wnd = self.forms["AccountSettings"]
@@ -100,4 +127,5 @@ class SettingsDialog(QDialog):
             self.settings.UI_Settings.Notification = 1
         #update plugin changes
         self.settings.save()
+        self.manager.save()
         QDialog.accept(self)
