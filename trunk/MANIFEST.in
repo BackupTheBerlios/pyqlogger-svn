@@ -9,6 +9,7 @@ include CHANGES.txt
 include __init__.py
 include pyqlogger.py
 include setup.py
+include pyqlogger.desktop
 
 exclude test*
 exclude build.py
