@@ -81,11 +81,12 @@ try:
 	    e.SendScintilla(QextScintilla.SCI_STYLESETFONT,style,f.family().latin1())
             e.SendScintilla(QextScintilla.SCI_STYLESETSIZE,style,f.pointSize())
 
+
     def setEditWidget(parent):
         parent.sourceEditor.hide()
         parent.sourceEditor = QextScintilla(parent.Source)
 	parent.sourceEditor.setUtf8(1)
-	parent.sourceEditor.setWrapMode( QextScintilla.SC_WRAP_WORD )
+        parent.sourceEditor.SendScintilla(QextScintilla.SCI_SETWRAPMODE, QextScintilla.SC_WRAP_WORD)
 	parent.sourceEditor.setLexer(QextScintillaLexerHTML(parent))
 	setMonospaced(parent.sourceEditor)
         parent.Source.layout().addWidget(parent.sourceEditor)
