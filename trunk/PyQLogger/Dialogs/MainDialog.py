@@ -123,18 +123,66 @@ class MainDialog(QDialog):
         self.SaveAll()
         QDialog.reject(self)
 
-    
+
+    def donePublishPost(self,res):
+        if not res:
+            blog = self.account.Blogs [ self.account.SelectedBlog ]
+            post = blog.Posts.Data [ len(blog) - 1 ] # get last added one
+            i = QListBoxText(post.Title)
+            self.listPublishedPosts.insertItem(i,0)
+            self.PublishedItems [ i ] = post
+            self.current_post = None
+            self.editPostTitle.setText("")
+            self.sourceEditor.setText("")
+            self.notifier.info("Publishing success!")
+        else:
+            self.notifier.error(res)
+        self.btnPublish.setEnabled(True)
+        
+    def startPublishPost(self):        
+        self.btnPublish.setEnabled(False)
+        try:
+            title = unicode(self.editPostTitle.text())
+            content = unicode(self.sourceEditor.text())
+            self.account.Blogs [ self.account.SelectedBlog ].createPost(title,content)
+        except Exception, e:
+            import traceback
+            traceback.print_exc()
+            return str(e)
+            
+    def doneEditPost(self,res):
+        if not res:
+            self.editPostTitle.setText("")
+            self.sourceEditor.setText("")
+            for (k,v) in self.PublishedItems.items():
+                if v == self.current_post:
+                    k.setText(v['title'])
+                    self.listPublishedPosts.updateItem(k)
+            self.notifier.info("Publishing success!")
+            self.current_post = None
+        else:
+            self.notifier.error(res)
+        self.btnPublish.setEnabled(True)
+        
+    def startEditPost(self):
+        self.btnPublish.setEnabled(False)
+        try:
+            self.current_post.Title = unicode(self.editPostTitle.text())
+            self.current_post.Content = unicode(self.sourceEditor.text())
+            self.account.Blogs [ self.account.SelectedBlog ].editPost(self.current_post)
+        except Exception, e:
+            return str(e)
+
+
     def btnPublish_clicked(self):       
         title = unicode(self.editPostTitle.text())
         content = unicode(self.sourceEditor.text())
         if content:
             if title:
-                aBlog = self.__getAtomBlog()
-                if self.current_post and self.current_post.has_key('id'):
-                    bgWorker = BG.PostEditor(aBlog, self.notifier, self )
+                if self.current_post and self.current_post.ID:
+                    self.network.enqueue(netOp("Editing post...",self.startEditPost,self.doneEditPost))
                 else:
-                    bgWorker = BG.PostCreator(aBlog, self.notifier, self )
-                bgWorker()
+                    self.network.enqueue(netOp("Publishing post...",self.startPublishPost,self.donePublishPost))
             else:
                 QMessageBox.warning(self, "Warning", "You forgot the post's title!")
         else:
@@ -157,9 +205,9 @@ class MainDialog(QDialog):
                 self.comboBlogs.insertItem(blog.Name)
             self.comboBlogs.setCurrentItem( self.account.SelectedBlog )
             self.notifier.info("%d Blogs fetched!" % len(self.account))        
-            self.btnRefreshBlogs.setEnabled(True)
         else:
             self.notifier.error(res)
+        self.btnRefreshBlogs.setEnabled(True)
         
     def startFetchingBlogs(self):
         self.btnRefreshBlogs.setEnabled(False)
@@ -192,11 +240,11 @@ class MainDialog(QDialog):
     def doneFetchingPosts(self,res):
         if not res:
             self.populateLists()
-            self.btnFetchPosts.setEnabled(True)
             self.notifier.info("%d posts fetched!" % len( self.account.Blogs[self.account.SelectedBlog] ))
             self.SaveAll()
         else:
             self.notifier.error(res)
+        self.btnFetchPosts.setEnabled(True)
             
     def startFetchingPosts(self):
         self.btnFetchPosts.setEnabled(False)
@@ -294,7 +342,8 @@ class MainDialog(QDialog):
         self.listPublishedPosts.clear()
         self.listSavedPosts.clear()
         selectedblog = self.account.Blogs [ self.account.SelectedBlog ]
-        
+        bydate = lambda x,y: time.mktime(time.strptime(x.Created,'%Y-%m-%dT%H:%M:%SZ')) - time.mktime(time.strptime(y.Created,'%Y-%m-%dT%H:%M:%SZ'))
+        selectedblog.Drafts.Data.sort(bydate)
         for post in selectedblog.Drafts.Data:
             self.SavedItems [ QListBoxText(self.listSavedPosts, post.Title) ] = post
 

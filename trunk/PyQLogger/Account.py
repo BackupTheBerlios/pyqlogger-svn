@@ -70,7 +70,10 @@ class Account(XMLObject):
         """
         Perform login to server (if needed)
         """
-        pass
+        if hasattr(self.BlogService,'login'):
+            return self.BlogService.login()
+        return True
+    
     
     def fetchBlogs(self):
         """

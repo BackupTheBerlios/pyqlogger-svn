@@ -531,6 +531,12 @@
         <receiver>AccountSettingsDialog</receiver>
         <slot>comboBlogs_activated(int)</slot>
     </connection>
+    <connection>
+        <sender>edtHomepage</sender>
+        <signal>textChanged(const QString&amp;)</signal>
+        <receiver>AccountSettingsDialog</receiver>
+        <slot>edtHomepage_textChanged(const QString&amp;)</slot>
+    </connection>
 </connections>
 <slots>
     <slot>comboProviders_activated(const QString&amp;)</slot>
@@ -541,6 +547,7 @@
     <slot>_textChanged(const QString&amp;)</slot>
     <slot>comboBlogs_activated(const QString&amp;)</slot>
     <slot>comboBlogs_activated(int)</slot>
+    <slot>edtHomepage_textChanged(const QString&amp;)</slot>
 </slots>
 <layoutdefaults spacing="6" margin="11"/>
 </UI>

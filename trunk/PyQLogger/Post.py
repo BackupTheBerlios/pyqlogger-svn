@@ -17,16 +17,21 @@
 ## along with PyQLogger; if not, write to the Free Software
 ## Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-from EaseXML import  XMLObject,TextNode,RawNode
+from EaseXML import  XMLObject,TextNode,RawNode,ItemNode
+
+class PostData(XMLObject):
+    Pickle  = RawNode(main=True)
+    
 class Post(XMLObject):
     """
     Basic class for post in a blog
     """
     
-    ID = TextNode()#post's id
+    ID = TextNode(optional=True)#post's id (optional because we use it for drafts aswell)
     Title = TextNode()#post's title
     Content = RawNode()#body of the post
     Created = TextNode()#date of post's publication (or last update)
+    Data = ItemNode('PostData',optional=True)
     
     def __str__(self):
         """

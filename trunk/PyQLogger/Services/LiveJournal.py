@@ -17,6 +17,11 @@
 ## along with PyQLogger; if not, write to the Free Software
 ## Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 from BlogService import BlogService
+from xmlrpclib import Server
+from md5 import md5
+from PyQLogger.Post import Post,PostData
+from PyQLogger.Blog import Blog,Posts,Drafts
+import urllib2,feedparser,pickle,time
 
 class LiveJournalService (BlogService):
     icon = \
@@ -76,8 +81,90 @@ class LiveJournalService (BlogService):
         "\x00\x00\x49\x45\x4e\x44\xae\x42\x60\x82"
     name = "LiveJournal"
     def __init__(self,host,username,password):
-        BlogService.__init__(self,host,username,password)
+        BlogService.__init__(self,"www.livejournal.com",username,password)
+        self.server = Server("http://www.livejournal.com/interface/xmlrpc")
         
+    def prepare_call(self,params={}):
+        ch = self.server.LJ.XMLRPC.getchallenge()
+        response = md5(ch["challenge"] + md5(self.password).hexdigest()).hexdigest()
+        params.update( {
+                "username":self.username,
+                "auth_method" : 'challenge',
+                "auth_challenge":ch["challenge"],
+                "auth_response":response
+                })
+        return params
+        
+    def login(self):    
+        """ this should get the challenge and report if all is good """
+        try:          
+            params = self.prepare_call()
+            log = self.server.LJ.XMLRPC.login(params)
+            self.userid = log["userid"]
+            return True
+        except Exception , e:
+            return False
+
+    def getBlogs(self):
+        req_url = "http://www.livejournal.com/users/%s/data/atom"%self.username
+        try:
+            req = urllib2.urlopen(req_url)
+            lines = req.read()
+            req.close()
+            feed = feedparser.parse(lines)
+            title = feed['feed']['title']
+            url = feed['feed']['link']
+            id = self.username
+            return [ Blog(ID=id,Name=title,Url=url,Drafts=Drafts(),Posts=Posts()) ]
+        except:
+            return []
+
+    def getEvent(self,eventprops):
+        params = self.prepare_call(eventprops)
+        res = self.server.LJ.XMLRPC.getevents(params)
+        ret = []
+        for event in res['events']:
+            created = time.strftime('%Y-%m-%dT%H:%M:%SZ',  time.strptime(event['eventtime'],'%Y-%m-%d %H:%M:%S'))
+            ret += [ Post(
+                            ID=unicode(event['itemid']),
+                            Content=unicode(event["event"]),
+                            Created=created,
+                            Data=PostData(Pickle=pickle.dumps(event["props"])),
+                            Title=unicode(event['subject'])
+                        )]
+        return ret
+
+    def getPosts(self,id):
+        return self.getEvent({"selecttype":"lastn" , "howmany":"15" })
+
+    def getPost(self,blogid,postid):
+        ret = self.getEvent({"selecttype":"one" , "itemid":postid })
+        if ret:
+            return ret[0]
+
+    def newPost(self, blogId, title, content, date=None, other=None):
+        t = time.localtime()
+        created = time.strftime('%Y-%m-%dT%H:%M:%SZ', time.gmtime())
+        par = { "event":content,"subject":title,"year":t[0],"day":t[2],"hour":t[3],"mon":t[1],"min":t[4] }
+        if other:
+            par.update(other) 
+        params = self.prepare_call(par)
+        res = self.server.LJ.XMLRPC.postevent(par)
+        p = Post(ID=res['itemid'],Title=title,Content=content,Created=created)
+        if other:
+            p.Data = PostData(pickle.dumps(other))
+        return p
+
+    def editPost(self, blogId, post):
+        t = time.localtime()
+        post.Created = time.strftime('%Y-%m-%dT%H:%M:%SZ', time.gmtime())
+        par = { "itemid":post.ID,"event":post.Content,"subject":post.Title,"year":t[0],"day":t[2],"hour":t[3],"mon":t[1],"min":t[4] }
+        if post.Data:
+            par.update(pickle.loads(post.Data.Pickle))
+        params = self.prepare_call(par)
+        self.server.LJ.XMLRPC.editevent(par)
+        
+
     def getEmpty():
         return LiveJournalService("","","")
     getEmpty = staticmethod(getEmpty)

@@ -58,15 +58,20 @@ class LoginDialog(QDialog):
         
     def accept(self):
         acc = self.settings.accountByName(str(self.comboUsers.text(self.comboUsers.currentItem())))
-        #check if we need to save changes
-        if self.chkAutoLogin.isChecked()  and self.settings.AutoLogin != acc.Name \
-            or (acc.Password=="" and bool(self.chkSavePass.isChecked())):
-            self.settings.AutoLogin = acc.Name
-            acc.Password=str(self.edtPassword.text())
-            self.settings.save()
-        self.acc = acc
-        QDialog.accept(self)
-        
+        if acc.login():
+            #check if we need to save changes
+            if self.chkAutoLogin.isChecked()  and self.settings.AutoLogin != acc.Name \
+                or (acc.Password=="" and bool(self.chkSavePass.isChecked())):
+                self.settings.AutoLogin = acc.Name
+                acc.Password=str(self.edtPassword.text())
+                self.settings.save()
+            self.acc = acc
+            QDialog.accept(self)
+        else:
+            self.acc = None
+            QMessageBox.warning(None,"Failed!","""Cannot login!""")
+            QDialog.reject(self)
+            
     def btnSettings_clicked(self):
         wnd = self.forms["Settings"]
         wnd["Impl"].init(self.settings,self.forms)

@@ -47,17 +47,21 @@ class Blog(XMLObject):
         """  remove post  """
         pass
     
-    def updatePost(self, postNr, title, content, **other):
+    def editPost(self, post ):
         """   change post's content     """
-        pass
+        self.Service.editPost ( self.ID , post )
     
     def createPost(self, title, content, **other):
         """  create new post    """
-        pass
+        p = self.Service.newPost ( self.ID , title, content, None, other)
+        self.Posts.Data += [ p ]
     
     def reloadPosts(self):
         """   fetch the list of posts in a blog   """
-        self.Posts.Data = self.Service.getPosts(self.ID)
+        posts = self.Service.getPosts(self.ID)
+        for p in posts:
+            if not [ bb for bb in self.Posts.Data if bb.ID == p.ID ]: # it's new! add it
+                self.Posts.Data += [ p ]
     
     def __len__(self):
         """   return the amount of posts in a blog     """

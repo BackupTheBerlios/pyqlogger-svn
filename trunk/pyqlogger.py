@@ -89,9 +89,12 @@ def main():
     splash.message( "Loading settings..." ,alignflag)
     qApp.processEvents();
     settings = Settings.Settings.load()
+    #settings.Accounts[0].init()
+    #settings.Accounts[0].Blogs[0].editPost(settings.Accounts[0].Blogs[0].Posts.Data[0])
     splash.message( "Loading forms...",alignflag )
     qApp.processEvents();
     load_forms(splash,app,settings)
+    del splash
     acc = None
     pwd = None
     if settings.AutoLogin: # check if we have auto login info
@@ -109,17 +112,18 @@ def main():
             break
         else:
             wnd = __FORMS__["Main"]
+            acc.init()
             wnd["Impl"].init(settings,__FORMS__,acc,pwd)
             app.setMainWidget(wnd["Class"])
             wnd["Class"].show()
-            splash.finish(wnd["Class"])
+            #splash.finish(wnd["Class"])
             app.exec_loop()
             if wnd["Impl"].reload:
                 acc = None
             else:
                 break
 
-    del splash
+    
 
 if __name__ == '__main__':
     main()

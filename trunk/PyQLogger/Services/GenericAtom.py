@@ -19,7 +19,7 @@
 
 from BlogService import BlogService
 from PyQLogger.Post import Post
-from PyQLogger.Blog import Blog
+from PyQLogger.Blog import Blog,Posts,Drafts
 import httplib, sha, base64, urllib2, time, random
 from xml.sax.saxutils import escape , unescape
 import feedparser, re
@@ -259,7 +259,12 @@ class GenericAtomService (BlogService):
         try:
             for blog in feedparser.parse(xml)['feed']['links']:
                 if blog['rel'] == u'service.feed':
-                    ret += [  Blog(Name= blog["title"], ID=self.id_re.search(blog['href']).group(1) ) ]
+                    ret += [  Blog( 
+                                    Name= blog["title"], 
+                                    ID=self.id_re.search(blog['href']).group(1) ,
+                                    Posts=Posts(),
+                                    Drafts=Drafts()
+                                ) ]
         except:
             raise Exception("Couldn't parse the response from the server! Bad xml?")
         return ret
