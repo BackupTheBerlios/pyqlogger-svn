@@ -1,6 +1,6 @@
 # $Id$
 %define _name           pyqlogger
-%define _version        1.3.1
+%define _version        1.3.3
 %define _rel            1
 %define _prefix         /usr
 %define _release        %_rel
