@@ -126,6 +126,7 @@ class SettingsDialog(QDialog):
         self.chkKDE.setChecked(bool(settings.UI.EnableKde))
         self.chkDCOP.setChecked(bool(settings.UI.EnableDCOP))
         self.chkTray.setChecked(bool(settings.UI.EnableTray))
+        self.chkShowText.setChecked(bool(settings.UI.EnableText))
         self.chkKDE_stateChanged(0)
         self.chkSpellEnable.setChecked(bool(settings.Speller.Enabled))
         self.edtSpellPrefix.setText(str(settings.Speller.Prefix))
@@ -153,6 +154,7 @@ class SettingsDialog(QDialog):
         self.settings.Speller.Language = self.edtSpellLanguage.text()
         self.settings.UI.EnableTray = int(self.chkTray.isChecked())
         self.settings.UI.EnableDCOP = int(self.chkDCOP.isChecked())
+        self.settings.UI.EnableText = int(self.chkShowText.isChecked())
         if self.rbOSD.isChecked():
             self.settings.UI.Notification = 0
         else:

@@ -17,7 +17,7 @@
 ## along with PyQLogger; if not, write to the Free Software
 ## Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 ##
-__revision__ = "$Id: UI.py 75 2004-12-19 14:12:35Z reflog $"
+__revision__ = "$Id$"
 
 icon = \
     "\x89\x50\x4e\x47\x0d\x0a\x1a\x0a\x00\x00\x00\x0d" \
@@ -67,96 +67,90 @@ from qt import QApplication, Qt, SIGNAL, QFont, PYSIGNAL
 from qtext import QextScintilla, QextScintillaLexerHTML
 from PyQLogger.Plugins.EventPlugin import EventType
 # define default functions
-try:
-    class API:
-        class KQApplication(QApplication):
-            def __init__(self, argv, opts):
-                QApplication.__init__(self, argv)
-    
-        class MyQextScintilla(QextScintilla):
-            def keyPressEvent( self, evt ):
-                res = False
-                if hasattr(self, "manager"):
-                    res = self.manager.handleEvent( EventType.TEXTCHANGED , evt )
-                if not res:
-                    QextScintilla.keyPressEvent( self, evt )
-    
-            def contextMenuEvent(self, evt):
-                evt.accept()
-                self.emit(PYSIGNAL('aboutToShowMenu'), (evt,))
-    
-            def fillDefaultMenu(self, parent):
-                self.undoid = parent.insertItem("Undo",self.undo)  
-                self.redoid = parent.insertItem("Redo",self.redo)  
-                self.cutid = parent.insertItem("Cut",self.cut)  
-                self.copyid = parent.insertItem("Copy",self.copy)  
-                parent.insertItem("Paste",self.paste)  
-    
-            def updateDefaultMenu(self, parent):
-                parent.setItemEnabled(self.undoid,self.isUndoAvailable())
-                parent.setItemEnabled(self.redoid,self.isRedoAvailable())
-                parent.setItemEnabled(self.copyid,self.hasSelectedText())
-                parent.setItemEnabled(self.cutid,self.hasSelectedText())
-                
-    
-        def setEditWidget(parent):
-            def setMonospaced(editor):
-                try:
-                    rangeLow = range(editor.STYLE_DEFAULT)
-                except AttributeError:
-                    rangeLow = range(32)
-                try:
-                    rangeHigh = range(editor.STYLE_LASTPREDEFINED + 1, editor.STYLE_MAX + 1)
-                except AttributeError:
-                    rangeHigh = range(40, 128)
-                try:
-                    font = QFont('Bitstream Vera Sans,11,-1,5,50,0,0,0,0,0')
-                except:
-                    return # no font. bail.
-                for style in rangeLow + rangeHigh:
-                    editor.SendScintilla(QextScintilla.SCI_STYLESETFONT, style, font.family().latin1())
-                    editor.SendScintilla(QextScintilla.SCI_STYLESETSIZE, style, font.pointSize())
-            parent.sourceEditor.hide()
-            parent.sourceEditor = API.MyQextScintilla(parent.Source)
-            parent.sourceEditor.setUtf8(1)
-            parent.sourceEditor.SendScintilla(QextScintilla.SCI_SETWRAPMODE, QextScintilla.SC_WRAP_WORD)
-            parent.sourceEditor.setLexer(QextScintillaLexerHTML(parent))
-            setMonospaced(parent.sourceEditor)
-            parent.Source.layout().addWidget(parent.sourceEditor)
-            parent.connect(parent.sourceEditor, SIGNAL("textChanged()"), parent.sourceEditor_textChanged)
+class MyQextScintilla(QextScintilla):
+    def keyPressEvent( self, evt ):
+        res = False
+        if hasattr(self, "manager"):
+            res = self.manager.handleEvent( EventType.TEXTCHANGED , evt )
+        if not res:
+            QextScintilla.keyPressEvent( self, evt )
 
-        def setPreviewWidget(parent):
-            pass
-            
-        def setPreview(parent, text):
-            parent.sourcePreview.setText(text)
-            
-        def prepareCommandLine():
-            import optparse
-            parser = optparse.OptionParser(usage="%prog [options]")
-            parser.add_option("--statusbar", "-s",
-                          action = "store_true",
-                  help = "Status bar (default = disabled)")
-            (opt, arg) = parser.parse_args()
-            stat = opt.statusbar
-            return stat == True
-            
-        def setupTray(app, wnd):
-            pass
-        
-        def setupDCOP(app, wnd):
-            pass
-        
-        setupTray = staticmethod(setupTray)
-        setupDCOP = staticmethod(setupDCOP)
-        prepareCommandLine = staticmethod(prepareCommandLine)
-        setPreview = staticmethod(setPreview)
-        setPreviewWidget = staticmethod(setPreviewWidget)
-        setEditWidget = staticmethod(setEditWidget)
+    def contextMenuEvent(self, evt):
+        evt.accept()
+        self.emit(PYSIGNAL('aboutToShowMenu'), (evt,))
 
-except ImportError,e:
-    print "Cannot initialize QScintilla. Bad!"
-    sys.exit()
+    def fillDefaultMenu(self, menu):
+        self.parent.UndoAction.addTo(menu)
+        self.parent.RedoAction.addTo(menu)
+        self.parent.CutAction.addTo(menu)
+        self.parent.CopyAction.addTo(menu)
+        self.parent.PasteAction.addTo(menu)
+
+    def updateDefaultMenu(self, parent):
+        self.parent.UndoAction.setEnabled(self.isUndoAvailable())
+        self.parent.RedoAction.setEnabled(self.isRedoAvailable())
+        self.parent.CopyAction.setEnabled(self.hasSelectedText())
+        self.parent.CutAction.setEnabled(self.hasSelectedText())
+
+
+    def setMonospaced(self):
+        try:
+            rangeLow = range(self.STYLE_DEFAULT)
+        except AttributeError:
+            rangeLow = range(32)
+        try:
+            rangeHigh = range(self.STYLE_LASTPREDEFINED + 1, self.STYLE_MAX + 1)
+        except AttributeError:
+            rangeHigh = range(40, 128)
+        try:
+            font = QFont('Bitstream Vera Sans,11,-1,5,50,0,0,0,0,0')
+        except:
+            return # no font. bail.
+        for style in rangeLow + rangeHigh:
+            self.SendScintilla(self.SCI_STYLESETFONT, style, font.family().latin1())
+            self.SendScintilla(self.SCI_STYLESETSIZE, style, font.pointSize())
+            
+    def __init__(self, parent, owner):
+        QextScintilla.__init__ (self, parent, "sourceEditor")
+        self.parent = owner
+        self.setUtf8(1)
+        self.SendScintilla(QextScintilla.SCI_SETWRAPMODE, QextScintilla.SC_WRAP_WORD)
+        self.setLexer(QextScintillaLexerHTML(parent))
+        self.setMonospaced()
+        self.connect(self, SIGNAL("selectionChanged()"), self.parent.handleContextMenu)
+        
+class API:
+    class KQApplication(QApplication):
+        def __init__(self, argv, opts):
+            QApplication.__init__(self, argv)
+
+    def setPreviewWidget(parent):
+        pass
+        
+    def setPreview(parent, text):
+        parent.sourcePreview.setText(text)
+        
+    def prepareCommandLine():
+        import optparse
+        parser = optparse.OptionParser(usage="%prog [options]")
+        parser.add_option("--statusbar", "-s",
+                      action = "store_true",
+              help = "Status bar (default = disabled)")
+        (opt, arg) = parser.parse_args()
+        stat = opt.statusbar
+        return stat == True
+        
+    def setupTray(app, wnd):
+        pass
+    
+    def setupDCOP(app, wnd):
+        pass
+    
+    setupTray = staticmethod(setupTray)
+    setupDCOP = staticmethod(setupDCOP)
+    prepareCommandLine = staticmethod(prepareCommandLine)
+    setPreview = staticmethod(setPreview)
+    setPreviewWidget = staticmethod(setPreviewWidget)
 
 
 def prepareModule(settings):
@@ -195,8 +189,9 @@ def prepareModule(settings):
                         sysargv = argv[:]
                         from pyqlogger import VERSION
                         aboutData = KAboutData("pyqlogger", "PyQLogger", VERSION,  
-                                           "Blogger GUI", KAboutData.License_GPL, 
-                               "(C) 2004, Eli Yukelzon", "","http://pyqlogger.berlios.de","")
+                                               "Blogger GUI", KAboutData.License_GPL, 
+                                               "(C) 2004, Eli Yukelzon", "",
+                                               "http://pyqlogger.berlios.de","")
                         aboutData.addAuthor("Eli Yukelzon a.k.a Reflog",  "",
                                         "reflog@gmail.com");
                         aboutData.addAuthor("Xander Soldaat a.k.a Mightor", "", 
@@ -240,8 +235,8 @@ def prepareModule(settings):
                         def __init__ (self, parent, dcopid = 'PyQLogger'):
                             DCOPExObj.__init__ (self, dcopid)
                             self.parent = parent
-                            self.addMethod ('void newpost()', self.parent.btnNewPost_clicked)
-                            self.addMethod ('void preview()', self.parent.btnPreview_clicked)
+                            self.addMethod ('void newpost()', self.parent.NewPostAction_activated)
+                            self.addMethod ('void preview()', self.parent.PreviewAction_activated)
                             self.addMethod ('QString getPostTitle()', self.getPostTitle)
                             self.addMethod ('QString getPostText()', self.getPostText)
                             self.addMethod ('void setPostTitle(QString)', self.setPostTitle)

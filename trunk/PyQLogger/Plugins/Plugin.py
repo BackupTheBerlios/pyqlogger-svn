@@ -19,7 +19,7 @@
 
 from EaseXML import XMLObject, ItemNode, TextNode, RawNode, \
                                         ListNode,IntegerAttribute
-
+import pickle
 
 class Option(XMLObject):
     Type = TextNode() # one of : 'Integer','String','Boolean','List', 'DoubleList'
@@ -33,7 +33,7 @@ class Option(XMLObject):
         
     def getDoubleListOptionValue(self):
         if self.Value:
-            hash = pickle.loads( str(option.Value) )
+            hash = pickle.loads( str(self.Value) )
         else:
             hash = {}
         return hash

@@ -37,10 +37,10 @@ def doneFetchingBlogs(self, res):
         self.notifier.info("%d Blogs fetched!" % len(self.account))        
     else:
         self.notifier.error(res)
-    self.btnRefreshBlogs.setEnabled(True)
+    self.FetchBlogsAction.setEnabled(True)
     
 def startFetchingBlogs(self):
-    self.btnRefreshBlogs.setEnabled(False)
+    self.FetchBlogsAction.setEnabled(False)
     try:
         self.account.fetchBlogs()
     except Exception, e:
@@ -50,7 +50,7 @@ def startFetchingBlogs(self):
 ###########  Fetch Posts ###################
             
 def startFetchingPosts(self):
-    self.btnFetchPosts.setEnabled(False)
+    self.FetchPostsAction.setEnabled(False)
     try:
         self.account.Blogs[self.account.SelectedBlog].reloadPosts()
     except Exception, e:
@@ -64,7 +64,7 @@ def doneFetchingPosts(self, res):
         self.SaveAll()
     else:
         self.notifier.error(res)
-    self.btnFetchPosts.setEnabled(True)
+    self.FetchPostsAction.setEnabled(True)
 
 
 ###########  Publish Post ###################

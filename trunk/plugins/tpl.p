@@ -21,7 +21,17 @@ class TemplatePlugin(EventPlugin):
             if words:
                 words.sort()                
                 sci = parent.sourceEditor
+		pos = sci.SendScintilla( sci.SCI_GETCURRENTPOS)
+		sci.SendScintilla( sci.SCI_AUTOCSETDROPRESTOFWORD,True)
+		end = sci.SendScintilla( sci.SCI_WORDENDPOSITION , pos, True)
+		start = sci.SendScintilla( sci.SCI_WORDSTARTPOSITION , pos, True)
+		try:
+		    selword = str(sci.text())[start:end]
+		except:
+		    selword = None
                 parent.connect(sci, SIGNAL("SCN_USERLISTSELECTION(const char *, int)"), self.usersel)
                 sci.SendScintilla(sci.SCI_USERLISTSHOW, 1, str(" ".join(words)))           
+		if selword:
+		    sci.SendScintilla(sci.SCI_AUTOCSELECT,0,selword)
                 return True        
         return False

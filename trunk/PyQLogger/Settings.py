@@ -21,7 +21,7 @@ from Blog import Blog
 from EaseXML import XMLObject, TextNode, ListNode, \
                     IntegerAttribute, ItemNode, ChoiceNode
 import os
-__revision__ = "$Id:  $"
+__revision__ = "$Id$"
 
 class UISettings(XMLObject):
     """ Subclass representing settings related to GUI """
@@ -29,7 +29,8 @@ class UISettings(XMLObject):
     EnableKde =  IntegerAttribute(default=1)
     EnableDCOP =  IntegerAttribute(default=1)
     Notification = IntegerAttribute(default=0)
-
+    EnableText = IntegerAttribute(default=0)
+    
 class SpellerSettings(XMLObject):
     Enabled  = IntegerAttribute(default=0)
     Language = TextNode(default="en_US")

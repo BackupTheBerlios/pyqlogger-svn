@@ -142,6 +142,7 @@ def create( ui_file, connector=None, parent=None, exportchildren=False ):
     # Mix widget and connector
     if connector:
         mix_objects( connector, widget )
+        mix_objects( widget, connector )
 
     for sender, signal, receiver, slot in connections:
         # get sender from widgets:

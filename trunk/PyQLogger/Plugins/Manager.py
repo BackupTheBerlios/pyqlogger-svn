@@ -24,7 +24,7 @@ from MenuPlugin import MenuPlugin
 from ServiceGUIPlugin import ServiceGUIPlugin
 from PyQLogger.ToolBar import initToolbar
 from qt import *
-
+__revision__ = "$Id$"
 def import_plugin_classes():
     globals()["Plugin"] = Plugin
     globals()["EventPlugin"] = EventPlugin
@@ -100,13 +100,15 @@ class Manager(XMLObject):
             
     def fillToolbar(self):
         """ Fills the panel with plugins of ToolbarPlugin type """
-        for plug in self.Plugins:
-            if issubclass(plug.__class__,ToolbarPlugin) and plug.Data.Enabled == 1 :
-                widget = plug.getWidget(self.parent)
-                if widget:
-                    widget.show()
-                else:
-                    print "Failed to initialize plugin: "+plug.Name
+        if self.toolbarNeeded:
+            for plug in self.Plugins:
+                if issubclass(plug.__class__,ToolbarPlugin) and plug.Data.Enabled == 1 :
+                    widget = plug.getWidget(self.parent)
+                    if widget:
+                        widget.show()
+                    else:
+                        print "Failed to initialize plugin: "+plug.Name
+        self.toolbarNeeded = False
     
     def handleEvent(self, eventType, data):
         """ For supplied event, execute all plugins handling it """
@@ -137,6 +139,7 @@ class Manager(XMLObject):
         else:
             m = Manager(PluginData=[])
         m.init(parent,l)
+        m.toolbarNeeded = True
         return m
             
     load = staticmethod(load)

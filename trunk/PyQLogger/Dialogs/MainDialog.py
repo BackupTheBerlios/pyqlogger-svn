@@ -17,7 +17,7 @@
 ## along with PyQLogger; if not, write to the Free Software
 ## Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-__revision__ = "$Id: MainForm_Impl.py 102 2005-01-11 13:37:12Z reflog $"
+__revision__ = "$Id$"
 
 from qt import *
 import os, pickle, webbrowser
@@ -30,7 +30,7 @@ from PyQLogger import BG, UI
 from PyQLogger.Network import Network, netOp
 from Speller import Speller
 
-class MainDialog(QDialog):
+class MainDialog(QMainWindow):
     def spellTimer(self):
         scin = self.sourceEditor
         text = unicode ( scin.text() )
@@ -72,7 +72,7 @@ class MainDialog(QDialog):
             if str(filename):
                 try:
                     post = self.PublishedItems[ self.listPublishedPosts.selectedItem () ]
-                    open(unicode(filename),"w").write(post['content'])
+                    open(unicode(filename),"w").write(post.Content)
                 except Exception, e:
                     print "Exception while saving to file: " + str(e)
                     QMessageBox.warning(self, "Warning", "Cannot write post to file %s" % filename)
@@ -83,21 +83,38 @@ class MainDialog(QDialog):
             if res == QMessageBox.Yes:
                 post = self.SavedItems [ self.listSavedPosts.selectedItem () ]
                 del self.SavedItems [ self.listSavedPosts.selectedItem () ]
-                blogid = self.settings.get("main", "selectedblog")
+                self.account.Blogs[self.account.SelectedBlog].Drafts.Data.remove(post)
                 self.SavedPosts[blogid].remove(post)
                 self.listSavedPosts.removeItem(self.listSavedPosts.currentItem())
         elif(action == 2):
             filename = QFileDialog.getSaveFileName(os.path.expanduser("~"),
-                                        "All files (*.*)",self,           
-                                        "Export post dialog",
-                                        "Choose a filename to save under")
+                                                   "All files (*.*)",self,           
+                                                   "Export post dialog",
+                                                   "Choose a filename to save under")
             if str(filename):
                 try:
                     post = self.SavedItems [ self.listSavedPosts.selectedItem () ]
-                    open(unicode(filename),"w").write(post['content'])
+                    open(unicode(filename),"w").write(post.Content)
                 except Exception, e:
                     print "Exception while saving to file: " + str(e)
                     QMessageBox.warning(self, "Warning", "Cannot write post to file %s!" % filename)
+        elif(action == 3):
+            files = QFileDialog.getOpenFileNames("All files (*.*)",
+                                                 os.path.expanduser("~"),self,           
+                                                 "Import posts",
+                                                 "Choose a files with posts")
+            if files.count():
+                for fname in files:
+                    try:
+                        title = os.path.basename(str(fname))
+                        item = Post(Created=date.today(), 
+                                    Title=title,
+                                    Content=open(str(fname)).read() )
+                        self.account.Blogs[self.account.SelectedBlog].Drafts.Data += [ item ]
+                        listitem = QListBoxText(self.listSavedPosts, title)
+                        self.SavedItems [ listitem ] = item
+                    except:
+                        print "Cannot import post!"
                 
     def listPublishedPosts_contextMenuRequested(self, a0, a1):
         self.aMenu.setItemEnabled(1, a0 != None)
@@ -110,7 +127,7 @@ class MainDialog(QDialog):
         self.bMenu.popup(a1)
 
 
-    def btnNewPost_clicked(self):
+    def NewPostAction_activated(self):
         if self.current_post:
             res = QMessageBox.question(self, "Question", 
                                    "Current post is unsaved. Are you sure you want to erase it?",
@@ -122,8 +139,7 @@ class MainDialog(QDialog):
         self.current_post = None
 
     def closeEvent(self, event):
-        print "inside closeevent"+str(self.sender())
-        self.reload = self.sender() == self.btnRelogin
+        self.reload = self.sender() == self.btnRelogin or self.sender() == self.ReloginAction
         if self.current_post:
             res = QMessageBox.question(self, "Question", 
                                    "Current post is unsaved. Are you sure you want to exit?",
@@ -158,10 +174,10 @@ class MainDialog(QDialog):
         else:
             QMessageBox.warning(self, "Warning", "You forgot the post's title!")
 
-    def btnRefreshBlogs_clicked(self):
+    def FetchBlogsAction_activated(self):
         self.network.enqueue(netOp("Fetching blogs...",BG.startFetchingBlogs,BG.doneFetchingBlogs))
 
-    def btnSettings_clicked(self):
+    def SettingsAction_activated(self):
         wnd = self.forms["Settings"]
         wnd["Impl"].init(self.settings, self.forms, self.manager)
         if wnd["Class"].exec_loop() == QDialog.Accepted:
@@ -172,7 +188,7 @@ class MainDialog(QDialog):
                 QMessageBox.critical(self, "Error", "Cannot write configuration!")
                 QApplication.exit()
     
-    def btnPreview_clicked(self):
+    def PreviewAction_activated(self):
         url = self.account.Blogs[self.account.SelectedBlog].Url
         if url:
             webbrowser.open_new(url)
@@ -180,7 +196,7 @@ class MainDialog(QDialog):
             QMessageBox.warning(self, "Warning", "You don't have homepage configured!\nYou can do that in the Setup dialog.")
 
 
-    def btnReloadFeed_clicked(self):
+    def FetchPostsAction_activated(self):
         self.network.enqueue(netOp("Fetching posts...",BG.startFetchingPosts,BG.doneFetchingPosts))
     
     def comboBlogs_activated(self, blogname):
@@ -264,7 +280,8 @@ class MainDialog(QDialog):
 
     def init_ui(self, settings):
         UI.API.setPreviewWidget(self)
-        UI.API.setEditWidget(self)
+        self.sourceEditor = UI.MyQextScintilla(self.Source, self)
+        self.Source.layout().addWidget(self.sourceEditor)
         self.current_post = None
         self.cached_password = None
         self.cached_atomblog = None
@@ -273,23 +290,30 @@ class MainDialog(QDialog):
         tabLayout2 = QHBoxLayout(self.toolbarTab.page(1), 11, 6, "tabLayout2")
         tabLayout2.setAutoAdd( True )
         self.notifier = Notifier(self, settings.UI.Notification)
-        if self.notifier.mode != 1:
-            self.statusFrame.hide()
         self.aMenu = QPopupMenu()
         self.aMenu.insertItem("Delete post", 1)
         self.aMenu.insertItem("Export post", 2)
         self.bMenu = QPopupMenu()
         self.bMenu.insertItem("Delete post", 1)
-        self.bMenu.insertItem("Export post", 2)  
+        self.bMenu.insertItem("Export post", 2)
+        self.bMenu.insertItem("Import posts", 3)
+        self.connect(self.CutAction,SIGNAL("activated()"),self.sourceEditor.cut)
+        self.connect(self.CopyAction,SIGNAL("activated()"),self.sourceEditor.copy)
+        self.connect(self.PasteAction,SIGNAL("activated()"),self.sourceEditor.paste)
+        self.connect(self.UndoAction,SIGNAL("activated()"),self.sourceEditor.undo)
+        self.connect(self.RedoAction,SIGNAL("activated()"),self.sourceEditor.redo)
         self.connect(self.aMenu, SIGNAL("activated(int)"), self.pubPopup)
         self.connect(self.bMenu, SIGNAL("activated(int)"), self.savePopup)
-        self.connect(self.sourceEditor, PYSIGNAL("aboutToShowMenu"), self.showMenu)                
-        self.frameCat.hide()
+        self.connect(self.sourceEditor, PYSIGNAL("aboutToShowMenu"), self.showMenu)
+        self.connect(self.sourceEditor, SIGNAL("textChanged()"), self.sourceEditor_textChanged)
+        #self.frameCat.hide()
         self.network = Network(self)
         self.network.start()
-
+        
+       
     def handleContextMenu(self):
-        self.sourceEditor.updateDefaultMenu(self.editMenu)
+        if hasattr(self,"editMenu"):
+            self.sourceEditor.updateDefaultMenu(self.editMenu)
 
     def handleSpellMenu(self, idx):
         if idx == 99:
@@ -339,6 +363,11 @@ class MainDialog(QDialog):
         self.password = password
         self.settings = settings        
         self.forms = forms
+        forms["Main"]["Class"].setUsesTextLabel( settings.UI.EnableText )
+        self.statusBar=forms["Main"]["Class"].statusBar()
+
+        if self.notifier.mode != 1:
+            self.statusBar.hide()
         self.sourceEditor.manager = manager
         a = self.PublishMenuHanlder(self)
         a.buildAccountMenu( settings , account )

@@ -8,8 +8,8 @@
         <rect>
             <x>0</x>
             <y>0</y>
-            <width>423</width>
-            <height>330</height>
+            <width>427</width>
+            <height>352</height>
         </rect>
     </property>
     <property name="caption">
@@ -177,6 +177,14 @@
                                 </property>
                             </widget>
                         </vbox>
+                    </widget>
+                    <widget class="QCheckBox">
+                        <property name="name">
+                            <cstring>chkShowText</cstring>
+                        </property>
+                        <property name="text">
+                            <string>Show text on buttons</string>
+                        </property>
                     </widget>
                     <widget class="QGroupBox">
                         <property name="name">
