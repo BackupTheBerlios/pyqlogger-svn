@@ -1,4 +1,4 @@
-## $Id: SpellForm_Impl.py 65 2004-12-15 20:36:03Z mightor $
+## $Id$
 ## This file is part of PyQLogger.
 ## 
 ## Copyright (c) 2004 Eli Yukelzon a.k.a Reflog
@@ -32,8 +32,8 @@ class Speller:
     _wordEx = re.compile(r"\b\w+\b", re.MULTILINE|re.UNICODE|re.LOCALE)
 
     def __init__(self, settings):
-        import aspell
-        self.speller = aspell.spell_checker(prefix=settings.Speller.Prefix,
+        from PyQLogger.ASpell import aspell
+        self.speller = aspell(prefix=settings.Speller.Prefix,
                                             lang=settings.Speller.Language)
 
     def CalculateWords(self):
@@ -91,13 +91,12 @@ class Speller:
         if self.cur_word < len(self._words):
             w = self._words[ self.cur_word ]
             word = w.group(0)
-            if self.CheckString(w,word) and not self.speller.check(word):  # should we even check it?
-                    sug = self.speller.suggest(word)
+            sug = self.speller.suggest(word)
+            if sug != None:  # should we even check it?
                     ret[word] =  { "word":w, "sug": sug, "idx":self.cur_word } 
             self.cur_word += 1
             self.keepChecking(ret)
 
 
-#    self.speller.add_to_personal(word)
 
 
