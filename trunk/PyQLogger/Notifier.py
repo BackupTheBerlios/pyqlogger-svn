@@ -21,19 +21,20 @@ __revision__ = "$Id$"
 import Status, qt , sys
 
 class Notifier:
-    def __init__(self, parent, mode):
+    def __init__(self, parent, mode, args = None):
         self.parent = parent
         if mode == 0 :
             try:
                 import OSD
                 self.display = OSD.OSD()
-            except:
+            except Exception, inst:
+                print "Exception while loading OSD: " + str(inst)
                 qt.QMessageBox.warning(None,
                 self.parent.trUtf8("Warning"),
                 self.parent.trUtf8("""Seems like you don't have PyOSD installed!\nReverting to status bar notifications"""))
-                self.display  = Status.StatusNotifier(parent)
+                self.display  = Status.StatusNotifier(parent,args)
         elif mode == 1:
-            self.display  = Status.StatusNotifier(parent)
+            self.display  = Status.StatusNotifier(parent,args)
         else:
             print "What the hell?"
             sys.exit()

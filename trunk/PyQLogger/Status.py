@@ -19,9 +19,15 @@
 __revision__ = "$Id$"
 
 class StatusNotifier:
-    def __init__(self, parent):
+    def __init__(self, parent,args):
         self.parent = parent
-        self.parent.statusFrame.show()
+        self.args = args
+        if args:
+            self.progressBar = args[0]
+        else:
+            self.progressBar = self.parent.statusProgress
+            self.progressBar.hide()
+            self.parent.statusFrame.show()
         
     def error(self, msg):
         self.parent.statusLabel.setText(msg)
@@ -34,3 +40,15 @@ class StatusNotifier:
 
     def status(self, msg):
         self.parent.statusLabel.setText(msg)
+
+    def progress(self,completed,total):        
+        if not self.args:
+            if not self.parent.statusLabel.isHidden(): 
+                self.parent.statusLabel.hide() 
+        if self.parent.statusProgress.isHidden():
+            self.progressBar.show() 
+        self.progressBar.setProgress(completed,total)    
+        if not self.args and completed >= total:
+            self.progressBar.hide()
+            self.parent.statusLabel.show()
+            self.parent.statusLabel.setText('')

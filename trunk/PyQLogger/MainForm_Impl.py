@@ -20,8 +20,8 @@
 __revision__ = "$Id$"
 
 from qt import  QHBoxLayout, QPopupMenu, QMessageBox, QFileDialog, \
-                QApplication, QListBoxText, QLineEdit, QInputDialog, \
-		Qt, qApp, SIGNAL
+                          QApplication, QListBoxText, QLineEdit, QInputDialog, \
+                          Qt, qApp, SIGNAL, QProgressBar
 
 import os, pickle, webbrowser
 from mainform import MainForm
@@ -38,9 +38,9 @@ class MainForm_Impl(MainForm):
 
     def __init__(self, parent = None, name = None, fl = 0, statusbar = False):
         MainForm.__init__(self, parent, name, fl)
-        notifymode = 0
+        self.notifymode = 0
         if statusbar:
-            notifymode = 1
+            self.notifymode = 1
         self.settings = PyQLoggerConfig.PyQLoggerConfig()
         self.statusFrame.hide()
         self.sh = HTMLSyntax(self.sourceEditor)
@@ -56,8 +56,10 @@ class MainForm_Impl(MainForm):
         tabLayout.setAutoAdd( True )
         tabLayout2 = QHBoxLayout(self.tab_2, 11, 6, "tabLayout2")
         tabLayout2.setAutoAdd( True )
+        self.statusProgress = QProgressBar(self.statusFrame)
+        self.statusFrame.layout().addWidget(self.statusProgress)
         initToolbar(self, self.plugins)
-        self.notifier = Notifier(self, notifymode)
+        self.notifier = Notifier(self, self.notifymode)
         self.bg = BG.BackGround()
         self.workers = BG.BackGround()
         self.uChecker = BG.updateCheckWorker(self.notifier)
@@ -70,6 +72,8 @@ class MainForm_Impl(MainForm):
         self.connect(self.aMenu, SIGNAL("activated(int)"), self.pubPopup)
         self.connect(self.bMenu, SIGNAL("activated(int)"), self.savePopup)
         self.frameCat.hide()
+
+
         
     def getPage(self, title):
         if not title: 
@@ -99,7 +103,7 @@ class MainForm_Impl(MainForm):
                     post = self.PublishedItems[ self.listPublishedPosts.selectedItem () ]
                     open(unicode(filename),"w").write(post['content'])
                 except Exception, e:
-		    print "Exception while saving to file: " + str(e)
+                    print "Exception while saving to file: " + str(e)
                     QMessageBox.warning(self, "Warning", "Cannot write post to file %s" % filename)
 
     def savePopup(self, action):
@@ -121,7 +125,7 @@ class MainForm_Impl(MainForm):
                     post = self.SavedItems [ self.listSavedPosts.selectedItem () ]
                     open(unicode(filename),"w").write(post['content'])
                 except Exception, e:
-		    print "Exception while saving to file: " + str(e)
+                    print "Exception while saving to file: " + str(e)
                     QMessageBox.warning(self, "Warning", "Cannot write post to file %s!" % filename)
                 
     def listPublishedPosts_contextMenuRequested(self, a0, a1):
@@ -138,7 +142,7 @@ class MainForm_Impl(MainForm):
     def btnNewPost_clicked(self):
         if self.current_post:
             res = QMessageBox.question(self, "Question", "Current post is unsaved. Are you sure you want to erase it?",
-	                               QMessageBox.Yes, QMessageBox.No)
+                                   QMessageBox.Yes, QMessageBox.No)
             if res == QMessageBox.No:
                 return
         self.editPostTitle.setText("")
@@ -148,7 +152,7 @@ class MainForm_Impl(MainForm):
     def btnExit_clicked(self):
         if self.current_post:
             res = QMessageBox.question(self, "Question", "Current post is unsaved. Are you sure you want to exit?",
-	                               QMessageBox.Yes, QMessageBox.No)
+                                   QMessageBox.Yes, QMessageBox.No)
             if res == QMessageBox.No:
                 return
         self.SaveAll()

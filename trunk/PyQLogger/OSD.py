@@ -18,6 +18,7 @@
 """ Wrapper module for PyOSD """
 
 __revision__ = "$Id$"
+from __future__ import division
 import pyosd
 
 class OSD:
@@ -44,3 +45,7 @@ class OSD:
     def status(self, msg):
         self.osd2.set_colour('black')
         self.osd2.display(msg, pyosd.TYPE_STRING, 1)
+
+    def progress(self,completed,total):
+        self.osd.set_colour('blue')
+        self.osd.display(int(completed/total*100), pyosd.TYPE_PERCENT, 1)

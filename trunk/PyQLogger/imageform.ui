@@ -26,8 +26,8 @@ Python:## Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  
         <rect>
             <x>0</x>
             <y>0</y>
-            <width>549</width>
-            <height>335</height>
+            <width>556</width>
+            <height>338</height>
         </rect>
     </property>
     <property name="caption">
@@ -294,29 +294,17 @@ Python:## Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  
                                     </widget>
                                     <widget class="QLayoutWidget">
                                         <property name="name">
-                                            <cstring>layout13</cstring>
+                                            <cstring>layout14</cstring>
                                         </property>
                                         <hbox>
                                             <property name="name">
                                                 <cstring>unnamed</cstring>
                                             </property>
-                                            <spacer>
+                                            <widget class="QProgressBar">
                                                 <property name="name">
-                                                    <cstring>spacer3</cstring>
+                                                    <cstring>progressBar</cstring>
                                                 </property>
-                                                <property name="orientation">
-                                                    <enum>Horizontal</enum>
-                                                </property>
-                                                <property name="sizeType">
-                                                    <enum>Expanding</enum>
-                                                </property>
-                                                <property name="sizeHint">
-                                                    <size>
-                                                        <width>131</width>
-                                                        <height>20</height>
-                                                    </size>
-                                                </property>
-                                            </spacer>
+                                            </widget>
                                             <widget class="QPushButton">
                                                 <property name="name">
                                                     <cstring>btnUpload</cstring>
@@ -546,7 +534,7 @@ Python:## Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  
 </widget>
 <images>
     <image name="image0">
-        <data format="PNG" length="1295">89504e470d0a1a0a0000000d4948445200000016000000160806000000c4b46c3b000004d649444154388d7d9551885dc51dc67f7b76ae9db339b7ced15cd843b3eb4e74ab3741c9d6fa9052a5dd222516545610ac8f0121a40f8a2d22f8a6214f3e959207714b91c4874a108410082cf4412f65e3dea61773351b9c35f7ca396e8ef74c9b933de3eeecc687bb89c604e7e59b19667eff8f6fe69c19e147dacca14f6a5a250d634964c4982b0d3ad295295d2665b1aaf323eb27de3971dbbd233f02dd0fc9b390ee432493f874074283efae81ee813907c97b33eeb50f9d739b27debdb9c02de0fdaf0eee75367d512bfdc78250fd628aa012f0c4345807cec3c23248c756bb5f5452f221b6fbc6ac3cd532b9f1d70bdc049e3934b807d263c83d0766a60a0e3f1e1347157a22a4aa200c192ab070b1a2db0e39fe1f8373b22b7df795a63f7e7afeeff31b3781b79dfeb5b96bcfef679a04877f3304100139a080f27b1a419543ab0f6f7e505d2b9c5bc6b60fce8a855637ed6e06d7c1cea67f41ee39d09cae8283bf065356a40e963e4d2980f35941e16169a5d81e5710c1f878c5cb07c211bcfdb913cd17529f8ea9588d8c0e23f878bf56d347f5ae9afcd36f6ba46bd090359483c9fbeb847568c421a184a411d2edc384ac510e2094354aa0b123a67bc94fe5d183e71aeb2d13cc1cfab806fad9c2673f9d9b01630ba407e70a42fd8393ad0d2516d0ce2a0aa09b15280152a6c44ad69db57396a6123ad20d53ba7dcd291d580f3131a103dd8c6ff04c070a01d6838ee0a38bd01c0fe966208979b3055224149e40abe6dec29ac9c094260139e9fcb0b2c953f403df993c7ea6e0bc85f64a4a6561e1d382240247c5338fc21f1e0504b4334082294d82d093818cf41822ddd1dc190f1d8804c4105a18502266c5c2b84cb065c5dc2f6366ef835f3d18de94928e862a5533c4a7f5c09506d0b4b382f00ab47be98d2cad80139d8a8f96c1ba94e70f84c40da0f1c3cf0a4c091270d68048824047bac2bb352962162cc83081cbc3c515a05548ea4046c9adb4eb57d58354e0001d250e6fbe098c3519d06b671585839681a56cb861cf041c7c1c9ed805a7ba155cb98dd374bb53020e8c35ab212a0b642457c19cd332dc0a058c47f0b7d6b65d4027f0e7e7e0ed1742a8df0a5602f0a015e0d9922abea07c2b0d747e641d92f74c7efe7fd283f3157878ed9f155501d506373287e1bf826a7b1e68f72ba480cc16e08aabe44b67942806a39dff76989ba9fa79f494f68e871fdb1db2094cdc59e35407ea23e07370ebb0f839f43378fb5f50df84e50114831ab985de1a9479e7f493772dfea374e5ea28c0230f3f726dc5259f3b1f36f3b5de3d8fed6c8c5cde4a11411d93a7941b75163e4be9e5757a839489bbeb74be4ce96dd4e9a729cb7db1955d6a9f4d288e79d7fa4420ae8c022c2e2d72f877fa6bb3a6cf3a91ec5d1998a9877eb61b7e02d38d3abd72a89b9ba01b75d212a6e33a17bf802bb9a0d3ef9edd3f76f9a85a3fb538a126f2dce59ba3d7b3d37bf5b509da83ccc9b65ddf3dd6cd7a536e2dbac3f9fe48b31193fdbf605c85189b620b41eb427f6bf912e5c5ac733ad9ba7c4cae9f5c1488d5dce51bf36fcddffa82bcfed2eb8129cd8eae7a79d695764e47cdbda674891a9721d6104bed4cee56a57217a45d3a331b75ff6dacf94a2bfdb5298d9f7f6b1eb8cdd334f7f41c2a5623c01d994f1a954fa611e3f723dc35a4dec09b6f4254267d2b553ebdeabcb378aeba0de74fbe7ff206e75b7c38616e0a6072220000000049454e44ae426082</data>
+        <data format="PNG" length="1320">89504e470d0a1a0a0000000d4948445200000016000000160806000000c4b46c3b000004ef49444154388d7d9551681cc719c77f5aed9959eb2e9da57b6db6e46c6d1ad58c5c979c824b6d28a4a68db1a150647049fc580884bc14ead087ba6f2979087d4a2194604329715e52b74faac1548586e868e5e8ea5ead3139b7abf88eecf6baf16ee3f3ed581a4b7d3859c151c8f7f2cd0cdffcbe8fff7c3333c1e758f385eb151544759d110ac95e53689454a52e4c2aaac5204acfad5ffcedc5cfdc3bf139d023109d86f849dc681f369ec29d05bb3202d5037d0da2b79be6ecbbc698fb17df7a38c12ef0919f8fbe6ab2f8c72a987d2eb1c8a34fe0e4c02905c9701cb3a0415a365b6b6529aabc4bd67ef96475b1a5536d1f24701fae72b4df64f16b88d91322c8f9d5091f4f94440d8fb204cf83b284334fc3e28dd2996b7b53e7ff1e3f635cd558189a9f2a115f06361eaa78bbd2d79ad3b3c7d50cced9ef0216f08104088002a803f927eb4b29fce2f76ce5b6ec92b57e74522cb5dabdf67de701d864f14b88d91351543a2f3e0dab45496e61a59350bab0dacf2981956e3e9ef74a902083929f7d9f094cfa35e3369f8f4dbc57fa7262722cc17b4754f08d571a5f419cfd5e85f86368542bf843080fd4a84c41ddf7a8ec81b0eed1b90533d50ac301d4aa15320b8d2ff874d698cee4dcb5baf94bec345f78af02ea7462e247ce1c069de5f84031cc21fad4c956c62e14d0ea97142eb4fb39a100dc045f7a359325f3054a3a4aaa3a9827e79e889cc480747dc410a2c8dfe1251d58edc26207921e2cde804785c74a1f303e2fff117412925b1c15340fe684fb1c5de810c4bedc8c33eb3421fcfa2745be7925470fa1753381212cfc33279250d89253df866347c6bdb5d40704e84287b86a9f23a4da8b1b4fcd853e2b7d9022dc81963184c2476710554392029efb96cfd169387ac87b482525c75e04731e36ae39a6d0c02c4bbd1cff0eb4e26447cb42c0f976c952179261c29913e0f9db2df729d30508c064abe0468ea3a42ab1e5480a9f8502642d84ff8e83730b2af0480c4819eea63d68550b220003281919acbee7e84ca740afd52fc90dfcb90babd978c36c03ce7c074e3d06973a2594bba171b23d2800033ad3038f307584f407a0afa9aab7e9b9302de197efb07d31210ae1c567e1fcf31e78bbc18f0ac0820a00cba608c2f7a55d4c9c283db70ed1db3a5dfd9fb05098122c9c7bab843b506eb0a3398cdf0a36b6d781d65a8970612dcbc194774997ae4837bf3dd9f94787f9e69d7e267f18d951e5a9e3072a984d98f962854b6da8578001d84d68dd842c835fff09ea13a033283fae90de86debac770b07cf9f4973abf2946c56012e0f05387b7d646f57f1b5b55e930deff4c509fe8d904d7a9d11d2498ad1a0bd7137a598d384b98f9728de50f127a5b35d67a09dd7e6d335d5bba1a625e37a3c5eb2eee9d4980e595657e725c7dd41d3e7ed588c6c19b5977fa9bfb1fc756e05058a35b8cfdbd0d50618db88043f51a37fe05b6a8d1beb572f5d823c357aae677cb33c14c968ed2fb930fb46ba8c65683bfdd4e476ebb589fdddbf9309e36a3fa9ee17a3cd10c7dd66ee74c071e3a4b28f21aefdc8837bbb7c4507fb87c39dc1cbeee9a37975ddc413a4a372ebc7161f70ff2ea4baf3abad0533a3877cc14c9bc92cd83ba30a17c4c78649ab0aa8c4ecd4004e67d912d5d3929e3bfea4cff4705ea235d687be18d0bc0677c4df33f9847fa7202d893dab05eda700677fa006eb185501b587dcf234c855d4ca44dee1a6b0a2c77cd86b197fe706987f37f2e215b6a5abb255a0000000049454e44ae426082</data>
     </image>
 </images>
 <connections>
@@ -628,6 +616,9 @@ Python:## Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  
     <slot>btnOpen_clicked()</slot>
     <slot>editUrl_textChanged( const QString &amp; )</slot>
     <slot>editFile_textChanged(const QString&amp;)</slot>
+    <slot>editFile2_textChanged( const QString &amp; )</slot>
+    <slot>btnUploadFtp_clicked()</slot>
+    <slot>btnOpen2_clicked()</slot>
 </slots>
 <layoutdefaults spacing="6" margin="11"/>
 </UI>

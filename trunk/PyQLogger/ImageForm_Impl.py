@@ -17,22 +17,136 @@
 ## Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 __revision__ = "$Id$"
-from qt import QPixmap, QFileDialog, QMessageBox
+from qt import QPixmap, QFileDialog, QMessageBox,SIGNAL,QString
+from qtnetwork import QHttp,QHttpRequestHeader
 from imageform import ImageForm
-import urllib2, PatchedClientForm, re, os
+import urllib2, re, os
+from Notifier import Notifier
+
+import mimetypes
+import mimetools
+
+def encode_multipart_formdata(fields, files, BOUNDARY = '-----'+mimetools.choose_boundary()+'-----'):
+    CRLF = '\r\n'
+    L = []
+    if isinstance(fields, dict):  fields = fields.items()
+    for (key, value) in fields:
+        L.append('--' + BOUNDARY)
+        L.append('Content-Disposition: form-data; name="%s"' % key)
+        L.append('')
+        L.append(value)
+    for (key, filename, value) in files:
+        filetype = mimetypes.guess_type(filename)[0] or 'application/octet-stream'
+        L.append('--' + BOUNDARY)
+        L.append('Content-Disposition: form-data; name="%s"; filename="%s"' % (key, filename))
+        L.append('Content-Type: %s' % filetype)
+        L.append('')
+        L.append(value)
+    L.append('--' + BOUNDARY + '--')
+    L.append('')
+    body = CRLF.join(L)
+    content_type = 'multipart/form-data; boundary=%s' % BOUNDARY
+    return content_type, body
+
 
 class ImageForm_Impl(ImageForm):
     alignList = {}
     def __init__(self, parent = None, name = None, modal = 0, fl = 0):
         ImageForm.__init__(self, parent, name, modal, fl)
         self.comboAlign.insertItem('None')
+        self.notifier = Notifier(parent, 1,args=[self.progressBar])
         self.alignList['Left'] = 'left'
         self.alignList['Right'] = 'right'
         self.alignList['Center'] = 'center'
         self.btnUpload.setEnabled(False)
         self.buttonOk.setEnabled(False)
+        self.http = QHttp()
+        self.connect(self.http, SIGNAL( "done(bool)" ), self.httpDone )
+        self.connect(self.http, SIGNAL( "dataSendProgress (int, int)"),self.httpProgress)
+        self.http2 = QHttp()
+        self.connect(self.http2, SIGNAL( "done(bool)" ), self.http2Done )
+        self.connect(self.http2, SIGNAL( "dataSendProgress (int, int)"),self.httpProgress)
+
         for key in self.alignList.keys():
             self.comboAlign.insertItem(key)
+
+    def ImageArkPostData(sel,filename):
+        return ([("MAX_FILE_SIZE","512000")],
+                    [
+                     ("userfile",
+                       os.path.basename(filename),
+                       open(filename,"rb").read()
+                      )
+                    ],
+                    "www.imageark.net",
+                    "/upload.php",
+                    "http://www.imageark.net"
+                    )
+    
+    def ImageShackPostData(self,filename):
+        return ([],
+                    [
+                       ( "fileupload",
+                         os.path.basename(filename),
+                         open(filename,"rb").read()
+                       )
+                    ],
+                    "imageshack.us",
+                    "/index2.php",
+                    "http://imageshack.us/index2.php",
+                    )
+
+    def BeginImageUpload(self, filename, GetPostData ,http):
+        (fields,files, host, path, referer) = GetPostData(filename)
+        content_type, body = encode_multipart_formdata(fields, files)
+        Req = QHttpRequestHeader("POST",path)
+        Req.setContentType ( content_type )
+        Req.setValue("Host",host)
+        Req.setValue("Content-Length", str(len(body)))
+        Req.setValue("Referer", referer)
+        http.setHost(host)
+        http.request(Req,body)
+    
+
+    def httpProgress(self,done,total):
+        self.notifier.progress(done,total)
+
+    def http2Done(self,error):
+        qs = QString(self.http2.readAll())
+        match = self.imgre.search(unicode(qs))
+        if error:
+            QMessageBox.warning(self, "Warning", "Cannot upload! Error:"+self.http2.error())
+        else:
+            if match:          
+                self.editUrl.setText(self.image)
+                self.editThumb.setText(match.group(1))
+                QMessageBox.information(self, "Info", "Image successfully uploaded!")
+            else:
+                QMessageBox.warning(self, "Warning", "Cannot upload the thumbnail image file!")
+        self.http2.closeConnection()
+
+    def httpDone(self,error):
+        qs = QString(self.http.readAll())
+        match = self.imgre.search(unicode(qs))
+        if error:
+            QMessageBox.warning(self, "Warning", "Cannot upload! Error:"+self.http.error())
+        else:
+            if match:
+                self.image = match.group(1)
+                if self.thumbfile: # do second upload
+                    if self.chkShack.isChecked():
+                        self.BeginImageUpload(self.thumbfile,self.ImageShackPostData,self.http2)
+                    elif self.chkArk.isChecked():
+                        self.BeginImageUpload(self.thumbfile,self.ImageArkPostData,self.http2)
+                else: # no need to upload second
+                    QMessageBox.information(self, "Info", "Image successfully uploaded!")
+                    self.editUrl.setText(self.image)
+            else:
+                if self.thumbfile:
+                    os.unlink(thumbfile)
+                QMessageBox.warning(self, "Warning", "Cannot upload the image file!")
+        self.http.closeConnection()
+
 
     def imagetag(self):
         imagetag = ''
@@ -75,6 +189,7 @@ class ImageForm_Impl(ImageForm):
         return imagetag
 
 
+
     def btnRefresh_clicked(self):
         if str(self.editUrl.text()):
             try:
@@ -105,40 +220,14 @@ class ImageForm_Impl(ImageForm):
 
     imgre = re.compile('\[img\](.*?)\[/img\]', re.IGNORECASE)
     
-    def uploadArk(self, afile):
-        try:
-            cform = PatchedClientForm.ParseResponse(urllib2.urlopen("http://www.imageark.net"))
-            cform[0].referer = 'http://www.imageark.net'
-            cform[0].find_control("userfile").add_file(open(afile,"rb"), filename = os.path.basename(afile))
-            req = cform[0].click()
-            content = urllib2.urlopen(req).read()
-            match = self.imgre.search(content)
-            if match:
-                return match.group(1)
-        except Exception, e:
-            print "Upload exception: " + str(e)
-            return None
-
-    def uploadShack(self, afile):
-        try:
-            cform = PatchedClientForm.ParseResponse(urllib2.urlopen("http://imageshack.us/index2.php"))
-            cform[0].referer = 'http://imageshack.us/index2.php'
-            cform[0].find_control("fileupload").add_file(open(afile,"rb"), filename = os.path.basename(afile))
-            content = urllib2.urlopen(cform[0].click()).read()
-            match = self.imgre.search(content)
-            if match:
-                return match.group(1)
-        except Exception, e:
-            print "Upload exception: " + str(e)
-            return None
 
     def __generateThumb(self, filename):
         if not self.chkThumb.isChecked(): 
-	    return None
+            return None
         try:            
             p = self.previewImage
-	    import tempfile
-	    fn = tempfile.mkstemp('-%s' % filename)
+            import tempfile
+            fn = tempfile.mkstemp('%s' % os.path.basename(filename))[1]
             w = p.width()
             h = p.height()
             if w > 120:
@@ -154,24 +243,14 @@ class ImageForm_Impl(ImageForm):
         except:
             return None
             
-    def btnUpload_clicked(self):
-        res = res2 = None
-        thumbfile = self.__generateThumb(str(self.editFile.text()))
+    def btnUpload_clicked(self):        
+        self.image = None
+        self.thumbfile = self.__generateThumb(str(self.editFile.text()))
         if self.chkShack.isChecked():
-            res = self.uploadShack(str(self.editFile.text()))            
-            if thumbfile and res : 
-                res2 = self.uploadShack(thumbfile)
+            self.BeginImageUpload(str(self.editFile.text()),self.ImageShackPostData,self.http)
         elif self.chkArk.isChecked():
-            res = self.uploadArk(str(self.editFile.text()))
-            if thumbfile and res : 
-                res2 = self.uploadArk(thumbfile)
+            self.BeginImageUpload(str(self.editFile.text()),self.ImageArkPostData,self.http)
 
-        if thumbfile:
-            os.unlink(thumbfile)
-        if res:
-            self.editUrl.setText(res)
-            if res2: 
-                self.editThumb.setText(res2)
 
     def __open(self, txt, btn):
         filename = str(QFileDialog.getOpenFileName(None , \
