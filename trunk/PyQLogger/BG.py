@@ -79,9 +79,17 @@ class blogFetchWorker(bgWorker):
         try:
             blogs = self.atomBlog.getBlogs()
             self.result = len(blogs)
+            selectedblog = p.settings.get("main", "selectedblog")
             p.settings.delblogs()
             p.settings.addblogs(blogs)
+            if selectedblog in p.settings.get("main", "blogs").split(';'):
+                p.settings.set("main", "selectedblog", selectedblog)
+            else:
+                firstblog = str(p.settings.get("main", "blogs")).split(';')[0]
+                if firstblog:
+                    p.settings.set("main", "selectedblog", firstblog)
         except Exception, inst:
+            print "blogFetchWorker: exception %s" % inst
             self.result = None
         
     def ui(self):
