@@ -7,6 +7,11 @@ CHANGELOG
 * changed
 ? info
 
+19/12/2004 - 1.3.3.0
+
+- Many bugfixes. Upgrade is highly recommended
++ Command line handled correctly
+
 15/12/2004 - 1.3.3
 
 + New configuration system. The settings are stored in human readable INI
