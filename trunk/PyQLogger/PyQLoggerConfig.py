@@ -27,14 +27,12 @@ class PyQLoggerConfig (ConfigParser):
     def __init__(self, defaults=None):
         ConfigParser.__init__(self, defaults)
 
-    def write(self, configfile):
-        fp = open(configfile, "w")
+    def write(self, fp):
         if fp:
             try:
                 ConfigParser.write(self, fp)
             except Exception, inst:
                 print inst
-        fp.close()
     
     def read(self, configfile):
     # do some checking to see if there's a new style file available
@@ -61,8 +59,8 @@ class PyQLoggerConfig (ConfigParser):
             if key == "blogs":
                 if len(config_hash["blogs"]) > 0:
                     bloglist = config_hash["blogs"]
-                    addblogs(bloglist)
-                    if config_hash.has_key["selectedblog"]:
+                    self.addblogs(bloglist)
+                    if config_hash.has_key("selectedblog"):
                         blogid = self.getblogID(unicode(config_hash["selectedblog"]))
                         self.set("main", "selectedblog", blogid)
             else: 

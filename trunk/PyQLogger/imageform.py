@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file '/home/reflog/Personal/pyqlogger/trunk/PyQLogger/imageform.ui'
 #
-# Created: Tue Dec 7 17:50:41 2004
+# Created: Sun Dec 12 13:20:44 2004
 #      by: The PyQt User Interface Compiler (pyuic) 3.13
 #
 # WARNING! All changes made in this file will be lost!
