@@ -26,7 +26,7 @@ class MovableTypeService (GenericAtomService):
             "/mt-atom.cgi/weblog", "/mt-atom.cgi/weblog/blog_id=%s", "/mt-atom.cgi/weblog/blog_id=%s/entry_id=%s")
 
     endpoints = ("/mt-atom.cgi/weblog", "/mt-atom.cgi/weblog/blog_id=%s", "/mt-atom.cgi/weblog/blog_id=%s/entry_id=%s")
-
+    name = "Movable Type Provider"
     def getCategories(self, blogId):
         """ Fetches the list of blog's categories """
         path = self.feedpath+"/svc=categories" % blogId

@@ -17,7 +17,7 @@
 ## along with PyQLogger; if not, write to the Free Software
 ## Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-from BlogService import BlogService
+from BlogService import BlogService,makeNonce
 
 class GenericAtomService (BlogService):
     """ Implementation of Atom API
@@ -28,13 +28,22 @@ class GenericAtomService (BlogService):
         self.postpath = format for getting the post    
     """
     endpoints = ("", "", "")        
+    name = "Generic Atom API Provider"
     def __init__(self, host, username, password, path, feedpath, postpath):
         self.id_re = re.compile(r'(\d+)$')
         BlogService.__init__(self,host, username, password)
         self.path = path
         self.feedpath = feedpath
         self.postpath = postpath
-
+        
+    def getOptions(self):
+        return { "Atom Endpoint":self.path , "Blog Atom Feed Path":self.feedpath, "Post Atom Url Path ":self.psotpath }
+            
+    def setOptions(self,hash):
+        self.path = hash["Atom Endpoint"]
+        self.feedpath = hash["Blog Atom Feed Path"]
+        self.postpath = hash["Post Atom Url Path "]
+    
     def _makeCommonHeaders(self, Req, date=None):
         """ Returns a dict with Nonce, Password Digest and other headers """
         nonce = makeNonce()

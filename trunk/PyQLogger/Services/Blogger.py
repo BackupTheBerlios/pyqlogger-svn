@@ -26,7 +26,9 @@ class BloggerService (GenericAtomService):
         GenericAtomService.__init__(self, "www.blogger.com", username, password,
                                                 *self.endpoints)
         self.hp_re = re.compile(r'<homePageLink>(.*)</homePageLink>', re.MULTILINE)        
-
+        
+    name = "Blogger.com"
+    
     def getHomepage(self, blogid):
         """ Returns the homepage of the blog """
         req_url = "http://www.blogger.com/rsd.pyra?blogID=%s" % blogid

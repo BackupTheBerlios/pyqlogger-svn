@@ -35,3 +35,11 @@ class BlogService:
         self.host = host
         self.username = username
         self.password = password
+        
+    def getOptions(self):
+        return {}
+        
+    def setOptions(self,hash):
+        pass
+        
+    name = "(none)"
