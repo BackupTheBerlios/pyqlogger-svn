@@ -40,8 +40,10 @@ def doneFetchingBlogs(self, res):
     else:
         self.notifier.error(res)
     self.FetchBlogsAction.setEnabled(True)
+    self.blogsmutex.unlock()
     
 def startFetchingBlogs(self):
+    self.blogsmutex.lock()
     try:
         self.account.fetchBlogs()
     except Exception, e:
@@ -51,6 +53,7 @@ def startFetchingBlogs(self):
 ###########  Fetch Posts ###################
             
 def startFetchingPosts(self):    
+    self.postsmutex.lock()
     try:
         self.account.Blogs[self.account.SelectedBlog].reloadPosts()
     except Exception, e:
@@ -65,6 +68,7 @@ def doneFetchingPosts(self, res):
     else:
         self.notifier.error(res)
     self.FetchPostsAction.setEnabled(True)
+    self.postsmutex.unlock()
 
 
 ###########  Publish Post ###################
@@ -85,8 +89,10 @@ def donePublishPost(self, res):
     else:
         self.notifier.error(res)
     self.btnPublish.setEnabled(True)
+    self.postsmutex.unlock()
     
 def startPublishPost(self):            
+    self.postsmutex.lock()
     try:
         title = unicode(self.editPostTitle.text())
         content = unicode(self.sourceEditor.text())
@@ -100,6 +106,7 @@ def startPublishPost(self):
 ###########  Edit Post ###################
 
 def startEditPost(self):    
+    self.postsmutex.lock()
     try:
         self.current_post.Title = unicode(self.editPostTitle.text())
         self.current_post.Content = unicode(self.sourceEditor.text())
@@ -120,6 +127,7 @@ def doneEditPost(self, res):
     else:
         self.notifier.error(res)
     self.btnPublish.setEnabled(True)
+    self.postsmutex.unlock()
 
 ###########  Speller ###################
 class SpellThread(QThread):

@@ -103,7 +103,8 @@ class AccountSettingsDialog(QDialog):
         done = False
         canFetchBlogs = False
         canFetchHome = False
-        hasGetHome = hasattr(self.acc,"BlogService") and hasattr(self.acc.BlogService,"getHomepage")
+        hasService = hasattr(self.acc,"BlogService")
+        hasGetHome = hasService and hasattr(self.acc.BlogService,"getHomepage")
         name = unicode(self.edtName.text())
         username = unicode(self.edtUsername.text())
         password = unicode(self.edtPassword.text())
@@ -115,6 +116,11 @@ class AccountSettingsDialog(QDialog):
         self.btnFetchHome.setEnabled(canFetchHome)
         self.btnFetchBlogs.setEnabled(canFetchBlogs)
         self.buttonOk.setEnabled(done)
+        
+        if hasService and self.acc.BlogService.host:
+            self.edtHost.setText(self.acc.BlogService.host)
+        if not name and hasService:
+            self.edtName.setText(self.acc.BlogService.name+" Account")
 
     def accept(self):
         self.putToAccount()

@@ -55,8 +55,7 @@ class MainDialog(QMainWindow):
         if(action == 1):
             res = QMessageBox.question(self, "Question", "Are you sure you want to delete this post?", QMessageBox.Yes, QMessageBox.No)
             if res == QMessageBox.Yes:
-                aBlog = self.__getAtomBlog()
-                BG.PostEraser(aBlog, self.notifier, self)()
+                self.network.enqueue(netOp("Deleting post...",BG.startDeletePost,BG.doneDeletePost))
         elif(action == 2):
             filename = QFileDialog.getSaveFileName(os.path.expanduser("~"),
                                         "All files (*.*)",self,           
@@ -64,13 +63,16 @@ class MainDialog(QMainWindow):
                                         "Choose a filename to save under")
             if str(filename):
                 try:
+                    self.postsmutex.lock()
                     post = self.PublishedItems[ self.listPublishedPosts.selectedItem () ]
                     open(unicode(filename),"w").write(post.Content)
+                    self.postsmutex.unlock()
                 except Exception, e:
                     self.log.error("Exception while saving to file",exc_info=1)
                     QMessageBox.warning(self, "Warning", "Cannot write post to file %s" % filename)
 
     def savePopup(self, action):
+        self.draftsmutex.lock()
         if(action == 1):
             res = QMessageBox.question(self, "Question", "Are you sure you want to delete this post?", QMessageBox.Yes, QMessageBox.No)
             if res == QMessageBox.Yes:
@@ -79,6 +81,7 @@ class MainDialog(QMainWindow):
                 self.account.Blogs[self.account.SelectedBlog].Drafts.Data.remove(post)
                 self.SavedPosts[blogid].remove(post)
                 self.listSavedPosts.removeItem(self.listSavedPosts.currentItem())
+                
         elif(action == 2):
             filename = QFileDialog.getSaveFileName(os.path.expanduser("~"),
                                                    "All files (*.*)",self,           
@@ -109,7 +112,8 @@ class MainDialog(QMainWindow):
                     except:
                         self.log.error("Exception while importing file",exc_info=1)
                         QMessageBox.warning(self, "Warning", "Cannot import post file!")
-
+        self.draftsmutex.lock()
+        
     def listPublishedPosts_contextMenuRequested(self, a0, a1):
         self.aMenu.setItemEnabled(1, a0 != None)
         self.aMenu.setItemEnabled(2, a0 != None)
@@ -170,6 +174,7 @@ class MainDialog(QMainWindow):
             QMessageBox.warning(self, "Warning", "You cannot post an empty item!")
 
     def btnSavePost_clicked(self):
+        self.draftsmutex.lock()
         title = unicode(self.editPostTitle.text())
         if title:
             listitem = QListBoxText(self.listSavedPosts, title)
@@ -178,6 +183,7 @@ class MainDialog(QMainWindow):
             self.SavedItems [ listitem ] = item
         else:
             QMessageBox.warning(self, "Warning", "You forgot the post's title!")
+        self.draftsmutex.unlock()
 
     def FetchBlogsAction_activated(self):
         self.FetchBlogsAction.setEnabled(False)
@@ -411,6 +417,9 @@ class MainDialog(QMainWindow):
         self.password = password
         self.settings = settings        
         self.forms = forms
+        self.postsmutex = QMutex()
+        self.blogsmutex = QMutex()
+        self.draftsmutex = QMutex()
         self.spellthread = BG.SpellThread(self)
         if not hasattr(self,"crossPostControls"):
             self.crossPostControls = []

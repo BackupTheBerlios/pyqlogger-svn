@@ -105,6 +105,9 @@ def main():
     UI.prepareModule(settings)
     app =  UI.API.KQApplication(sys.argv, None)
     stat = UI.API.prepareCommandLine()    
+    pic = QPixmap ( 150, 50)
+    pic.fill()
+    loginsplash = QSplashScreen( pic )
     pixmap = QPixmap( "splash.png" )
     splash = QSplashScreen( pixmap )
     splash.show()
@@ -133,7 +136,10 @@ def main():
         else:
             (acc.Password,oldpwd) = (pwd,acc.Password)            
             acc.init()
+            loginsplash.show()
+            loginsplash.message( "Logging in...",Qt.AlignCenter)            
             logres = acc.login()
+            loginsplash.hide()
             acc.Password = oldpwd
             if not logres:
                 QMessageBox.warning(None,"Failed!","""Cannot login!""")

@@ -197,7 +197,7 @@ class GenericAtomService (BlogService):
     ]
 
     name = "Generic Atom API Provider"
-    def __init__(self, host, username, password, path, feedpath, postpath):
+    def __init__(self, host, username, password, path="", feedpath="", postpath=""):
         self.id_re = re.compile(r'(\d+)$')
         BlogService.__init__(self,host, username, password)
         self.path = path
