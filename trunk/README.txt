@@ -12,18 +12,21 @@ FEATURES:
 * Async and responsive UI
 * Posts saving feature (drafts)
 * On-Screen notifications of events
-* Post editor with syntax highlighting
+* Post editor with syntax highlighting (with optional QScintilla support)
+* Post preview (with optional KHTML Support)
 * Multiple blog support
 * Post export
 * Update notification (for pyqlogger itself)
 * Pluggable features, like SpellChecker and others
 * Unicode support
 * Multiple blog providers
+* Kde integration (optional)
 
 USES:
 ~~~~~
 
 PyQt - http://riverbankcomputing.co.uk/pyqt
+PyKde - http://riverbankcomputing.co.uk/pykde
 PyOSD - http://repose.cx/pyosd/
 FeedParser - http://diveintomark.org/projects/feed_parser/
 
