@@ -1,0 +1,18 @@
+[Desktop Entry]
+BinaryPattern=
+Categories=Application;Network
+Comment=Qt/Kde interface to Blogger
+Comment[en_US]=
+Encoding=UTF-8
+Exec=pyqlogger.py -caption "%c" %i %m
+GenericName=PyQLogger
+GenericName[en_US]=PyQLogger
+Icon=kedit
+MimeType=
+Name=PyQLogger - Blogger GUI
+Path=
+StartupNotify=false
+Type=Application
+X-DCOP-ServiceType=none
+X-KDE-SubstituteUID=false
+X-KDE-Username=
