@@ -540,7 +540,7 @@ Python:## Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  
 
 &lt;p align="center"&gt;Now you're ready to start bloggin!&lt;/p&gt;&lt;br&gt;
 
-&lt;p align="right"&gt;Cheers, Sir Reflog&lt;/p&gt;</string>
+&lt;p align="right"&gt;Cheers, Sir Reflog and Mightor&lt;/p&gt;</string>
                 </property>
             </widget>
         </grid>
@@ -639,9 +639,6 @@ Python:## Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  
     <tabstop>editFP</tabstop>
     <tabstop>editPP</tabstop>
 </tabstops>
-<includes>
-    <include location="local" impldecl="in implementation">setupwizardform.ui.h</include>
-</includes>
 <slots>
     <slot>editLogin_textChanged( const QString &amp; )</slot>
     <slot>comboBlogs_activated( int )</slot>

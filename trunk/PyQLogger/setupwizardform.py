@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'setupwizardform.ui'
 #
-# Created: Fri Dec 17 13:17:59 2004
+# Created: Fri Dec 17 23:13:20 2004
 #      by: The PyQt User Interface Compiler (pyuic) 3.12
 #
 # WARNING! All changes made in this file will be lost!
@@ -10,7 +10,7 @@
 
 from qt import *
 ## This file is part of PyQLogger.
-## $Id$
+## $Id: setupwizardform.ui 68 2004-12-17 12:24:48Z mightor $
 ## 
 ## Copyright (c) 2004 Eli Yukelzon a.k.a Reflog 		
 ##                    Xander Soldaat a.k.a. Mightor
@@ -2041,7 +2041,7 @@ class SetupWizardForm(QWizard):
 "\n"
 "<p align=\"center\">Now you're ready to start bloggin!</p><br>\n"
 "\n"
-"<p align=\"right\">Cheers, Sir Reflog</p>"))
+"<p align=\"right\">Cheers, Sir Reflog and Mightor</p>"))
         self.setTitle(self.WizardPage_2,self.__tr("Final"))
 
 
