@@ -1,5 +1,4 @@
 #! /usr/bin/python
-## $Id$
 ## This file is part of PyQLogger.
 ## 
 ## Copyright (c) 2004 Eli Yukelzon a.k.a Reflog         
@@ -17,19 +16,18 @@
 ## You should have received a copy of the GNU General Public License
 ## along with PyQLogger; if not, write to the Free Software
 ## Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-from PyQLogger import *
+from PyQLogger import MainForm_Impl, KdeQt
 import sys
-import os
 
 try:
-    from qt import *
-except:
+    from qt import QObject, SIGNAL, SLOT
+except ImportError, e:
     print """Could not locate the PyQt module.  Please make sure that
 you have installed PyQt for the version of Python that you are running."""
     sys.exit(1)
 
 VERSION = '1.3.3.0'
-
+__revision__ = "$Id$"
 # I might enable this in future:
 #
 #try:
@@ -44,15 +42,15 @@ VERSION = '1.3.3.0'
 
 
 def main():
-    a =  KdeQt.KQApplication(sys.argv,None)    
+    app =  KdeQt.KQApplication(sys.argv, None)
     stat = KdeQt.prepareCommandLine()    
-    QObject.connect(a,SIGNAL("lastWindowClosed()"),a,SLOT("quit()"))
-    w = MainForm_Impl.MainForm_Impl(statusbar=stat)
-    if w.init():
-        a.setMainWidget(w)
-        KdeQt.setupKDE(a,w)
-        w.show()
-        res = a.exec_loop()
+    QObject.connect(app, SIGNAL("lastWindowClosed()"), app, SLOT("quit()"))
+    wnd = MainForm_Impl.MainForm_Impl(statusbar=stat)
+    if wnd.init():
+        app.setMainWidget(wnd)
+        KdeQt.setupKDE(app, wnd)
+        wnd.show()
+        res = app.exec_loop()
         sys.exit(res)
 
 
