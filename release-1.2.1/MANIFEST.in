@@ -1,0 +1,11 @@
+include PyQLogger/*.py
+include MANIFEST.in
+include LICENSE.txt
+include README.txt
+include CHANGES.txt
+include __init__.py
+include pyqlogger.py
+include setup.py
+
+exclude test*
+exclude build.py
