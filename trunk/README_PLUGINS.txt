@@ -1,12 +1,5 @@
 $Id$
 
-Installation
-~~~~~~~~~~~~
-
-This is trivial. Copy the .tar.gz file to ~/.pyqlogger
-Then type 'tar xvfz plugins.tar.gz'
-
-And that's it!
 
 Dependancies
 ~~~~~~~~~~~~
