@@ -18,29 +18,34 @@
 __revision__ = "$Id$"
 """ Wrapper module for displaying notifications """
 
-import Status, qt , sys
+import qt , sys
+from Notifiers import Status
 
 class Notifier:
     def __init__(self, parent, mode, args = None):
         self.parent = parent
+        fallback = False
+        self.mode = mode
         if mode == 0 :
             try:
-                import OSD
+                from Notifiers import OSD
                 self.display = OSD.OSD()
             except Exception, inst:
                 print "Exception while loading OSD: " + str(inst)
-                qt.QMessageBox.warning(None,
-                self.parent.trUtf8("Warning"),
-                self.parent.trUtf8("""Seems like you don't have PyOSD installed!\nReverting to status bar notifications"""))
-                self.mode = 1
-                self.display  = Status.StatusNotifier(parent,args)
-        elif mode == 1:
+                print """Seems like you don't have PyOSD installed!\nReverting to status bar notifications"""
+                fallback = True
+        elif mode == 2:
+            try:
+                from Notifiers import KdePopup
+                self.display = KdePopup.KdePopupNotifier(parent)
+            except Exception, inst:
+                print "Exception while loading Kde Popup: " + str(inst)
+                print """Seems like you don't have PyKde installed!\nReverting to status bar notifications"""
+                fallback = True
+        if mode == 1 or fallback:
+            self.mode = 1
             self.display  = Status.StatusNotifier(parent,args)
-        else:
-            print "What the hell?"
-            sys.exit()
-        self.mode = mode
-        
+
     def error(self, msg):
         self.display.error(msg)        
         self.parent.log.error(msg)

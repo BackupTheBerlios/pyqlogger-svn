@@ -16,24 +16,29 @@
 ## along with PyQLogger; if not, write to the Free Software
 ## Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-__revision__ = "$Id$"
+__revision__ = "$Id: Status.py 132 2005-02-06 15:29:06Z reflog $"
 
-class StatusNotifier:
-    def __init__(self, parent,ctrl):
+from kdeui import KPassivePopup
+from kdecore import KIconLoader, KIcon
+
+class KdePopupNotifier:
+    def __init__(self, parent):
         self.parent = parent
-        self.progressBar = ctrl
-        
+        self.PassivePopup = KPassivePopup()
+        IconLoader   = KIconLoader()        
+        self.icoCancel = IconLoader.loadIcon('cancel', KIcon.Small)
+        self.icoInfo = IconLoader.loadIcon('info', KIcon.Small)
+        self.st = parent.systray
+
     def error(self, msg):
-        self.parent.statusBar.message("<font color='red'>%s</font>"%msg)
+        self.PassivePopup.message("Notification", msg, self.icoCancel, self.st)
 
     def info(self, msg):
-        self.parent.statusBar.message(msg)
+        self.PassivePopup.message("Notification", msg, self.icoInfo, self.st)
 
     def warn(self, msg):
-        self.parent.statusBar.message(msg)
+        self.PassivePopup.message("Notification", msg, self.icoCancel, self.st)
 
     def status(self, msg):
-        self.parent.statusBar.message(msg)
+        self.PassivePopup.message("Notification", msg, self.icoInfo, self.st)
 
-    def progress(self, completed, total):        
-        self.progressBar.setProgress(completed, total)

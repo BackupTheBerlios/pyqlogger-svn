@@ -17,7 +17,7 @@
 ## Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 """ Wrapper module for PyOSD """
 
-__revision__ = "$Id$"
+__revision__ = "$Id: OSD.py 87 2004-12-21 16:25:48Z reflog $"
 from __future__ import division
 import pyosd
 

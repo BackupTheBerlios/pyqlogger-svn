@@ -292,7 +292,7 @@ class MainDialog(QMainWindow):
         self.cached_password = None
         self.cached_atomblog = None
         grpLayout = QVBoxLayout(self.grpCross)
-        grpLayout.setAutoAdd( True )        
+        grpLayout.setAutoAdd( True )
         tabLayout = QHBoxLayout(self.toolbarTab.page(0), 11, 6, "tabLayout")
         tabLayout.setAutoAdd( True )
         tabLayout2 = QHBoxLayout(self.toolbarTab.page(1), 11, 6, "tabLayout2")
@@ -306,8 +306,7 @@ class MainDialog(QMainWindow):
                 button.setMaximumSize(QSize(45,45))
                 button.setMinimumSize(QSize(45,45))
             button.setUsesTextLabel( settings.UI.EnableText )
-        self.statusBar=forms["Main"]["Class"].statusBar()        
-        self.notifier = Notifier(self, settings.UI.Notification)
+        self.statusBar=forms["Main"]["Class"].statusBar()
         self.aMenu = QPopupMenu()
         self.aMenu.insertItem("Delete post", 1)
         self.aMenu.insertItem("Export post", 2)
@@ -326,8 +325,8 @@ class MainDialog(QMainWindow):
         self.connect(self.sourceEditor, SIGNAL("textChanged()"), self.sourceEditor_textChanged)
         self.network = Network(self)
         self.network.start()
-        
-       
+
+
     def handleContextMenu(self):
         if hasattr(self,"editMenu"):
             self.sourceEditor.updateDefaultMenu(self.editMenu)
@@ -384,6 +383,7 @@ class MainDialog(QMainWindow):
             self.crossPostControls = []
         self.crossPost = {}
         self.prepareCrossBlog()
+        self.notifier = Notifier(self, settings.UI.Notification)
         
         if self.notifier.mode != 1:
             self.statusBar.hide()

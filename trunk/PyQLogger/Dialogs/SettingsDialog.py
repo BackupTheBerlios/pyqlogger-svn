@@ -132,10 +132,8 @@ class SettingsDialog(QDialog):
         self.edtSpellPrefix.setText(str(settings.Speller.Prefix))
         self.edtSpellLanguage.setText(str(settings.Speller.Language))
         self.chkSpellEnable_stateChanged(0)
-        if settings.UI.Notification == 0:
-            self.rbOSD.setChecked(True)
-        else:
-            self.rbStatus.setChecked(True)
+        self.nc = [ self.rbOSD, self.rbStatus, self.rbPopup ]
+        self.nc [ settings.UI.Notification ].setChecked(True)
 
 
     def chkKDE_stateChanged(self, ins):
@@ -157,8 +155,11 @@ class SettingsDialog(QDialog):
         self.settings.UI.EnableText = int(self.chkShowText.isChecked())
         if self.rbOSD.isChecked():
             self.settings.UI.Notification = 0
-        else:
+        elif self.rbStatus.isChecked():
             self.settings.UI.Notification = 1
+        else:
+            self.settings.UI.Notification = 2
+
         #update plugin changes
         self.settings.save()
         self.manager.save()

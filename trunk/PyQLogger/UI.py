@@ -225,6 +225,7 @@ def prepareModule(settings):
                         systray.setPixmap (p)
                         QToolTip.add(systray, "PyQLogger - Blogger GUI")
                         systray.show ()
+                        wnd["Impl"].systray = systray
                     except Exception, inst:
                         sys.stderr.write("setupKDE: cannot set tray, exception: %s\n" % inst)
                 API.setupTray = staticmethod(_setupTray)
