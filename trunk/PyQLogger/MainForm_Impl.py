@@ -160,15 +160,19 @@ class MainForm_Impl(MainForm):
     
     def btnPublish_clicked(self):       
         title = unicode(self.editPostTitle.text())
-        if title:
-            aBlog = self.__getAtomBlog()
-            if self.current_post and self.current_post.has_key('id'):
-                bgWorker = BG.PostEditor(aBlog, self.notifier, self )
+        content = unicode(self.sourceEditor.text())
+        if content:
+            if title:
+                aBlog = self.__getAtomBlog()
+                if self.current_post and self.current_post.has_key('id'):
+                    bgWorker = BG.PostEditor(aBlog, self.notifier, self )
+                else:
+                    bgWorker = BG.PostCreator(aBlog, self.notifier, self )
+                bgWorker()
             else:
-                bgWorker = BG.PostCreator(aBlog, self.notifier, self )
-            bgWorker()
+                QMessageBox.warning(self, "Warning", "You forgot the post's title!")
         else:
-            QMessageBox.warning(self, "Warning", "You forgot the post's title!")
+            QMessageBox.warning(self, "Warning", "You cannot post an empty item!")
     
     def btnSavePost_clicked(self):
         title = unicode(self.editPostTitle.text())

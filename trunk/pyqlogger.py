@@ -26,7 +26,7 @@ except ImportError, e:
 you have installed PyQt for the version of Python that you are running."""
     sys.exit(1)
 
-VERSION = '1.3.3.0'
+VERSION = '2.0'
 __revision__ = "$Id$"
 
 def main():

@@ -143,21 +143,23 @@ class PostCreator(bgOperation):
     def __call__(self):
         p = self.parent()
         blogId = p.settings.get("main", "selectedblog")
-        title = unicode(p.editPostTitle.text())
-        content = unicode(p.sourceEditor.text())
-        (self.req,self.body) = self.atomBlog.startNewPost(int(blogId), title, content)
+        self.title = unicode(p.editPostTitle.text())
+        self.content = unicode(p.sourceEditor.text())
+        (self.req,self.body) = self.atomBlog.startNewPost(int(blogId), self.title, self.content)
         self.begin()
 
     def ui(self,result):
+        p = self.parent()
         idx = self.atomBlog.endNewPost(result)
         if idx:
                 item = {
                     "id":idx,
                     "date":date.today(),
-                    "title":title,
-                    "content":content,
+                    "title":self.title,
+                    "content":self.content,
                     }
-                i = QListBoxText(p.listPublishedPosts, title)
+                i = QListBoxText(self.title)
+                p.listPublishedPosts.insertItem(i,0)
                 p.PublishedPosts[p.settings.get("main", "selectedblog")] += [ item ]
                 p.PublishedItems [ i ] = item
                 p.current_post = None
@@ -166,6 +168,7 @@ class PostCreator(bgOperation):
                 self.notifier.info("Publishing success!")
         else:
                 self.notifier.error("Couldn't parse server response!")
+                print "Got bad response from server: " + result
 
 class PostEditor(bgOperation):
     """ class for posting new blog item (or reposting) in background """
@@ -174,26 +177,27 @@ class PostEditor(bgOperation):
     def __call__(self):
         p = self.parent()
         blogId = p.settings.get("main", "selectedblog")
-        title = unicode(p.editPostTitle.text())
-        content = unicode(p.sourceEditor.text())
-        self.req = self.atomBlog.editPost(blogId,p.current_post['id'], title,content)
+        self.title = unicode(p.editPostTitle.text())
+        self.content = unicode(p.sourceEditor.text())
+        (self.req,self.body) = self.atomBlog.startEditPost(blogId,p.current_post['id'], 
+                                                                                  self.title,self.content)
         self.begin()
 
     def ui(self,result):
         p = self.parent()
         idx = p.PublishedPosts[p.settings.get("main", "selectedblog")].index(p.current_post)
         p.PublishedPosts[p.settings.get("main", "selectedblog")][idx]['date'] = date.today()
-        p.PublishedPosts[p.settings.get("main", "selectedblog")][idx]["title"] = title
-        p.PublishedPosts[p.settings.get("main", "selectedblog")][idx]["content"] = content
+        p.PublishedPosts[p.settings.get("main", "selectedblog")][idx]["title"] = self.title
+        p.PublishedPosts[p.settings.get("main", "selectedblog")][idx]["content"] = self.content
         item_to_update = p.PublishedPosts[p.settings.get("main", "selectedblog")][idx] 
-        self.parent.current_post = None
-        self.parent.editPostTitle.setText("")
-        self.parent.sourceEditor.setText("")
+        p.current_post = None
+        p.editPostTitle.setText("")
+        p.sourceEditor.setText("")
         if item_to_update:
-            for (k,v) in self.parent.PublishedItems.items():
+            for (k,v) in p.PublishedItems.items():
                 if v == item_to_update:
                     k.setText(v['title'])
-                    self.parent.listPublishedPosts.updateItem(k)
+                    p.listPublishedPosts.updateItem(k)
             self.notifier.info("Publishing success!")
         else:
             self.notifier.error("Post id changed???")

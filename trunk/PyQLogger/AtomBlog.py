@@ -100,12 +100,12 @@ class AtomBlog:
             content = post['content'][0]['value']
             if post['content'][0]['mode'] == 'escaped':
                 unescape(content)
-                res += [ {
-                    'title':post['title'],
-                    'date':post['modified'],
-                    'id':self.id_re.search( post['id'] ).group(1),
-                    'content':content
-                }]
+            res += [ {
+                'title':post['title'],
+                'date':post['modified'],
+                'id':self.id_re.search( post['id'] ).group(1),
+                'content':content
+            }]
         return res
 
     def startGetPost(self,  blogId, postId):
@@ -146,17 +146,20 @@ class AtomBlog:
         
     def startNewPost(self,  blogId, title, content, date=None):
         """ Make a new post to Blogger, returning it's body """
-        Req = QHttpRequestHeader("PUT",self.feedpath % (blogId))
+        Req = QHttpRequestHeader("POST",self.feedpath % (blogId))
         created = self._makeCommonHeaders(Req,date)
         Req.setContentType("application/atom+xml")
         return (Req, self._makeBody(title, content, created))
         
     def endNewPost(self, result):
         """ Parse result, and return post's ID """
-        amatch = self.id_re.search(feedparser.parse(result)['entries'][0]['id'])
-        if amatch:
-            return amatch.group(1)
-        return None
+        try:
+            res = feedparser.parse(result)['entries'][0]['id']
+            amatch = self.id_re.search(res)
+            if amatch:
+                return amatch.group(1)
+        except:
+            return None
     
     def startEditPost (self, blogId, entryId, title, content, date=None):
         """ Edits existing post on Blogger, returns new ID """        

@@ -24,7 +24,7 @@ class StatusNotifier:
         self.progressBar = ctrl
         
     def error(self, msg):
-        self.parent.statusLabel.setText("<font color='red'>msg</font>")
+        self.parent.statusLabel.setText("<font color='red'>%s</font>"%msg)
 
     def info(self, msg):
         self.parent.statusLabel.setText(msg)
