@@ -29,7 +29,7 @@ class Blog(XMLObject):
     Name = StringAttribute() #Visible blog's name
     ID = StringAttribute() #Internal blog id
     Posts = ListNode('Post') #List of posts in the blog
-    
+    Drafts = ListNode('Post') #List of posts in the blog
     def __postById(self,postNr):
         for post in Posts:
             if post.ID == postNr:

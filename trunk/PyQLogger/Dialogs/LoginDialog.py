@@ -15,7 +15,7 @@ class LoginDialog(QDialog):
         self.forms = forms
         if not self.settings.Accounts:
             QMessageBox.information(None,"No Accounts!","""No accounts were found in your configuration! Please add at least one account in <b>Setup</b> dialog.""")
-            wnd = forms["AccountSettingsDialog"]
+            wnd = forms["AccountSettings"]
             wnd["Impl"].init()
             if wnd["Class"].exec_loop() == QDialog.Rejected: 
                 QMessageBox.warning(None,"No Accounts!","""Program cannot work without accounts!""")
@@ -58,7 +58,7 @@ class LoginDialog(QDialog):
         QDialog.accept(self)
         
     def btnSettings_clicked(self):
-        wnd = self.forms["SettingsDialog"]
+        wnd = self.forms["Settings"]
         wnd["Impl"].init(self.settings)
         if wnd["Class"].exec_loop() == QDialog.Accepted:
             self.fillList()

@@ -28,22 +28,20 @@ from datetime import date
 #from AtomBlog import MovableTypeClient, BloggerClient, GenericAtomClient,LiveJournalClient
 from PyQLogger.ToolBar import initToolbar
 from PyQLogger.Notifier import Notifier
-from PyQLogger.SyntaxHighlight import HTMLSyntax
 from PyQLogger.ToolBarManager import PluginFactory
-import PyQLogger.BG, PyQLogger.KdeQt
+from PyQLogger import BG, KdeQt
 
 class MainDialog(QDialog):
-        
     def getPage(self, title):
         if not title: 
-            return self.tabWidget3.page(0)
-        for i in range(0, self.tabWidget3.count()):
-            if title == str(self.tabWidget3.label(i)):
-                return self.tabWidget3.page(i)
+            return self.toolbarTab.page(0)
+        for i in range(0, self.toolbarTab.count()):
+            if title == str(self.toolbarTab.label(i)):
+                return self.toolbarTab.page(i)
         return None
 
-    def tabWidget2_currentChanged(self, a0):
-        if a0 == self.Preview:
+    def editorTab_currentChanged(self, widget):
+        if widget == self.Preview:
             KdeQt.setPreview(self, self.sourceEditor.text())
 
     def pubPopup(self, action):
@@ -109,7 +107,11 @@ class MainDialog(QDialog):
         self.sourceEditor.setText("")
         self.current_post = None
         
-    def btnExit_clicked(self):
+    def accept(self):
+        self.reload = True
+        QDialog.accept(self)
+        
+    def reject(self):
         if self.current_post:
             res = QMessageBox.question(self, "Question", 
                                    "Current post is unsaved. Are you sure you want to exit?",
@@ -117,7 +119,7 @@ class MainDialog(QDialog):
             if res == QMessageBox.No:
                 return
         self.SaveAll()
-        qApp.closeAllWindows()
+        QDialog.reject(self)
 
     
     def btnPublish_clicked(self):       
@@ -159,14 +161,11 @@ class MainDialog(QDialog):
             bg()
     
     def btnSettings_clicked(self):
-        wiz = SetupWizardForm_Impl(self)
-        wiz.initValues(self.settings)
-        res = wiz.exec_loop()
-        if res:
-            self.settings = wiz.settings
+        wnd = self.forms["Settings"]
+        wnd["Impl"].init(self.settings)
+        if wnd["Class"].exec_loop() == QDialog.Accepted:
             try:
-                self.settings.write(open(os.path.expanduser("~/.pyqlogger/settings.ini"), "w"))
-                self.init()
+                self.settings.save()
             except Exception, inst: 
                 print "btnSettings_clicked: %s" % inst
                 QMessageBox.critical(self, "Error", "Cannot write configuration!")
@@ -194,7 +193,7 @@ class MainDialog(QDialog):
             self.current_post = post
             self.editPostTitle.setText(post["title"])
             self.sourceEditor.setText(post["content"])
-            self.tabWidget2.setCurrentPage(0)            
+            self.editorTab.setCurrentPage(0)            
             self.sender().setFocus()
         else:
             QMessageBox.critical(self, "Error", "Something is not right!")
@@ -204,7 +203,7 @@ class MainDialog(QDialog):
             currentItem = self.SavedItems[item]
             self.editPostTitle.setText(currentItem["title"])
             self.sourceEditor.setText(currentItem["content"])
-            self.tabWidget2.setCurrentPage(0)
+            self.editorTab.setCurrentPage(0)
             self.sender().setFocus()
         else:
             QMessageBox.critical(self, "Error", "Something is not right!")
@@ -213,121 +212,28 @@ class MainDialog(QDialog):
         """ this even should be connected to plugins """
         pass
 
-    def WriteSettings(self, filename, settings):
-        """ pickles the current settings  to specified file """
-        if not os.path.exists(os.path.dirname(filename)):
-            os.mkdir(os.path.dirname(filename))
-        if not settings.has_key("newstyle"):
-            settings["newstyle"] = 1
-        pickle.dump(settings, open(filename, 'w'))
-        
-    def ReadSettings(self, filename):
-        """ unpickles the specified file into a hash """
-        settings = ()
-        try:
-            if os.path.exists(filename):
-                settings = pickle.load(open(filename))
-            else:
-                return None
-        except Exception, inst:
-            print "ReadSettings: %s" % inst
-            return None
-            
-        if not settings.has_key("newstyle"):
-            new_hash = {}
-            for blogid in self.settings.get("main", "blogs").split(';'):
-                blogname = self.settings.get(blogid, "name")
-                if settings.has_key(blogname):
-                    new_hash[blogid] = settings[blogname]
-                    settings[blogname] = None
-            settings = new_hash
-            settings["newstyle"] = 1
-            self.WriteSettings(filename, settings)
-        return settings
-
     def SaveAll(self):
         try:
-            self.settings.write(open(os.path.expanduser("~/.pyqlogger/settings.ini"), "w"))
-            self.WriteSettings(os.path.expanduser("~/.pyqlogger/drafts"), self.SavedPosts)
-            self.WriteSettings(os.path.expanduser("~/.pyqlogger/posts"), self.PublishedPosts)
+            self.settings.save()
         except Exception, inst:
             print "SaveAll: %s" % inst
             QMessageBox.critical(self, "Error", "Cannot write configuration!")
-
-    def MainForm_destroyed(self, a0):
-        self.SaveAll()
-        
-    def __getPassword(self):
-        if not self.cached_password:
-            if self.settings.has_option("main", "password"):
-                self.cached_password = self.settings.get("main", "password")
-                return self.cached_password
-            else:
-                (text, ok) = QInputDialog.getText("PyQLogger", "Enter your password:", QLineEdit.Password)
-                if ok and  str(text) != "":
-                    self.cached_password = str(text)
-                    return str(text)
-                else:
-                    return None
-        else:
-            return self.cached_password
-
-    def __getAtomBlog(self):
-        if not self.cached_atomblog:
-            psw = self.__getPassword()
-            host = self.settings.get("main", "host")
-            login = self.settings.get("main", "login")
-            if psw:
-                self.cached_atomblog = None
-                if self.settings.getint("main", "hosttype") == 0:
-                    endpoint = self.settings.get("main", "ep")
-                    feedpath = self.settings.get("main", "fp")
-                    postpath = self.settings.get("main", "pp")
-                    self.cached_atomblog = GenericAtomClient(host, login, psw, endpoint, feedpath, postpath)
-                elif self.settings.getint("main", "hosttype") == 1:
-                    self.cached_atomblog = BloggerClient(login, psw)
-                elif self.settings.getint("main", "hosttype") == 2:
-                    self.cached_atomblog = MovableTypeClient(host, login, psw)
-                elif self.settings.getint("main", "hosttype") == 3:
-                    self.cached_atomblog = LiveJournalClient(login, psw)
-                return self.cached_atomblog
-            else:
-                QMessageBox.warning(self, "Error", "Cannot work online without a password!")
-
-        else:
-            return self.cached_atomblog
             
-    def init(self):
-        self.notifymode = 0
-        #if statusbar:
-        self.notifymode = 1
-        self.settings = Settings.load()
-        #if not self.settings:
-#            myform_impl = MainForm_Impl()
-#myform = qt_ui_loader.create( 'mainform.ui', myform_impl,None,True )
-#myform_impl.init()
-#QObject.connect(a,SIGNAL("lastWindowClosed()"),a,SLOT("quit()"))
-#a.setMainWidget(myform)
-#myform.show()
-
-        self.sh = HTMLSyntax(self.sourceEditor)
-        self.sourceEditor.setTextFormat(Qt.PlainText)
+    def init_ui(self, settings):
         KdeQt.setPreviewWidget(self)
         KdeQt.setEditWidget(self)
-
         self.current_post = None
         self.cached_password = None
         self.cached_atomblog = None
-        #self.plugins = PluginFactory(self)
-        #tabLayout = QHBoxLayout(self.tabWidget3.page(0), 11, 6, "tabLayout")
-        #tabLayout.setAutoAdd( True )
-        #tabLayout2 = QHBoxLayout(self.tabWidget3.page(1), 11, 6, "tabLayout2")
-        #tabLayout2.setAutoAdd( True )
-        #initToolbar(self, self.plugins)
-        self.notifier = Notifier(self, self.notifymode)
+        self.plugins = PluginFactory(self)
+        tabLayout = QHBoxLayout(self.toolbarTab.page(0), 11, 6, "tabLayout")
+        tabLayout.setAutoAdd( True )
+        tabLayout2 = QHBoxLayout(self.toolbarTab.page(1), 11, 6, "tabLayout2")
+        tabLayout2.setAutoAdd( True )
+        initToolbar(self, self.plugins)
+        self.notifier = Notifier(self, settings.UI_Settings.Notification)
         if self.notifier.mode != 1:
             self.statusFrame.hide()
-        #self.uChecker = BG.updateCheckWorker(self.notifier)
         self.aMenu = QPopupMenu()
         self.aMenu.insertItem("Delete post", 1)
         self.aMenu.insertItem("Export post", 2)
@@ -337,39 +243,26 @@ class MainDialog(QDialog):
         self.connect(self.aMenu, SIGNAL("activated(int)"), self.pubPopup)
         self.connect(self.bMenu, SIGNAL("activated(int)"), self.savePopup)
         self.frameCat.hide()
-        self.SavedPosts = ()
-        self.PublishedPosts = ()
         
-        if not os.path.exists(os.path.expanduser("~/.pyqlogger")):
-            os.mkdir(os.path.expanduser("~/.pyqlogger"))
+    def init(self, settings, account, password):
+        self.reload = False
+        self.account = account
+        self.password = password
+        self.settings = settings        
+        self.comboBlogs.clear()
+        for blog in self.account.Blogs:
+            self.comboBlogs.insertItem(blog.Name)
+            
+        selectedblog = self.account.Blogs [ self.account.SelectedBlog ]
+
+        for counter in range(0, self.comboBlogs.count()):
+            if self.comboBlogs.text(counter) == selectedblog.Name:
+                self.comboBlogs.setCurrentItem( counter )
+                break
         
-##        self.settings.read(os.path.expanduser("~/.pyqlogger/settings.ini"))
-##        self.SavedPosts = self.ReadSettings(os.path.expanduser("~/.pyqlogger/drafts"))
-##        self.PublishedPosts = self.ReadSettings(os.path.expanduser("~/.pyqlogger/posts"))
-##        
-##        if not self.settings.has_section("main"):
-##            self.btnSettings_clicked()
-##            if not self.settings.has_section("main"):
-##                QMessageBox.critical(self, "Error", "Cannot procede without configuration!")
-##                return False
-##        
-##        self.comboBlogs.clear()
-##        for blogid in self.settings.get("main", "blogs").split(';'):
-##            self.comboBlogs.insertItem(self.settings.get(blogid, "name"))
-##            
-##        selectedblogid = self.settings.get("main", "selectedblog")
-##        selectedblogname = self.settings.get(selectedblogid, "name")
-##
-##        for counter in range(0, self.comboBlogs.count()):
-##            if self.comboBlogs.text(counter) == selectedblogname:
-##                self.comboBlogs.setCurrentItem( counter )
-##                break
-##        
 ##        if self.settings.getint("main", "hosttype") == 2:
 ##            self.frameCat.show()
-##        self.populateLists()
-        
-##        self.__getPassword()
+        self.populateLists()
         return True
 
     def populateLists(self):
@@ -377,19 +270,11 @@ class MainDialog(QDialog):
         self.SavedItems = {}
         self.listPublishedPosts.clear()
         self.listSavedPosts.clear()
+        selectedblog = self.account.Blogs [ self.account.SelectedBlog ]
+        
+        for post in selectedblog.Drafts:
+            self.SavedItems [ QListBoxText(self.listSavedPosts, post.Title) ] = post
 
-        if self.SavedPosts != None and self.SavedPosts.has_key(self.settings.get("main", "selectedblog")):
-            for post in self.SavedPosts[self.settings.get("main", "selectedblog")]:
-                self.SavedItems [ QListBoxText(self.listSavedPosts, post["title"]) ] = post
-        else:
-            if self.SavedPosts == None:
-                self.SavedPosts = {}
-            self.SavedPosts[self.settings.get("main", "selectedblog")] = []
+        for post in selectedblog.Posts:
+            self.PublishedItems [ QListBoxText(self.listSavedPosts, post.Title) ] = post
 
-        if self.PublishedPosts != None and self.PublishedPosts.has_key(self.settings.get("main", "selectedblog")):
-            for post in self.PublishedPosts[self.settings.get("main", "selectedblog")]:
-                self.PublishedItems [ QListBoxText(self.listPublishedPosts, post["title"]) ] = post
-        else:
-            if self.PublishedPosts == None:
-                self.PublishedPosts = {}
-            self.PublishedPosts[self.settings.get("main", "selectedblog")] = []

@@ -214,6 +214,9 @@ try:
         parent.connect(parent.sourceEditor, SIGNAL("textChanged()"), parent.sourceEditor_textChanged)
 
 except ImportError, e:
+    from qt import Qt
+    from SyntaxHighlight import HTMLSyntax    
     def setEditWidget(parent): 
-        pass
+        parent.sh = HTMLSyntax(parent.sourceEditor)
+        parent.sourceEditor.setTextFormat(Qt.PlainText)
 

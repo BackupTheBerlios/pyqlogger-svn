@@ -38,7 +38,7 @@ class SettingsDialog(QDialog):
             self.rbStatus.setChecked(True)
 
     def btnEditAccount_clicked(self):
-        wnd = forms["AccountSettingsDialog"]
+        wnd = forms["AccountSettings"]
         wnd["Impl"].init(self.settings.accountByName(str(self.lbAccounts.currentText())))
         if wnd["Class"].exec_loop() == QDialog.Accepted: #if something changed, reload the title
             self.fillList()        

@@ -93,8 +93,11 @@ Python:## Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  
                                         <property name="name">
                                             <cstring>btnNewPost</cstring>
                                         </property>
+                                        <property name="text">
+                                            <string></string>
+                                        </property>
                                         <property name="accel">
-                                            <string>Ctrl+N</string>
+                                            <string>Ctrl+Alt+N</string>
                                         </property>
                                         <property name="iconSet">
                                             <iconset>image1</iconset>
@@ -103,15 +106,18 @@ Python:## Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  
                                             <string>Click here to create new post</string>
                                         </property>
                                         <property name="whatsThis" stdset="0">
-                                            <string>Press this button to create a new post. If you have an unsaved post you'll be propted to save it. &lt;b&gt;Hotkey: Ctrl-N&lt;/b&gt;</string>
+                                            <string>Press this button to create a new post. If you have an unsaved post you'll be propted to save it. &lt;b&gt;Hotkey: Ctrl-Alt-N&lt;/b&gt;</string>
                                         </property>
                                     </widget>
                                     <widget class="QToolButton">
                                         <property name="name">
                                             <cstring>btnPreview</cstring>
                                         </property>
+                                        <property name="text">
+                                            <string></string>
+                                        </property>
                                         <property name="accel">
-                                            <string>Ctrl+V</string>
+                                            <string>Ctrl+Alt+V</string>
                                         </property>
                                         <property name="iconSet">
                                             <iconset>image2</iconset>
@@ -120,7 +126,7 @@ Python:## Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  
                                             <string>Click here to open blog preview in browser.</string>
                                         </property>
                                         <property name="whatsThis" stdset="0">
-                                            <string>This button will launch your default browser with your blog for preview. &lt;b&gt;Hotkey Ctrl-V&lt;/b&gt;</string>
+                                            <string>This button will launch your default browser with your blog for preview. &lt;b&gt;Hotkey Ctrl-Alt-V&lt;/b&gt;</string>
                                         </property>
                                     </widget>
                                     <widget class="QToolButton">
@@ -133,8 +139,11 @@ Python:## Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  
                                                 <height>32767</height>
                                             </size>
                                         </property>
+                                        <property name="text">
+                                            <string></string>
+                                        </property>
                                         <property name="accel">
-                                            <string>Ctrl+R</string>
+                                            <string>Ctrl+Alt+R</string>
                                         </property>
                                         <property name="iconSet">
                                             <iconset>image3</iconset>
@@ -143,12 +152,15 @@ Python:## Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  
                                             <string>Click here to re-fetch the list of posts.</string>
                                         </property>
                                         <property name="whatsThis" stdset="0">
-                                            <string>Pressing this button will re-fetch the list of posts from your blog's feed and save them locally for later editing. &lt;b&gt;Hotkey Ctrl-R&lt;/b&gt;</string>
+                                            <string>Pressing this button will re-fetch the list of posts from your blog's feed and save them locally for later editing. &lt;b&gt;Hotkey Ctrl-Alt-R&lt;/b&gt;</string>
                                         </property>
                                     </widget>
                                     <widget class="QToolButton">
                                         <property name="name">
                                             <cstring>btnSettings</cstring>
+                                        </property>
+                                        <property name="text">
+                                            <string></string>
                                         </property>
                                         <property name="accel">
                                             <string></string>
@@ -197,6 +209,9 @@ Python:## Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  
                                     <widget class="QToolButton">
                                         <property name="name">
                                             <cstring>btnRefreshBlogs</cstring>
+                                        </property>
+                                        <property name="text">
+                                            <string></string>
                                         </property>
                                         <property name="iconSet">
                                             <iconset>image5</iconset>
@@ -449,6 +464,9 @@ Python:## Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  
                                                 <height>26</height>
                                             </size>
                                         </property>
+                                        <property name="text">
+                                            <string></string>
+                                        </property>
                                         <property name="iconSet">
                                             <iconset>image5</iconset>
                                         </property>
@@ -465,7 +483,7 @@ Python:## Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  
                     </widget>
                     <widget class="QTabWidget">
                         <property name="name">
-                            <cstring>tabWidget2</cstring>
+                            <cstring>editorTab</cstring>
                         </property>
                         <property name="maximumSize">
                             <size>
@@ -492,7 +510,7 @@ Python:## Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  
                                 </property>
                                 <widget class="QTabWidget">
                                     <property name="name">
-                                        <cstring>tabWidget3</cstring>
+                                        <cstring>toolbarTab</cstring>
                                     </property>
                                     <property name="sizePolicy">
                                         <sizepolicy>
@@ -587,6 +605,9 @@ Python:## Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  
                                         <height>327</height>
                                     </size>
                                 </property>
+                                <property name="text">
+                                    <string></string>
+                                </property>
                                 <property name="pixmap">
                                     <pixmap>image8</pixmap>
                                 </property>
@@ -598,6 +619,32 @@ Python:## Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  
                                 </property>
                                 <property name="whatsThis" stdset="0">
                                     <string>This allows you to run away in fear, screaming like a girl :) &lt;b&gt;Hotkey Ctrl-Alt-X&lt;/b&gt;</string>
+                                </property>
+                            </widget>
+                            <widget class="QPushButton">
+                                <property name="name">
+                                    <cstring>btnRelogin</cstring>
+                                </property>
+                                <property name="maximumSize">
+                                    <size>
+                                        <width>327</width>
+                                        <height>327</height>
+                                    </size>
+                                </property>
+                                <property name="text">
+                                    <string></string>
+                                </property>
+                                <property name="pixmap">
+                                    <pixmap>image9</pixmap>
+                                </property>
+                                <property name="accel">
+                                    <string>Ctrl+Alt+F</string>
+                                </property>
+                                <property name="toolTip" stdset="0">
+                                    <string>Click here to relogin with different user account.</string>
+                                </property>
+                                <property name="whatsThis" stdset="0">
+                                    <string>This allows you to run switch accounts &lt;b&gt;Hotkey Ctrl-Alt-F&lt;/b&gt;</string>
                                 </property>
                             </widget>
                             <spacer>
@@ -612,7 +659,7 @@ Python:## Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  
                                 </property>
                                 <property name="sizeHint">
                                     <size>
-                                        <width>444</width>
+                                        <width>420</width>
                                         <height>21</height>
                                     </size>
                                 </property>
@@ -621,34 +668,40 @@ Python:## Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  
                                 <property name="name">
                                     <cstring>btnPublish</cstring>
                                 </property>
+                                <property name="text">
+                                    <string></string>
+                                </property>
                                 <property name="pixmap">
-                                    <pixmap>image9</pixmap>
+                                    <pixmap>image10</pixmap>
                                 </property>
                                 <property name="accel">
-                                    <string>Ctrl+P</string>
+                                    <string>Ctrl+Alt+P</string>
                                 </property>
                                 <property name="toolTip" stdset="0">
                                     <string>Click here to publish the post to the web.</string>
                                 </property>
                                 <property name="whatsThis" stdset="0">
-                                    <string>Pressing this button will cause PyQLogger to connect to your blog and post current item. Afterwards it will be added to &lt;u&gt;Published&lt;/u&gt; list. &lt;b&gt;Hotkey Ctrl-P&lt;/b&gt;</string>
+                                    <string>Pressing this button will cause PyQLogger to connect to your blog and post current item. Afterwards it will be added to &lt;u&gt;Published&lt;/u&gt; list. &lt;b&gt;Hotkey Ctrl-Alt-P&lt;/b&gt;</string>
                                 </property>
                             </widget>
                             <widget class="QPushButton">
                                 <property name="name">
                                     <cstring>btnSavePost</cstring>
                                 </property>
+                                <property name="text">
+                                    <string></string>
+                                </property>
                                 <property name="pixmap">
-                                    <pixmap>image10</pixmap>
+                                    <pixmap>image11</pixmap>
                                 </property>
                                 <property name="accel">
-                                    <string>Ctrl+S</string>
+                                    <string>Ctrl+Alt+S</string>
                                 </property>
                                 <property name="toolTip" stdset="0">
                                     <string>Click here to save post's draft.</string>
                                 </property>
                                 <property name="whatsThis" stdset="0">
-                                    <string>Pressing this button will put current post into the list of saved ones, keeping it for &lt;u&gt;draft&lt;/u&gt;. &lt;b&gt;Hotkey Ctrl-S&lt;/b&gt;</string>
+                                    <string>Pressing this button will put current post into the list of saved ones, keeping it for &lt;u&gt;draft&lt;/u&gt;. &lt;b&gt;Hotkey Ctrl-Alt-S&lt;/b&gt;</string>
                                 </property>
                             </widget>
                         </hbox>
@@ -758,9 +811,12 @@ Python:## Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  
         <data format="PNG" length="1601">89504e470d0a1a0a0000000d4948445200000020000000200806000000737a7af400000608494441545885c5974f685dc715c67f0d5338175e600654d005077421062bb850891a2a81c17ab40b0b17b4c82a6ec169209bd29a967455934571bbb2176ed1aa3836a945174d6a838bbb30580683bd284885064960c115d8702f58300311dc039e4517f7df7b7a5228a19081c73077e6cd9cef9bef7c3303df70f9d6e10f7766ec396bb81c222bd64088f07faaef59c38d0bbbe1f1b1017c36636f89914b4c3bb28505b08e4404af1e671c957a90041d6b0baa8a18010d602c2106ace9bf97650edb015fe68891db1776cbf72702b833636f59c325777e996c69882f7292038f3f08881134ead1358af015b5519c113cc01739db4f36b186db1776c3fb5d009fcdd8736264dd9d1f929d5da4587f801e14a882155b2f3668e974101be411441288158843a3c78aabc74bc38458880a038b1a60a7245f7f8a1859bab05b3e7e03400c979972644b43f2f507e87ebdb81821c48018080a1608d183114254c480c60a4c82468f98a4f95effcf2204550082064415662c6eca12a25e0630001a59993dbb80becae1a040e991db818c219f9e99253d33c49d9a039b8208ec3ca32a0bf2670f90c818f27a9ebe2d62e1648a0dbad2052006d40a49f063c8ad911ab9014e4c33ffab3bf0a69bcca5b92109f0cef98bf07c83adbf5e271c68a3fe9a895a90a01ab0d651c46d00de6818c089c31fd41103357203561cd90f2f32fff1cda3173f5c4ecef3cec76b64a7e650533389011141013116628535c21803fec02306ca43c8d3734bb8f77e3ebec8bf1eb1f5e473f4e51e0a64a79748cf0ee1e47c3724fdd915f8e40ac55ede68a5cd9e506b226a1f40cb40a5c5d89ebbd3b3a4ef7dd42ffc7c8badbf5c27841c2b8ef4d40200f9ce3a7e6f93c45ab25faf8e047115fde347f850e006962ad6a959463a06da2cc0ab6fd4daab3dfbe5b57ef1ed0d36fef41b42c81193e01686a41f5ea97fd3330455aafd928d3f7c3046d6f4d965c408becb066de6d7710d8824288a957a9f677fb03c36d1c69f7f8f5275fde9cc6cd7275329b6c973018a4fae747dc9dc906420b84603566a139b60400f3c8274796ee716bb49fcfdb5893cf75a8d84e76abf68d4ee5fe6906ff52ccc0ef1b1764455458e62c035c86c1369d2ec2f40feecef1d722b968076e3eb524da8bddaddec59984ebbf122adc68ed340e370bc99f4f3ab4e385c3b1e0003daec71abf632147dbf083e5660dcf10cd491f71a385c5ae42d5277685c8bdc0deafeb17922b881a3328d131ec540d0660f1b6fc7f708646027bcddc79e0149920e79ab763523d1999ab184da09412719b0c6028a8843a9e040bbffa767861df256eda30c68ac3ae4addad3eff75954bddc241da46004118bbe3e8601904eedf993cfbb09dc8f3fe84fb546ed55ec0314e33ae43e2ae95406df49bbfef022c7c7e65ea1e1680d5863c734507dd1ab1860f117d7c6bc3d897d9f7e59f4c86d56db705bbc47557162f1fc0f1a18557bf1e9d57ea2b732e67ffadb4eed1bffbc897fb846fee9557c99d7793e70a41f8e2c0ee4f7576b6d743e70cc596045a051797b9efb9d4dd2cda7d09ad2c979e67fb746f5708df022a7d87c4462047722233db33c761801f8fb3711c05333d0de078a1127ec4ec3a0013bb08458766ab7069edebdcea201bedb3b63f2a38b2440caf1a578b806af8a7af18e0187ea360ec88fd4c0c81eb76ab762d9babb8abfbb0a5f565fb1640bdb53fced1a14798f1c7089836f574814fc88063a06ca9739d9e98c428fbec9e4ff794ab1bd417222233bb30c3319240e2a0f087ee719bab7817f55e28c9d44feba42124759e6245a511cd2c0bde47958a9be27586beb6b53bb67cd15bc3dcfd92fd8b8bf5afb40ac60e0a8628d549bdac77ecf5de2a03945c38b1cf1812228d6c8bd6e0bc470a32873f4dfdbf591da9c5a7570e30ed7aab9f5f6d6e1da3ceffbb5f6fed7f5b8e2454ef1f811bef4487db6dc809187c93fde9ebea5512f654b8bc8dbd3d09a86b11043dd8eed0b489b7781d6fd1aa0b9fdd66ded5f4c11b4cc511ff0a5877d45a3de7e776fe461d207616f85c8a574ca429662a71c2156cd0d86ee26d3b6a56508d0d775db47c5d13001f8088956f8fdd05cd9b9fd9366f189001a26ce69d4cb6264e5d8e7d8d7abef69d41befee8d3f4ebff1f25f1876d4b12440b3a70000000049454e44ae426082</data>
     </image>
     <image name="image9">
-        <data format="PNG" length="1635">89504e470d0a1a0a0000000d4948445200000020000000200806000000737a7af40000062a494441545885bd97ef6b1cc719c73f779a3bcf9e764fb392d6ba8b7cd6dd39b273721c53d78aa334fd11d2609306d2068a5e98b62f0c0d79dfbfa02ff22ad042de34a1b438af4ac9abb698044aa1b59dba0d89da2a5842527cb2b5912e962c0dd646373e8d4e7db12b2cbb96895c270f0cc3323bf37ce6d9ef33f36c0777da8b4009b80a6cf215dbd0c8f19125d5ab36813f00cf03e2cb76da91f4a9f2bef2af477f34fa35ddd0d8b43d24dae2b46999678055a00e6c7c99003f3d73e6cccfea57ea34961b940a25fc6e3fe5b95ed55a3b6aac39499bf504e4d6c30638f8c2a917ce0e5606ddf317cf53cc17b1c212e403bc6e8f23fb8fe02ab75f20beafd7f40f68e3106b64f5e100087e3b7c62f8eb1f8c7d80c80a48839375b06d8bcc4ac41e41b1af48b154a4f448a95708f1bc35f6b46999016005f81c780ee803aeed162085e0a444be597bb436a00a0a5ffa180c4a2ac88072150683effa346d13473a2c3416d0739acbe1e596239da8b0afd03d76696c4e47fa25606c771168f3896ddbbf69ad9fcae43205911378390f8b45ec11184c1c19c0173e366d0954805ff23976e85847a556716a83351acb8daec67c638838839a5f1c20b605dbb6ef46cbd1e3810caa5ede4375296cda52748bd0063fe763d271646cdbd2ebf68204958b9f6b0335ea617d406bed00efee160040dbb63d172e87fd52c8271cd7c1ed7431368e80c190c966306d133b7721ba1961da0637ed62a5a5d857647c727cd8b6ec35e05fbb050068d2e65ce37ac351423dedf578042ac0b62d7ecec762515211ec0f18bb34b6f6f6d9b797021978c50345bcb487ebbaf8d24f8dcf8c9fa0cd79e0d3dd020058e0cfe1f570d51afb6dd77785effa586b51426184a13e53e7adb36fbd678cf9f9e2dae293d503d56e999538c2c10d5ccc9a71c3301c02fe08aced1600e27be0ef4bcb4bb3abd1eab37e9fef042a2022a257f632393d497daade29b2a25f2f6b3b7179a2ed653d4ff8221de40382be80b9706ebfd6ba93580f3bde2b3b016cd97fb4d61f2d5e5ffc96d3e5285ff944ad884a4f85a012e4474e8c1c7495bb7f726ab2397e79fcead2f5a5acdbe93ad5bd55648fa43e553f6e5a26043e7a5000802b51145d902d79aa3258e9523985b1864aa182231d6a951a5e8fe7356f36bb66aecc84d353d3378d35def091e18e4c2e93aacfd44fd8b6bd00840f0a0030af5bba2fe80e9e319b868cc860ad4520886c44696f8962a528445a0433d766ecf4ccf4d5e970baa376a8961359e186617898580f9f3f2800b66517eab3f5eadc95b9fcf4b5e9ce484729bda61129c186dd205001a581128303839d2bcb2bfeecececc2c4e4c48da1f2507e5dac0fe8659d07ce71971e525f1420311f28030780a3c0512965552935e0f7fa6ea55041050a29251313138c7d3c76c34466bebcaf5cd491eed55abf0afceaff01d86e69200f740305e009e09894b2265d39582bd4f61a4c6a61698146a3114a29378c350e9697818b0f03e06e4b117f529fb8acab0147111c96c8c78d350ed042d09042fec218f30e0fb9b6d8c9ba8043c07781579552ff564a3581e35bd45f850d00fdc415550ff024700198da2d400ac802196e6790250ea5bdcf3c07781af83182752cbf043ede5af07e931e038e00fb8985a612800e6211429c5696b83a9a01fe027cb8c39a0a784dbaf265139951e0afff0320852c1b6b7e82e028963671991502f3c032b00eb412a729e2d2dd49001f0386814bc06b80b9d7c60a85c284d6fa1fc698d3770e094e21781fc1ebc077807dc01e6221e5935eeeb0bb2df3a490bf037e78cf51c153e572f916f00690db3eb4474af9be14f295c491200ef3b3c008709038e7ef777a76022711fc2699776784052f160a8545e9ca8bc03780ccf63f9f5bc698067098dba2ea001e252ec1e713a09ee4fd34e025cffdc023400044585e072689f5e121784e0af98a94f29b8da5c69fb0bc415cbcaedfad812af02671d8df01de036e101f2c7ddb1c771067c226b1260cf145b322854c196b2a52c89ac11c97420e03592c1f1a6b7e4f7c0a7e966cf29e59a08051e07bc4ea37c05c02b24a2cc0cd04c2013a11282c0a4180252f858c0c660598c5f2cf64b79f007adb7c7602d8b21c50495a35894017711a6ea5600b4113cb2a711a7e062c268eb6fa26f1e7bc6755b49b8348703bffb7e66d6e6b1b49dbd56ffd7f01fc254bc2827fd9bf0000000049454e44ae426082</data>
+        <data format="PNG" length="2797">89504e470d0a1a0a0000000d49484452000000260000002508060000002ea99b0000000ab4494441545885cd987b7053f795c73ff75ebd2de9eae5277e601ea931e16548421bfaa04b9ba4e99206d2c7643294f0473bd33f362433bbd3d93fc2b43b9dfd23db844e76da4c4a9bd2cc160a6db3248484a4a1a1890113221b3028183f645996adf7bd922c59ba92eefe21704cd634bbeca6bbe72f8de65ee973bfbf73bee79c2be8baceffc710ffaf016e16c25feb8ff6ec39b8ad5a65672e9779fd9967beb31f98052a37bbdef049c2fce847873b755d785cd7851d0683243734c85cbd5abe0378070802d99bdd2b7d12404f3df5d2ae2d5bbef51351949e6e6870ddb57af562cb3df7ace5b6db5a387f3e64379b1d999191fe4120072c98e4ff6b8aeddd7ba413785cd7c51d068324b7b5d5d3d5d54a73b30bbbdd8c280a54ab3acb97373331d17d2ff03b2001e43f11b0e79e7b7557b5ca4e5d173feb76db59b4c84777772b76bb198bc578c3b5a228d0d3b398fefee09afafaf625f1782804145840b55b02dbb7ef588f20883b755ddc61369be4a6260f9d9d8d3436cad86c2644f13fd754a552211e57e8e8f0e1f53ad8b871db03afbcb277004803da2d83bdf0c231b7d1687a50d785c7749dd56eb793e6662f1d1df5389d164ca6857f2a9bcd93482824120a007575167a7a3a0985baef059e03a66f09ecc081377b4451daadebe25693c928fb7c2edada1af0f91c3755a754d2482655120995d9d922b3b31a858286a695a95627696ff761b73b3d77ddf5e0dff4f5bd14a45604d58f053b74e84db7d1687e501084c7aa55563b9d767c3e376d6d3e9c4e2b06c3c2beacaa3952291545c951ad5651d502f97c09511471bb9d78bd2e4ca65ade2d59d2c0f8f8ba2ff7f5bd74845a11146e0a76f4e89f7b40dc2d08e25683c128cbb283458bea71b9eab0dbcd0bc2944a1a898482aae6289534741d8a458d743a4f5d9d8df6762f4ea7fd867b2a952a3d3d8bb97871e2d33e5fc79244623c4ccd70e78ac0f0da6b27dd0683711788df067195dd6ec7e39169687063b79b6faa8ea26449a532cccc14a8b55b1d102897ab48928565cbea311a3f7cee4aa54a2693251e4f53a954e8ee5e86c361e5f6dbb7dcfbf6dbbfb840ad08ca73607575f694284ad8ed0e1a1bbd389d566c3613001f9c7b9bf7ff7884b1c101cc36171bb63cc09df77c8d3ad9452c96a2542a030282a023cb4e2c1633f9fc8d5d6666a6403aad92c9e4a8543e4ca362b1c8860d4b989c5c751ff002b52298eb0462a5529d9065172b572ea6a9499e833af8e3ddc4c3236c7ee8511edbfb2bbef4b52df4bffc14bb37af23160ae27239311a0d343579f8d4a716d3d2524fa522cca9934c2a0c0d050906c3a86a0e5dd71145019bcd4247473366b389b56bdbb1589c8bbabbbfb81170326fa830a4d3a9c366b3e58972b932776c2fff7c0f3d9fff0af5cdad14b27162a3573098a08497db5a548c95340e4f3b1e8f135d075d874241239150c9666750942c8250fb5e14c5b9e4f7f96ac92f0802a59286c924b1664d3bd1e8a6ed972f9ff82390bc966b1802814bfb65d9f3443a3d4373b38be45490c4c4652c77de4974b48f821aa5a0463976e075bef8d5aff3d975dfe2e4dead7ceea93174bd96fce9748670384126930784390bb1dbadb85c4edc6e072050ad56afe5a64a2e97a7b5b581152b5ae8eb6b5e07340193d7c1a413278ea7b76f7ff85e49322e6a6c7473e6d87ea4b2825056512201d291cbf4befe67ba576fe46f3fd38a141da4ac1529399720d435313434412e57209f2fa2eb60321971bb9db4b636e1f3b9b0d92c148b25a2d12491480c55cda269650441a058d458b9b203bf3f64144567616262e01c90017403a0a5d3a9dfd4d539eec8e58ae4d43499e815c4c20833ca3489489272b19e6fdebf16922350e7c4ddb6944255c76834228ab54ab4d9acc8b20387c336a78eaae648261566678b73492f8a0256ab19b75bc6eb951104810d1b16130c2edf0cfc1288013903a0efdcb97ddfd1a3bd3f8c44120e776307978f9fa7ec15180f1529571af8c7ef7f138a49f03482d1c2e485f7f1ad7652a954696eae479224344d4710209f2fa02839b2d90fab501405445144966b466db59a11849a2167b379eeb86309c78e5d5cdedaba7675383c100266ae1b4d415595c3b19863d78a8df7f3ea4fbf4f2c5a60d3a7ef66fbb6cd204960708064464944514b363a5a5651a9e8582c668a450d45c9904aa9685a79ced34451c46a35e1f5ba703aed489288a695894693a4522aa552ad4536357959b5aa95586ccbd7c3e1815340f23a58656222f46bbbddb54babb6f1bd7f7d17a1ff5f30e446288b460c56374816c62f9ee6eaa50bacfaeeefe7d4a85675c2e118b95c7e4e1d49929065076eb7038ba5a64e3a9d219399415573f38e55c46432323b5b64cd9a36ce9d6b590f340291f91dd87ce8d05b039d9ded5dcb972f42d741ed7f91f4e02b585c2d9cbb34c9c1d13544dd5f229ed3d9d25ae691adcbe95aea26972b303919c3663323cb0e5c2e07009a5626955248a73337982b802cd73a8ccb65a766d2f0c41307181838fe63bfffd0b3f37ba5168fc79eb75aeb9e6e6f6f449244ecab1fa66ed5c30c45f2bc3c16e49f9e5987c168249c85b72e66d9f9cf27f8fb079a7868eb0a962d6bc368342008a028391425433e5fe0fabe238a022693119fcf852cdbaf35f31a9020c0e9d32358ad26eaeb977e0638301facdadfdf77d8e76bfa612a95b17bbdd7cd53e71f5e1ce3ef76ace78a62209283e91c4ce1c0fcd507d8fde2bfa36b151eda763bd3d309b2d919aad5eb495f336c97cb81dbedc46eb7cec100a452339c3811e0d4a9ab288aa2c46257fcc3c3efbc01183e3a4c19f6ed3bf2dba54b3bb7757575a0eb3ac353059e7c3dc31736ddc6f40cc466209c057fbcd6714509c4e79fe3f4bf7d054dcb5d83aa5989c723e3763b9024690e667656e3e2c5307d7d235cb9324d3239110885facf0e0e1e3d03a4802960fca3f358656222f8ac2c7bb6954a652449a47f3443ce56cfa930240b909e85a9228826f098c06301ebcead3cfdf4099e7cf2f354ab553c1e198bc574833a53530aefbe3bc4850b13a45269657232e00f04deea8d4687c68038b5261e075420ff5130fd073f78ecccfefd6f449249b5a5a5c5cbcc6c8548562702644ba0e9e0f5d4802c5985d49bef511a1e62d3a36b696af2de00532c6a0402117a7baf120ea788c74381d1d1f7cffafd47aeab1303a2d73e678122d796e08526d8522a95f8f9f8b8634f6bab0f749d9cae2309e0ac831617948787d12e05e872cef28d4756b2e9eebb6f008ac5329c39334c2030492a955642a1cbfef3e7dfe88d443e58501d6a33ff0d9bd24260d5f7de7be7171e4fe39e6cb6c0fa654e167d9040ae3393f10f6255223c725f275f7e7413b2d3324f9d32c3c3d39c3d3b422492261a1d0f0c0dbd77f6cc993f7cac3a0bc5cdde5d189f7df6f707bbba966eebe959c67d8fbf4dcf52273bee5fc28aa56ee697793c9ec5ef1f6368688a743aad8c8e0efacf9d7bad776222f05f5667a1b8d99654ce6633472291d4b6f5eb058eff6433f38faa542a3336166360204834aa12898c050281beb3274f1ebe2575168abff4b6c7f6b39fbd7a75e3c6ee96cece46040192c91c8383214647a3a452296570b0afd7efffd3fbc1e0a5316a9bce2da9b350fca5bdb298cd2a87c6c6a677eb3a5cba14221ecf303a1ae8f7fb4ff69d3af5ea003545a2d4144a738beafc77c12ac1e0d517ec76cfeee1e1706a60a0f7f4f1e307df4926a7a7f8f0a812d406bb02ff0375168a8f7b716702da812ec03c0f284d6d7b2ef2910dfaaf052600566a1b8c00cc5053e7fad0f589c57f00e888f3a91d8932200000000049454e44ae426082</data>
     </image>
     <image name="image10">
+        <data format="PNG" length="1635">89504e470d0a1a0a0000000d4948445200000020000000200806000000737a7af40000062a494441545885bd97ef6b1cc719c73f779a3bcf9e764fb392d6ba8b7cd6dd39b273721c53d78aa334fd11d2609306d2068a5e98b62f0c0d79dfbfa02ff22ad042de34a1b438af4ac9abb698044aa1b59dba0d89da2a5842527cb2b5912e962c0dd646373e8d4e7db12b2cbb96895c270f0cc3323bf37ce6d9ef33f36c0777da8b4009b80a6cf215dbd0c8f19125d5ab36813f00cf03e2cb76da91f4a9f2bef2af477f34fa35ddd0d8b43d24dae2b46999678055a00e6c7c99003f3d73e6cccfea57ea34961b940a25fc6e3fe5b95ed55a3b6aac39499bf504e4d6c30638f8c2a917ce0e5606ddf317cf53cc17b1c212e403bc6e8f23fb8fe02ab75f20beafd7f40f68e3106b64f5e100087e3b7c62f8eb1f8c7d80c80a48839375b06d8bcc4ac41e41b1af48b154a4f448a95708f1bc35f6b46999016005f81c780ee803aeed162085e0a444be597bb436a00a0a5ffa180c4a2ac88072150683effa346d13473a2c3416d0739acbe1e596239da8b0afd03d76696c4e47fa25606c771168f3896ddbbf69ad9fcae43205911378390f8b45ec11184c1c19c0173e366d0954805ff23976e85847a556716a83351acb8daec67c638838839a5f1c20b605dbb6ef46cbd1e3810caa5ede4375296cda52748bd0063fe763d271646cdbd2ebf68204958b9f6b0335ea617d406bed00efee160040dbb63d172e87fd52c8271cd7c1ed7431368e80c190c966306d133b7721ba1961da0637ed62a5a5d857647c727cd8b6ec35e05fbb050068d2e65ce37ac351423dedf578042ac0b62d7ecec762515211ec0f18bb34b6f6f6d9b797021978c50345bcb487ebbaf8d24f8dcf8c9fa0cd79e0d3dd020058e0cfe1f570d51afb6dd77785effa586b51426184a13e53e7adb36fbd678cf9f9e2dae293d503d56e999538c2c10d5ccc9a71c3301c02fe08aced1600e27be0ef4bcb4bb3abd1eab37e9fef042a2022a257f632393d497daade29b2a25f2f6b3b7179a2ed653d4ff8221de40382be80b9706ebfd6ba93580f3bde2b3b016cd97fb4d61f2d5e5ffc96d3e5285ff944ad884a4f85a012e4474e8c1c7495bb7f726ab2397e79fcead2f5a5acdbe93ad5bd55648fa43e553f6e5a26043e7a5000802b51145d902d79aa3258e9523985b1864aa182231d6a951a5e8fe7356f36bb66aecc84d353d3378d35def091e18e4c2e93aacfd44fd8b6bd00840f0a0030af5bba2fe80e9e319b868cc860ad4520886c44696f8962a528445a0433d766ecf4ccf4d5e970baa376a8961359e186617898580f9f3f2800b66517eab3f5eadc95b9fcf4b5e9ce484729bda61129c186dd205001a581128303839d2bcb2bfeecececc2c4e4c48da1f2507e5dac0fe8659d07ce71971e525f1420311f28030780a3c0512965552935e0f7fa6ea55041050a29251313138c7d3c76c34466bebcaf5cd491eed55abf0afceaff01d86e69200f740305e009e09894b2265d39582bd4f61a4c6a61698146a3114a29378c350e9697818b0f03e06e4b117f529fb8acab0147111c96c8c78d350ed042d09042fec218f30e0fb9b6d8c9ba8043c07781579552ff564a3581e35bd45f850d00fdc415550ff024700198da2d400ac802196e6790250ea5bdcf3c07781af83182752cbf043ede5af07e931e038e00fb8985a612800e6211429c5696b83a9a01fe027cb8c39a0a784dbaf265139951e0afff0320852c1b6b7e82e028963671991502f3c032b00eb412a729e2d2dd49001f0386814bc06b80b9d7c60a85c284d6fa1fc698d3770e094e21781fc1ebc077807dc01e6221e5935eeeb0bb2df3a490bf037e78cf51c153e572f916f00690db3eb4474af9be14f295c491200ef3b3c008709038e7ef777a76022711fc2699776784052f160a8545e9ca8bc03780ccf63f9f5bc698067098dba2ea001e252ec1e713a09ee4fd34e025cffdc023400044585e072689f5e121784e0af98a94f29b8da5c69fb0bc415cbcaedfad812af02671d8df01de036e101f2c7ddb1c771067c226b1260cf145b322854c196b2a52c89ac11c97420e03592c1f1a6b7e4f7c0a7e966cf29e59a08051e07bc4ea37c05c02b24a2cc0cd04c2013a11282c0a4180252f858c0c660598c5f2cf64b79f007adb7c7602d8b21c50495a35894017711a6ea5600b4113cb2a711a7e062c268eb6fa26f1e7bc6755b49b8348703bffb7e66d6e6b1b49dbd56ffd7f01fc254bc2827fd9bf0000000049454e44ae426082</data>
+    </image>
+    <image name="image11">
         <data format="PNG" length="1677">89504e470d0a1a0a0000000d4948445200000020000000200806000000737a7af400000654494441545885cd9741881d591586bfd7dec0b9fa845bd0912ae9453f18174f12487a35dd2b09332e661034e042dd39ae4671932cddcd7682cc22c280e32c24ee146130b3087604b13be0d83de8903760930ad8cc2d9ce7dc4bba481da6af948b5bddb1d3e90e68402f14bcaa7ae79e73fef39fff9e1af57dcf33593f1bd55d716539d6017fe757bf26c437566ef5bf7baa5ddff7fffdf5065fe9ff2c7dfff0b77dffe05edffffd5e7fefcd57fb3fbcc08f9f66fb6c02788bdbfd03e9fb7baeef3ffa69df3ff8a8ef1f7ed27ff2e695fe4f2ff0f5d36c0dc0fabb5b7d6815d917221149424c014996a8014108aad8248414d124a011109cd9e0ea370155880af17b4009ed25a4d926c2fba755c0acbf7bb75f7d7e054cdea3389b5ff8ba2324a530822665f2a5e2c93b6c6fc032a0920310815a20cdd89e3baef35a7d0946270610da88027eeeb1388ab316802f7ef5072c97155640c4b1f5ced5e3d6fb812efe046b80ddc1790b6881dff1d44b57b8584ea8aaeff4dedf786210468c807614385415c80194ae62e57cc564b1043921fc3b57b117045a054a480aad83a484b482776b48f4e4429f8040dc1b10d0881cf1a44ccb65182bce554fc8be83f1cdfcbb2d210146205898776c9a2916b8db34277bcf26020a820c08e4559525b20893b3930cede3ebc3ebb008e0204a4669d78294d4f3063d7719df786c928ccc89086800035123621e39bafce294b5f35f460c548bee986137bf867dae805d32c40aa412da48f9b5d7a8376bba1662eb9f868025a8e28ca0eda3173ffae1cb275bfdf506f6dc24b74d92ec3d5590c0ef36b86fbc84dcbe4948b9ac9a4e09c0b78135a06e03620aea3a2026f77b611c4123d6089d2ad60841232bf11a949209a79a6b1f810eb6d22a7a6b866f1b48426ce3891c06308529e814c414040db06b090ad6c04c67084254458c1035729175b82020d5d07ac5d0ff25773fdc6693cbf8f736b35d0ac8fee9082cf836b7496803168bd70074f83600d9a90071af41f68542d6617902f35c4092e6daabb2dd54f85687cc03a4ccadd3d682184754c51a4bd0ee30636772570842ec1439e390b4cee45c91552f9543fd972109e12f9e0d59458ca01a10630fed33431fadd168c58e466b9f0330b16d10c0b7b9f6760c852b08da3171b92ce5d811dbc8a5cfdf84729a7b5e07e59b036259bf0fd5d2949822562a66bb750e4cfd81d3cf009f1dae055046a39533467059074ccefce517578e62b43fa16b01adb1b10053c13c8258683b3013ba3fde66faadd7a944100a54956b6f7b421791640f38f085bce11144ec42d4881a8eb3751fe820c42edfefbc0ed3d56c6bdca07c1524a5be0fd108821dfabe23840655a569fd635d70b41c0b590103990bc3d30e48d0b5e45ab61d561ae82ca422134f4a50a19bd5c473970fff4782fa6fb90575e094a68ee3074abe37a18d8025ee7904a1dbeb98bd1ff31c608adc1dc6b23a765853423bcbb58f80146cef4466e594f0fbadc37961ba34216aee82a079ff6c701c09934506e48ce083c7b242b504158ea04a4595452856a06be02a68b733021f6ca2721111988c2ba2062654c414205934050a8486f058e60af04fa033394398058faac5b7016d73e482e035e0e28cce39ac912cb96e4ab7b3c1f63b3366e75e455ac5a7ac1ba440352ed0f4ef081cc9fc53e061df6f759903c666054c76e08250cf3dda0a71aea096e6e3881d4f73ed8d839d0d36dffe051bcf7d1786a06d12b48da00ce3dc41a692098b74c0bcefb7fe71e01cc0346dc846ad479223c6c874b9ca3320f92c70c9f1cb5bb7593315ec6e526f6ee12fbcc26490db492a8829508d2b8206ba810b16321206fafd8d274aa21184b8a7086e38921d1befd58881d80d43ca6e832461e3e7d72155ccdc4bc86e47548f3307722d44ad1123b845b0c6d1a5081490c2937ce700e25eccc7686c0021b40dd3e582a8818a4c2c691dfece0d64698d66699509795a2ec61521052a718414295d092885147443edf514e79903490829608da01ab1c6a1801be729d88d0bb47054cf7f1f3dff6dcaa2028172b102e9a8c6058c61524eb28c8f0bc240484d0ae971e9790c01df4674aef8fb59bbb73ed8404c41dc0b59d90642c524b88f3db5460a049f221687d78c9c4ff70fbf27a02036b31c8446e0f84475b0467ddfb372f1953e44508d4c164b621a8c52e6442694d0a11408210dec3e64791e4a3445048712894d18de5abafddf9cf85d307a661fa7ffe15af89f7aff7f08e05f063b3477d40e93460000000049454e44ae426082</data>
     </image>
 </images>
@@ -776,12 +832,6 @@ Python:## Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  
         <signal>activated(const QString&amp;)</signal>
         <receiver>MainForm</receiver>
         <slot>comboBlogs_activated(const QString&amp;)</slot>
-    </connection>
-    <connection>
-        <sender>btnExit</sender>
-        <signal>clicked()</signal>
-        <receiver>MainForm</receiver>
-        <slot>btnExit_clicked()</slot>
     </connection>
     <connection>
         <sender>btnPublish</sender>
@@ -874,10 +924,22 @@ Python:## Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  
         <slot>btnPreview_clicked()</slot>
     </connection>
     <connection>
-        <sender>tabWidget2</sender>
+        <sender>editorTab</sender>
         <signal>currentChanged(QWidget*)</signal>
         <receiver>MainForm</receiver>
-        <slot>tabWidget2_currentChanged(QWidget*)</slot>
+        <slot>editorTab_currentChanged(QWidget*)</slot>
+    </connection>
+    <connection>
+        <sender>btnRelogin</sender>
+        <signal>clicked()</signal>
+        <receiver>MainForm</receiver>
+        <slot>accept()</slot>
+    </connection>
+    <connection>
+        <sender>btnExit</sender>
+        <signal>clicked()</signal>
+        <receiver>MainForm</receiver>
+        <slot>reject()</slot>
     </connection>
 </connections>
 <tabstops>
@@ -888,15 +950,14 @@ Python:## Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  
     <tabstop>comboBlogs</tabstop>
     <tabstop>listPublishedPosts</tabstop>
     <tabstop>listSavedPosts</tabstop>
-    <tabstop>tabWidget3</tabstop>
+    <tabstop>toolbarTab</tabstop>
     <tabstop>btnExit</tabstop>
-    <tabstop>tabWidget2</tabstop>
+    <tabstop>editorTab</tabstop>
     <tabstop>sourcePreview</tabstop>
 </tabstops>
 <slots>
     <slot>btnNewPost_clicked()</slot>
     <slot>btnDeletePost_clicked()</slot>
-    <slot>btnExit_clicked()</slot>
     <slot>btnPublish_clicked()</slot>
     <slot>btnSavePost_clicked()</slot>
     <slot>btnRefreshBlogs_clicked()</slot>
@@ -913,7 +974,9 @@ Python:## Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  
     <slot>sourceEditor_textChanged()</slot>
     <slot>comboCats_activated( const QString &amp; )</slot>
     <slot>btnRefreshCat_clicked()</slot>
-    <slot>tabWidget2_currentChanged(QWidget*)</slot>
+    <slot>editorTab_currentChanged(QWidget*)</slot>
+    <slot>accept()</slot>
+    <slot>reject()</slot>
 </slots>
 <layoutdefaults spacing="6" margin="11"/>
 </UI>
