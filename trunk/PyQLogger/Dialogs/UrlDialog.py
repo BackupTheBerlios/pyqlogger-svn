@@ -19,26 +19,26 @@
 __revision__ = "$Id: UrlDialog_Impl.py 80 2004-12-20 13:34:44Z reflog $"
 
 from qt import QDialog
+from PyQLogger.Settings import DialogSettings
 
 class UrlDialog(QDialog):
     targetList = {}
 
-    def init(self):
+    def init(self, settings):
         # Hide these two until we've figured out how
         # to deal with them
-        self.parent = parent
         self.comboClass.hide()
         self.labelClass.hide()
-        
+        self.settings = settings
         self.editUrl.setFocus()
         self.targetList['in new window'] = '_blank'
         self.targetList['in same window'] = '_top'
         self.targetList['in same frame'] = '_self'
         for key in self.targetList.keys():
             self.comboOpen.insertItem(key)
-        target = unicode(self.parent.settings.get("URL Dialog", "target"))
-        if self.parent.settings.has_option("URL Dialog", "target"):
-            target = unicode(self.parent.settings.get("URL Dialog", "target"))
+        set = self.settings
+        if set.Dialogs and set.Dialogs.UrlDialogTarget:
+            target = set.Dialogs.UrlDialogTarget
             self.checkOpen.setChecked(True)
             for counter in range(0, self.comboOpen.count()):
                 if self.comboOpen.text(counter) == target:
@@ -72,10 +72,11 @@ class UrlDialog(QDialog):
         return urltag
         
     def accept(self):
+        if not self.settings.Dialogs:
+            self.settings.Dialogs = DialogSettings()
         if self.checkOpen.isChecked():
-            if self.targetList.has_key(unicode(self.comboOpen.currentText())):
-                self.parent.settings.set("URL Dialog", "target", unicode(self.comboOpen.currentText()))
+            self.settings.Dialogs.UrlDialogTarget = unicode(self.comboOpen.currentText())    
         else:
-            self.parent.settings.remove_option("URL Dialog", "target")
+            self.settings.Dialogs.UrlDialogTarget = ''
             
-        UrlDialog.accept(self)
+        QDialog.accept(self)

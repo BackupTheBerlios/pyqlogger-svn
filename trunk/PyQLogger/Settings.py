@@ -33,9 +33,12 @@ class SpellerSettings(XMLObject):
     Language = TextNode(default="en_US")
     Prefix   = TextNode(default="/usr")
 
+class DialogSettings(XMLObject):
+    UrlDialogTarget = TextNode(optional=True)
+    
 class Settings(XMLObject):
     """ Class for storing and retrieving ALL information about PyQLogger """
-        
+    Dialogs   = ItemNode('DialogSettings', optional=True)
     UI        = ItemNode('UISettings')      # GUI settings
     Accounts  = ListNode('Account')         # list of accounts
     AutoLogin = TextNode(optional=True)     # which account to autologin

@@ -44,7 +44,7 @@ __FORMS__ = {}
 
 alignflag = Qt.AlignBottom
 
-def load_forms(splash,app,settings):
+def load_forms(splash, app, settings):
     splash.message( "Loading form: Main",alignflag )
     qApp.processEvents()
     from PyQLogger.Dialogs import MainDialog
@@ -61,26 +61,26 @@ def load_forms(splash,app,settings):
     wnd_c = qt_ui_loader.create( 'UI/logindialog.ui', wnd,None,True )
     __FORMS__["Login"] = { "Class": wnd_c , "Impl": wnd }
     splash.message( "Loading form: Settings",alignflag )
-    qApp.processEvents();
+    qApp.processEvents()
     from PyQLogger.Dialogs import SettingsDialog
     wnd = SettingsDialog.SettingsDialog()
     wnd_c = qt_ui_loader.create( 'UI/settingsdialog.ui', wnd,None,True )
     __FORMS__["Settings"] = { "Class": wnd_c , "Impl": wnd }
     splash.message( "Loading form: Account Settings",alignflag )
-    qApp.processEvents();
+    qApp.processEvents()
     from PyQLogger.Dialogs import AccountSettingsDialog
     wnd = AccountSettingsDialog.AccountSettingsDialog()
     wnd_c = qt_ui_loader.create( 'UI/accountsettingsdialog.ui', wnd,None,True )
     wnd.init_ui()
     __FORMS__["AccountSettings"] = { "Class": wnd_c , "Impl": wnd }
     splash.message( "Loading form: Image Insert",alignflag )
-    qApp.processEvents();
+    qApp.processEvents()
     from PyQLogger.Dialogs import ImageDialog
     wnd = ImageDialog.ImageDialog()
     wnd_c = qt_ui_loader.create( 'UI/imagedialog.ui', wnd,None,True )
     __FORMS__["Image"] = { "Class": wnd_c , "Impl": wnd }
     splash.message( "Loading form: Url Insert",alignflag )
-    qApp.processEvents();
+    qApp.processEvents()
     from PyQLogger.Dialogs import UrlDialog
     wnd = UrlDialog.UrlDialog()
     wnd_c = qt_ui_loader.create( 'UI/urldialog.ui', wnd,None,True )
@@ -92,7 +92,7 @@ def load_forms(splash,app,settings):
     wnd_c = qt_ui_loader.create( 'UI/pluginsettingsdialog.ui', wnd,None,True )
     __FORMS__["PluginSettings"] = { "Class": wnd_c , "Impl": wnd }
     splash.message( "Loading form: Template settings",alignflag )
-    qApp.processEvents();
+    qApp.processEvents()
     wnd = QDialog()
     wnd_c = qt_ui_loader.create( 'UI/templatesettingsdialog.ui', wnd, None,True )
     __FORMS__["TemplateSettings"] = { "Class": wnd_c , "Impl": wnd }

@@ -17,11 +17,12 @@
 ## Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 from EaseXML import XMLObject,ListNode
-from Plugin import Plugin , PluginData, Option
+from Plugin import Plugin , PluginData, Option, InternalPlugin
 from EventPlugin import EventPlugin, EventType
 from ToolbarPlugin import ToolbarPlugin
 from MenuPlugin import MenuPlugin
 from ServiceGUIPlugin import ServiceGUIPlugin
+from PyQLogger.ToolBar import initToolbar
 
 def import_plugin_classes():
     globals()["Plugin"] = Plugin
@@ -75,22 +76,30 @@ class Manager(XMLObject):
         so only add the new ones
         """
         self.parent = parent
+        PluginClasses += initToolbar(parent, self)
+        changed = False
         for plug in PluginClasses:
             exists = [ p for p in self.PluginData if p.Class == plug.__name__ ]
             inst = plug()
             if not exists: # no data created yet. make one    
-                inst.Data = PluginData(Class=plug.__name__,Options=inst.defaultOptions())
+                changed = True
+                inst.Data = PluginData(Class=plug.__name__,
+                                       Options=inst.defaultOptions())
+                if issubclass(plug, InternalPlugin):
+                    inst.Data.Enabled = 1
                 self.PluginData += [ inst.Data ]
             else: # use existing data
                 inst.Data = exists[0]                
             self.Plugins += [ inst ] # add to the list            
             self.Plugin2Data [ inst ] = inst.Data # link for lookup
+        if changed:
+            self.save()
             
-    def fillToolbar(self, panel):
+    def fillToolbar(self):
         """ Fills the provided panel with plugins of ToolbarPlugin type """
         for plug in self.Plugins:
             if issubclass(plug.__class__,ToolbarPlugin) and plug.Data.Enabled == 1 :
-                panel.layout().addWidget(plug.getWidget())
+                plug.getWidget().show()
     
     def handleEvent(self, eventType):
         """ For supplied event, execute all plugins handling it """

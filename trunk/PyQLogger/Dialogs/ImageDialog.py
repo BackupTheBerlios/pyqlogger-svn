@@ -52,7 +52,6 @@ class ImageDialog(QDialog):
     alignList = {}
     def init(self):
         self.comboAlign.insertItem('None')
-        self.notifier = Notifier(parent, 1,args=self.progressBar)
         self.alignList['Left'] = 'left'
         self.alignList['Right'] = 'right'
         self.alignList['Center'] = 'center'
@@ -112,10 +111,10 @@ class ImageDialog(QDialog):
         http.request(Req,body)
     
 
-    def httpProgress(self,done,total):
-        self.notifier.progress(done,total)
+    def httpProgress(self, done, total):
+        self.progressBar.progress(done,total)
 
-    def http2Done(self,error):
+    def http2Done(self, error):
         qs = QString(self.http2.readAll())
         match = self.imgre.search(unicode(qs))
         if error:

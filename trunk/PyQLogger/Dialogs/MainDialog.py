@@ -26,7 +26,6 @@ from datetime import date
 from PyQLogger.ToolBar import initToolbar
 from PyQLogger.Notifier import Notifier
 from PyQLogger.Post import Post
-from PyQLogger.ToolBarManager import PluginFactory
 from PyQLogger import BG, UI
 from PyQLogger.Network import Network, netOp
 from Speller import Speller
@@ -211,8 +210,8 @@ class MainDialog(QDialog):
 
     def sourceEditor_textChanged(self):
         """ this even should be connected to plugins """
-        self.statusBar().message("test")
-
+        pass
+    
     def SaveAll(self):
         try:
             self.settings.save()
@@ -239,12 +238,10 @@ class MainDialog(QDialog):
         self.current_post = None
         self.cached_password = None
         self.cached_atomblog = None
-        self.plugins = PluginFactory(self)
         tabLayout = QHBoxLayout(self.toolbarTab.page(0), 11, 6, "tabLayout")
         tabLayout.setAutoAdd( True )
         tabLayout2 = QHBoxLayout(self.toolbarTab.page(1), 11, 6, "tabLayout2")
         tabLayout2.setAutoAdd( True )
-        initToolbar(self, self.plugins)
         self.notifier = Notifier(self, settings.UI.Notification)
         if self.notifier.mode != 1:
             self.statusFrame.hide()
@@ -312,6 +309,7 @@ class MainDialog(QDialog):
         self.password = password
         self.settings = settings        
         self.forms = forms
+        manager.fillToolbar()
         if settings.Speller.Enabled:
             try:
                 import aspell

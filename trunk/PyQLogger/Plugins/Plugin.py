@@ -53,3 +53,7 @@ class Plugin:
   def defaultOptions(self):
     return []
   
+  
+class InternalPlugin (Plugin):
+  """ Subclass to mark the plugin as internal (invisible to settings) """
+  pass

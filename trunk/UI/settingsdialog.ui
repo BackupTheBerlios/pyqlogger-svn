@@ -603,6 +603,14 @@
                             </widget>
                         </hbox>
                     </widget>
+                    <widget class="QCheckBox">
+                        <property name="name">
+                            <cstring>chkExpert</cstring>
+                        </property>
+                        <property name="text">
+                            <string>Show internal plugins (be sure about it!)</string>
+                        </property>
+                    </widget>
                 </vbox>
             </widget>
             <widget class="QWidget">
@@ -927,7 +935,16 @@
         <receiver>SettingsDialog</receiver>
         <slot>lbTemplates_selected(int)</slot>
     </connection>
+    <connection>
+        <sender>chkExpert</sender>
+        <signal>stateChanged(int)</signal>
+        <receiver>SettingsDialog</receiver>
+        <slot>chkExpert_stateChanged(int)</slot>
+    </connection>
 </connections>
+<includes>
+    <include location="local" impldecl="in implementation">settingsdialog.ui.h</include>
+</includes>
 <slots>
     <slot>btnAddAccount_clicked()</slot>
     <slot>btnEditAccount_clicked()</slot>
@@ -937,15 +954,16 @@
     <slot>btnUnload_clicked()</slot>
     <slot>btnEnablePlug_clicked()</slot>
     <slot>btnDisablePlug_clicked()</slot>
-    <slot>lbAccounts_selected(int)</slot>
-    <slot>chkKDE_stateChanged(int)</slot>
-    <slot>lvPlugins_selectionChanged(QListViewItem*)</slot>
-    <slot>chkSpellEnable_stateChanged(int)</slot>
-    <slot>rbOSD_stateChanged(int)</slot>
+    <slot>lbAccounts_selected( int )</slot>
+    <slot>chkKDE_stateChanged( int )</slot>
+    <slot>lvPlugins_selectionChanged( QListViewItem * )</slot>
+    <slot>chkSpellEnable_stateChanged( int )</slot>
+    <slot>rbOSD_stateChanged( int )</slot>
     <slot>btnAddTpl_clicked()</slot>
     <slot>btnEditTpl_clicked()</slot>
     <slot>btnDelTpl_clicked()</slot>
-    <slot>lbTemplates_selected(int)</slot>
+    <slot>lbTemplates_selected( int )</slot>
+    <slot>chkExpert_stateChanged( int )</slot>
 </slots>
 <layoutdefaults spacing="6" margin="11"/>
 </UI>

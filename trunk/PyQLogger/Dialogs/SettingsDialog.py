@@ -1,5 +1,6 @@
 from PyQLogger.Settings import Settings
 from PyQLogger.Templates import Template
+from PyQLogger.Plugins.Plugin import InternalPlugin
 from AccountSettingsDialog import AccountSettingsDialog
 from qt import QListBoxPixmap,QPixmap,QListBoxText,QDialog,\
                QMessageBox,QListView,QListViewItem
@@ -75,13 +76,14 @@ class SettingsDialog(QDialog):
         self.li2pl = {}
         First = True
         for plug in self.manager.Plugins:
-            li = QListViewItem(self.lvPlugins,str(plug.Name), plug.description())
-            li.setPixmap(0,self.statusPixmap(plug))
-            self.li2pl[li] = plug
-            if First:
-                li.setSelected(True)
-                self.lvPlugins_selectionChanged(li)
-                First = False
+            if self.chkExpert.isChecked() or not issubclass(plug.__class__,InternalPlugin):
+                li = QListViewItem(self.lvPlugins,str(plug.Name), plug.description())
+                li.setPixmap(0,self.statusPixmap(plug))
+                self.li2pl[li] = plug
+                if First:
+                    li.setSelected(True)
+                    self.lvPlugins_selectionChanged(li)
+                    First = False
                 
     def lvPlugins_selectionChanged(self, listItem):
         en = bool(self.li2pl[listItem].Data.Enabled)
@@ -105,6 +107,10 @@ class SettingsDialog(QDialog):
     def btnUnload_clicked(self):
         self.btnLoad_clicked(0)
 
+    def chkExpert_stateChanged( self, idx ):
+        self.fillPlugins()
+        
+
 ########## templates related #############
 
     def lbTemplates_selected(self, index):
@@ -118,7 +124,6 @@ class SettingsDialog(QDialog):
         if wnd["Class"].exec_loop() == QDialog.Accepted:
             return Template(Name=unicode(wnd["Impl"].edtName.text()),\
                             Content=unicode(wnd["Impl"].edtContent.text()))
-        
         
     def fillTemplates(self):
         self.lbTemplates.clear()
