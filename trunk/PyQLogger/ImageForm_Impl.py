@@ -17,7 +17,8 @@
 ## along with PyQLogger; if not, write to the Free Software
 ## Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-from qt import *
+from qt import QPixmap,QFileDialog,QMessageBox
+from qtnetwork import QHttp,QHttpRequestHeader
 from imageform import ImageForm
 import urllib2,PatchedClientForm,re,os
 
@@ -58,9 +59,8 @@ class ImageForm_Impl(ImageForm):
                 imagetag += "<a href='%s'><img src='%s'" % (image,thumb)
             else:
                 imagetag += '<img src=\'%s\'' % image
-	        if width:  imagetag += ' width=\'%d\'' % width
-    		if height:  imagetag += ' height=\'%d\'' % height
-
+                if width:  imagetag += ' width=\'%d\'' % width
+                if height:  imagetag += ' height=\'%d\'' % height
         if border:  imagetag += ' border=\'%d\'' % border
         if title:  imagetag += ' alt=\'%s\'' % title
         if self.alignList.has_key('%s' % self.comboAlign.currentText()):
@@ -106,7 +106,8 @@ class ImageForm_Impl(ImageForm):
             c = PatchedClientForm.ParseResponse(urllib2.urlopen("http://www.imageark.net"))
             c[0].referer = 'http://www.imageark.net'
             c[0].find_control("userfile").add_file(open(afile,"rb"),filename= os.path.basename(afile))
-            content = urllib2.urlopen(c[0].click()).read()
+            req = c[0].click()
+            content = urllib2.urlopen(req).read()
             m = self.imgre.search(content)
             if m:
                 return m.group(1)
@@ -166,17 +167,22 @@ class ImageForm_Impl(ImageForm):
             "open image file", \
             "Choose a file to open" ))
         txt.setText(s)
+        ok = False
         try:
             p = QPixmap()
-            p.loadFromData(open(s,"rb").read())
-            if not str(self.editWidth.text()):
-                self.editWidth.setText(str(p.width()))
-            if not str(self.editHeight.text()):
-                self.editHeight.setText(str(p.height()))
-            self.previewImage.setPixmap(p)
-            btn.setEnabled(True)
-        except:
+            if p.loadFromData(open(s,"rb").read()):
+                ok = True
+                if not str(self.editWidth.text()):
+                    self.editWidth.setText(str(p.width()))
+                if not str(self.editHeight.text()):
+                    self.editHeight.setText(str(p.height()))
+                self.previewImage.setPixmap(p)
+                btn.setEnabled(True)
+        except:            
+            ok = False
+        if not ok:
             QMessageBox.warning(self,"Warning","Cannot open the image file!")
+            self.previewImage.setPixmap(QPixmap())
             btn.setEnabled(False)
         
     def editFile_textChanged(self,a0):

@@ -30,6 +30,21 @@ PyKde - http://riverbankcomputing.co.uk/pykde
 PyOSD - http://repose.cx/pyosd/
 FeedParser - http://diveintomark.org/projects/feed_parser/
 
+
+UNINSTALL:
+~~~~~~~~~~
+
+To manually remove PyQLogger from your system issue the following commands:
+As user:
+rm -rf ~/.pyqlogger
+As root:
+rm -rf /usr/share/pyqlogger
+rm -rf /usr/lib/python2.3/site-packages/PyQLogger
+rm -rf /usr/bin/pyqlogger.py
+rm -rf /usr/share/applications/pyqlogger.desktop
+
+
+
 THANKS:
 ~~~~~~~
 Detlev Offenbach for Eric3, the most excellent Python IDE: http://www.die-offenbachs.de/detlev/eric3.html
