@@ -1,3 +1,4 @@
+## $Id$
 ## This file is part of PyQLogger.
 ##
 ## Copyright (c) 2004 Xander Soldaat a.k.a. Mightor

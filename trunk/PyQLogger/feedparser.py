@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+## $Id$
 """Universal feed parser
 
 Handles RSS 0.9x, RSS 1.0, RSS 2.0, CDF, Atom feeds

@@ -1,3 +1,4 @@
+## $Id$
 ## This file is part of PyQLogger.
 ## 
 ## Copyright (c) 2004 Eli Yukelzon a.k.a Reflog 		
