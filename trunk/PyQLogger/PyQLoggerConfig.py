@@ -47,7 +47,6 @@ class PyQLoggerConfig (ConfigParser):
 
     def convert_config(self, configfile):
         """ unpickles the specified file into a hash """
-        print "running conversion"
         config_hash = None
         try:
             fd = open(str(configfile[0:-4]))
@@ -62,25 +61,12 @@ class PyQLoggerConfig (ConfigParser):
             if key == "blogs":
                 if len(config_hash["blogs"]) > 0:
                     bloglist = config_hash["blogs"]
-
-                    for blogname in bloglist.keys():
-                        blogentry = bloglist[blogname]
-                        blogid = blogentry["id"]
-                        if self.has_option("main", "blogs"):
-                            blogids = str(self.get("main", "blogs"))
-                            if blogid not in blogs.split(';'):
-                                blogids += ";blogid"
-                                self.set("main", "blogs", blogids)
-                        else:
-                            self.set("main", "blogs", blogid)
-                        if blogname == config_hash["selectedblog"]:
-                            self.set("main", "selectedblog", blogid)
-                        self.set(blogid, "name", blogname)
-                    for blogkey in blogentry.keys():
-                        self.set(blogid, blogkey, blogentry[blogkey])
+                    addblogs(bloglist)
+                    if config_hash.has_key["selectedblog"]:
+                        blogid = self.getblogID(unicode(config_hash["selectedblog"]))
+                        self.set("main", "selectedblog", blogid)
             else: 
-                if not self.has_section("main"):
-                    self.add_section("main")
+                self.add_section("main")
                 if key != "selectedblog":
                     self.set("main",key, config_hash[key])
         
@@ -93,10 +79,19 @@ class PyQLoggerConfig (ConfigParser):
             pass
         return
 
-    def set(self, section, option, value):
-        print "adding section %s, option %s has value %s" % (str(section), str(option), str(value))
+    def get(self, section, option):
+        if self.has_section(section):
+            if self.has_option(section, option):
+                return ConfigParser.get(self, section, option)
+        else:
+            return None
+    
+    def add_section(self, section):
         if not self.has_section(section):
-            self.add_section(section)
+            ConfigParser.add_section(self, section)
+    
+    def set(self, section, option, value):
+        self.add_section(section)
         ConfigParser.set(self, section, option, value)
             
     def savesettings(self, configfile):
@@ -104,26 +99,36 @@ class PyQLoggerConfig (ConfigParser):
             fd = open(configfile, "w")
             self.write(fd)
             fp.close()
-        except:
+        except Exception, inst:
             # We need better error handling here, user needs to be notified
             pass
         return
         
-    def addblogs(blogdict):
+    def addblogs(self, blogdict):
         if len(blogdict) < 1:
             return
         for blogname in blogdict.keys():
             blogentry = blogdict[blogname]
             blogid = blogentry["id"]
-            if self.has_option("main", "blogs"):
-                blogids = str(self.get("main", "blogs"))
-                if blogid not in blogs.split(';'):
-                    blogids += ";blogid"
-                    self.set("main", "blogs", blogids)
+            blogids = str(self.get("main", "blogs"))
+            if blogids and blogid in blogids.split(';'):
+                pass
             else:
-                self.set("main", "blogs", blogid)
-            if blogname == config_hash["selectedblog"]:
-                self.set("main", "selectedblog", blogid)
+                if blogids:
+                    blogids += ";" + blogid
+                    self.set("main", "blogs", blogids)
+                else:
+                    self.set("main", "blogs", blogid)
             self.set(blogid, "name", blogname)
-        for blogkey in blogentry.keys():
-            self.set(blogid, blogkey, blogentry[blogkey])
+            for blogkey in blogentry.keys():
+                self.set(blogid, blogkey, blogentry[blogkey])
+
+    def getblogID(self, blogname):
+        if self.has_option("main", "blogs"):
+            for blogid in self.get("main", "blogs").split(';'):
+                if unicode(self.get(blogid, "name")) == unicode(blogname):
+                    return blogid
+    
+    def getblogName(self, blogid):
+        return self.get(blogid, "name")
+        

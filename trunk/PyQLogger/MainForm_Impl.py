@@ -29,6 +29,7 @@ from Notifier import Notifier
 from SyntaxHighlight import HTMLSyntax
 from BG import *
 from ToolBarManager import *
+import PyQLoggerConfig
 
 class MainForm_Impl(MainForm):
 
@@ -37,6 +38,7 @@ class MainForm_Impl(MainForm):
         notifymode = 0
         if len(sys.argv) > 1 and sys.argv[1] == '-s':
             notifymode = 1
+        self.settings = PyQLoggerConfig.PyQLoggerConfig()
         self.statusFrame.hide()
         self.sh = HTMLSyntax(self.sourceEditor)
         self.sourceEditor.setTextFormat(Qt.PlainText)
@@ -100,8 +102,10 @@ class MainForm_Impl(MainForm):
             res = QMessageBox.question(self,"Question","Are you sure you want to delete this post?",QMessageBox.Yes,QMessageBox.No)
             if res == QMessageBox.Yes:
                 post = self.SavedItems [ self.listSavedPosts.selectedItem () ]
-                del self.SavedItems [ self.listSavedPosts.selectedItem () ]     
-                self.SavedPosts[self.settings["selectedblog"]].remove(post)
+                del self.SavedItems [ self.listSavedPosts.selectedItem () ]
+                blogid = self.settings.get("main", "selectedblog")
+                blogname = self.settings.get(blogid, "name")
+                self.SavedPosts[blogname].remove(post)
                 self.listSavedPosts.removeItem(self.listSavedPosts.currentItem())
         elif(i == 2):
             s = QFileDialog.getSaveFileName(os.path.expanduser("~"),
@@ -166,7 +170,9 @@ class MainForm_Impl(MainForm):
                 "title":title,
                 "content":unicode(self.sourceEditor.text()),
                 }   
-            self.SavedPosts[self.settings["selectedblog"]] += [ item ]
+            blogid = self.settings.get("main", "selectedblog")
+            blogname = self.settings.get(blogid, "name")
+            self.SavedPosts[blogname] += [ item ]
             self.SavedItems [ i ] = item
         else:
             QMessageBox.warning(self,"Warning","You forgot the post's title!")
@@ -185,14 +191,14 @@ class MainForm_Impl(MainForm):
         if res:
             self.settings = wiz.settings
             try:
-                self.WriteSettings(os.path.expanduser("~/.pyqlogger/settings"),self.settings)
+                self.settings.write(os.path.expanduser("~/.pyqlogger/settings.ini"))
                 self.init()
-            except: 
-                QMessageBox.critical(w,"Error","Cannot write configuration!")
+            except Exception, inst: 
+                QMessageBox.critical(self,"Error","Cannot write configuration!")
                 QApplication.exit()
     
     def btnPreview_clicked(self):
-        url = self.settings["url"]
+        url = self.settings.get("main", "url")
         webbrowser.open_new(url)
     
     def btnReloadFeed_clicked(self):
@@ -202,7 +208,8 @@ class MainForm_Impl(MainForm):
             self.workers.add(b,self.sender())
     
     def comboBlogs_activated(self,a0):
-        self.settings["selectedblog"] = unicode(a0)
+        blogid = self.settings.getblogID(a0)
+        self.settings.set("main", "selectedblog", blogid)
         self.populateLists()
     
     def listPublishedPosts_doubleClicked(self,a0):
@@ -213,7 +220,7 @@ class MainForm_Impl(MainForm):
             self.sourceEditor.setText(d["content"])
             self.sender().setFocus()
         else:
-            QMessageBox.critical(self,"Error","Something is fucked up!")
+            QMessageBox.critical(self,"Error","Something is not right!")
     
     def listSavedPosts_doubleClicked(self,a0):
         if self.SavedItems.has_key(a0):
@@ -222,7 +229,7 @@ class MainForm_Impl(MainForm):
             self.sourceEditor.setText(d["content"])
             self.sender().setFocus()
         else:
-            QMessageBox.critical(self,"Error","Something is fucked up!")
+            QMessageBox.critical(self,"Error","Something is not right!")
 
 
     def WriteSettings(self,filename,hash):
@@ -241,11 +248,20 @@ class MainForm_Impl(MainForm):
             f.close()
         except:
             return None
+        if not h.has_key("newstyle"):
+            new_hash = {}
+            for blogid in self.settings.get("main", "blogs").split(';'):
+                blogname = self.settings.get(blogid, "name")
+                if h.has_key(blogname):
+                    new_hash[blogid] = h[blogname]
+                    h[blogname] = None
+            h = new_hash
+            h["newstyle"] = 1
         return h
 
     def SaveAll(self):
         try:
-            self.WriteSettings(os.path.expanduser("~/.pyqlogger/settings"),self.settings)
+            self.settings.write(os.path.expanduser("~/.pyqlogger/settings.ini"))
             self.WriteSettings(os.path.expanduser("~/.pyqlogger/drafts"),self.SavedPosts)
             self.WriteSettings(os.path.expanduser("~/.pyqlogger/posts"),self.PublishedPosts)
         except:
@@ -256,9 +272,9 @@ class MainForm_Impl(MainForm):
         
     def _getPassword(self):
         if not self.cached_password:
-            if self.settings.has_key("password"):
-                self.cached_password = self.settings["password"]
-                return self.settings["password"]
+            if self.settings.has_option("main", "password"):
+                self.cached_password = self.settings.get("main", "password")
+                return self.cached_password
             else:
                 (text,ok) = QInputDialog.getText("PyQLogger", "Enter your password:", QLineEdit.Password)
                 if ok and  str(text) != "":
@@ -272,14 +288,19 @@ class MainForm_Impl(MainForm):
     def _getAtomBlog(self):
         if not self.cached_atomblog:
             psw = self._getPassword()
+            host = self.settings.get("main", "host")
+            login = self.settings.get("main", "login")
             if psw:
                 self.cached_atomblog = None
-                if self.settings["hosttype"] == 0:
-                    self.cached_atomblog = GenericAtomClient(self.settings["host"],self.settings["login"], psw, self.settings["ep"],self.settings["fp"],self.settings["pp"])
-                elif self.settings["hosttype"] == 1:
-                    self.cached_atomblog = BloggerClient(self.settings["host"],self.settings["login"], psw)
-                elif self.settings["hosttype"] == 2:
-                    self.cached_atomblog = MovableTypeClient(self.settings["host"],self.settings["login"], psw)
+                if self.settings.getint("main", "hosttype") == 0:
+                    ep = self.settings.get("main", "ep")
+                    fp = self.settings.get("main", "fp")
+                    pp = self.settings.get("main", "pp")
+                    self.cached_atomblog = GenericAtomClient(host, login, psw, ep, fp, pp)
+                elif self.settings.getint("main", "hosttype") == 1:
+                    self.cached_atomblog = BloggerClient(host, login, psw)
+                elif self.settings.getint("main", "hosttype") == 2:
+                    self.cached_atomblog = MovableTypeClient(host, login, psw)
                 return self.cached_atomblog
             else:
                 QMessageBox.warning(self,"Error","Cannot work online without a password!")
@@ -288,23 +309,28 @@ class MainForm_Impl(MainForm):
             return self.cached_atomblog
             
     def init(self):
-        self.settings = self.ReadSettings(os.path.expanduser("~/.pyqlogger/settings"))
+        self.settings.read(os.path.expanduser("~/.pyqlogger/settings.ini"))
         self.SavedPosts = self.ReadSettings(os.path.expanduser("~/.pyqlogger/drafts"))
         self.PublishedPosts = self.ReadSettings(os.path.expanduser("~/.pyqlogger/posts"))
         
-        if not self.settings:
-            self.settings = {} 
+        if not self.settings.has_section("main"):
             self.btnSettings_clicked()
-            if not self.settings:
+            if not self.settings.has_section("main"):
                 QMessageBox.critical(self,"Error","Cannot procede without configuration!")
                 return False
         
-        for blog in self.settings["blogs"].keys():
-            self.comboBlogs.insertItem(blog)
-        idx = [i for i in range(0,self.comboBlogs.count()) if self.comboBlogs.text(i) == self.settings["selectedblog"]]
-        self.comboBlogs.setCurrentItem( idx [0] )
+        for blogid in self.settings.get("main", "blogs").split(';'):
+            self.comboBlogs.insertItem(self.settings.get(blogid, "name"))
+            
+        selectedblogid = self.settings.get("main", "selectedblog")
+        selectedblogname = self.settings.get(selectedblogid, "name")
+
+        for counter in range(0, self.comboBlogs.count()):
+            if self.comboBlogs.text(counter) == selectedblogname:
+                self.comboBlogs.setCurrentItem( counter )
+                break
         
-        if self.settings["hosttype"] != 1:
+        if self.settings.getint("main", "hosttype") != 1:
             self.frameCat.show()
         self.populateLists()
         
@@ -316,20 +342,21 @@ class MainForm_Impl(MainForm):
         self.SavedItems = {}
         self.listPublishedPosts.clear()
         self.listSavedPosts.clear()
-        if self.SavedPosts != None and self.SavedPosts.has_key(self.settings["selectedblog"]):
-            for post in self.SavedPosts[self.settings["selectedblog"]]:
+
+        if self.SavedPosts != None and self.SavedPosts.has_key(self.settings.get("main", "selectedblog")):
+            for post in self.SavedPosts[self.settings.get("main", "selectedblog")]:
                 i = QListBoxText(self.listSavedPosts,post["title"])
                 self.SavedItems [ i ] = post
         else:
             if self.SavedPosts == None:
                 self.SavedPosts = {}
-            self.SavedPosts[self.settings["selectedblog"]] = []
+            self.SavedPosts[self.settings.get("main", "selectedblog")] = []
 
-        if self.PublishedPosts != None and self.PublishedPosts.has_key(self.settings["selectedblog"]):
-            for post in self.PublishedPosts[self.settings["selectedblog"]]:
+        if self.PublishedPosts != None and self.PublishedPosts.has_key(self.settings.get("main", "selectedblog")):
+            for post in self.PublishedPosts[self.settings.get("main", "selectedblog")]:
                 i = QListBoxText(self.listPublishedPosts,post["title"])
                 self.PublishedItems [ i ] = post
         else:
             if self.PublishedPosts == None:
                 self.PublishedPosts = {}
-            self.PublishedPosts[self.settings["selectedblog"]] = []
+            self.PublishedPosts[self.settings.get("main", "selectedblog")] = []

@@ -2037,7 +2037,7 @@ class SetupWizardForm(QWizard):
 "\n"
 "<p align=\"center\">Now you're ready to start bloggin!</p><br>\n"
 "\n"
-"<p align=\"right\">Cheers, Sir Reflog</p>"))
+"<p align=\"right\">Cheers, Sir Reflog and Mightor</p>"))
         self.setTitle(self.WizardPage_2,self.__tr("Final"))
 
 
