@@ -23,55 +23,44 @@ from urldialog import UrlDialog
 class UrlDialog_Impl(UrlDialog):
 
 
-	targetList = {}
+    targetList = {}
 
-        def __init__(self,parent = None,name = None,modal = 0,fl = 0):
-                UrlDialog.__init__(self,parent,name,modal,fl)
-		# Hide these two until we've figured out how
-		# to deal with them
-		self.comboClass.hide()
-		self.labelClass.hide()
+    def __init__(self,parent = None,name = None,modal = 0,fl = 0):
+        UrlDialog.__init__(self,parent,name,modal,fl)
+        # Hide these two until we've figured out how
+        # to deal with them
+        self.comboClass.hide()
+        self.labelClass.hide()
+        
+        self.editUrl.setFocus()
+        self.targetList['in new window'] = '_blank'
+        self.targetList['in same window'] = '_top'
+        self.targetList['in same frame'] = '_self'
+        for key in self.targetList.keys():
+            self.comboOpen.insertItem(key)
 
-		self.editUrl.setFocus()
-		self.targetList['in new window'] = '_blank'
-		self.targetList['in same window'] = '_top'
-		self.targetList['in same frame'] = '_self'
-		for key in self.targetList.keys():
-			self.comboOpen.insertItem(key)
+    def initValues(self, text):
+        if text:
+            self.editName.setText(text)
 
-	def initValues(self, text):
-		if text:
-			self.editName.setText(text)
-
-	def urltag(self):
-		urltag = '<a href='
-		url = self.editUrl.text()
-		title = self.editTitle.text()
-		name = self.editName.text()
-		width = self.editWidth.text()
-		height = self.editHeight.text()
-		border = self.editBorder.text()
-
-		if not url or not name:
-			return None
-		else:
-			urltag += '\'%s\'' % url
-
-		if title:
-			urltag += ' title=\'%s\'' % title
-
-		if width:
-			urltag += ' width=\'%s\'' % width
-
-		if height:
-			urltag += ' height=\'%s\'' % height
-
-		if border: 
-			urltag += ' border=\'%s\'' % border
-
-		if self.checkOpen.isChecked():
-			if self.targetList.has_key('%s' % self.comboOpen.currentText()):
-				target = self.targetList['%s' % self.comboOpen.currentText()]
-				urltag += ' target=\'%s\'' % target
-
-		urltag += '>%s</a>' % name
+    def urltag(self):
+        urltag = '<a href='
+        url = self.editUrl.text()
+        alt = self.editTitle.text()
+        name = self.editName.text()
+    
+        if not url or not name:
+            return None
+        else:
+            urltag += '\'%s\'' % url
+    
+        if alt:
+            urltag += ' alt=\'%s\'' % alt
+    
+        if self.checkOpen.isChecked():
+            if self.targetList.has_key('%s' % self.comboOpen.currentText()):
+                target = self.targetList['%s' % self.comboOpen.currentText()]
+                urltag += ' target=\'%s\'' % target
+    
+        urltag += '>%s</a>' % name
+        return urltag

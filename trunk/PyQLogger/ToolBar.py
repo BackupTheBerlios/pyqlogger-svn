@@ -1,6 +1,6 @@
 ## This file is part of PyQLogger.
 ## 
-## Copyright (c) 2004 Eli Yukelzon a.k.a Reflog 		
+## Copyright (c) 2004 Eli Yukelzon a.k.a Reflog         
 ##
 ## Modified by Xander Soldaat to include support for
 ## adding URLs and Image tags
@@ -317,41 +317,41 @@ tbImg_image = \
 
 from ToolBarManager import *
 from UrlDialog_Impl import *
-from ImageDialog_Impl import *
+from ImageForm_Impl import *
 
 def initToolbar(self,plugs):
-	plugs.manualAdd( ToolbarPlugin.SimpleButton(self,"Bold",makeBold,None,tbBold_image) )
-	plugs.manualAdd( ToolbarPlugin.SimpleButton(self,"Italic",makeItalic,None,tbItalic_image) )
-	plugs.manualAdd( ToolbarPlugin.SimpleButton(self,"Underscore",makeUnderscore,None,tbUnder_image) )
-	plugs.manualAdd( ToolbarPlugin.SimpleButton(self,"Left align",alignLeft,None,tbLeft_image) )
-	plugs.manualAdd( ToolbarPlugin.SimpleButton(self,"Right align",alignRight,None,tbRight_image) )
-	plugs.manualAdd( ToolbarPlugin.SimpleButton(self,"Center align",alignCenter,None,tbCenter_image) )
-	plugs.manualAdd( ToolbarPlugin.SimpleButton(self,"HR",insertHR,None,tbHr_image) )
-	plugs.manualAdd( ToolbarPlugin.SimpleButton(self,"URL",insertUrl,None,tbUrl_image) )
-	plugs.manualAdd( ToolbarPlugin.SimpleButton(self,"Image",insertImage,None,tbImg_image) )
-	plugs.manualAdd( ToolbarPlugin.SimpleButton(self,"BR",insertBR,None,tbBr_image) )
-	plugs.manualAdd( ToolbarPlugin.SimpleButton(self,"Plus",incFont,None,tbFontPlus_image) )
-	plugs.manualAdd( ToolbarPlugin.SimpleButton(self,"Minus",decFont,None,tbFontMinus_image) )
-	plugs.manualAdd( ToolbarPlugin.SimpleButton(self,"UL",makeUnorderedList,None,tbUl_image) )
-	plugs.manualAdd( ToolbarPlugin.SimpleButton(self,"OL",makeOrderedList,None,tbOl_image) )
+    plugs.manualAdd( ToolbarPlugin.SimpleButton(self,"Bold",makeBold,None,tbBold_image) )
+    plugs.manualAdd( ToolbarPlugin.SimpleButton(self,"Italic",makeItalic,None,tbItalic_image) )
+    plugs.manualAdd( ToolbarPlugin.SimpleButton(self,"Underscore",makeUnderscore,None,tbUnder_image) )
+    plugs.manualAdd( ToolbarPlugin.SimpleButton(self,"Left align",alignLeft,None,tbLeft_image) )
+    plugs.manualAdd( ToolbarPlugin.SimpleButton(self,"Right align",alignRight,None,tbRight_image) )
+    plugs.manualAdd( ToolbarPlugin.SimpleButton(self,"Center align",alignCenter,None,tbCenter_image) )
+    plugs.manualAdd( ToolbarPlugin.SimpleButton(self,"HR",insertHR,None,tbHr_image) )
+    plugs.manualAdd( ToolbarPlugin.SimpleButton(self,"URL",insertUrl,None,tbUrl_image) )
+    plugs.manualAdd( ToolbarPlugin.SimpleButton(self,"Image",insertImage,None,tbImg_image) )
+    plugs.manualAdd( ToolbarPlugin.SimpleButton(self,"BR",insertBR,None,tbBr_image) )
+    plugs.manualAdd( ToolbarPlugin.SimpleButton(self,"Plus",incFont,None,tbFontPlus_image) )
+    plugs.manualAdd( ToolbarPlugin.SimpleButton(self,"Minus",decFont,None,tbFontMinus_image) )
+    plugs.manualAdd( ToolbarPlugin.SimpleButton(self,"UL",makeUnorderedList,None,tbUl_image) )
+    plugs.manualAdd( ToolbarPlugin.SimpleButton(self,"OL",makeOrderedList,None,tbOl_image) )
 
 def surroundWith(self,tag,param=''):
-	text = unicode(self.sourceEditor.selectedText())
-	self.sourceEditor.removeSelectedText()
-	line, index = self.sourceEditor.getCursorPosition()
-	if param != '': 
-		tagp = "%s %s" % (tag, param)
-	else:
-		tagp = tag
-	self.sourceEditor.insertAt("<%s>%s</%s>"%(tagp,text,tag), line, index)
-	
+    text = unicode(self.sourceEditor.selectedText())
+    self.sourceEditor.removeSelectedText()
+    line, index = self.sourceEditor.getCursorPosition()
+    if param != '': 
+        tagp = "%s %s" % (tag, param)
+    else:
+        tagp = tag
+    self.sourceEditor.insertAt("<%s>%s</%s>"%(tagp,text,tag), line, index)
+    
 
-def makeBold():	surroundWith(qApp.mainWidget(),'b')
-	
+def makeBold(): surroundWith(qApp.mainWidget(),'b')
+    
 def makeItalic(): surroundWith(qApp.mainWidget(),'i')
 
 def makeUnderscore(): surroundWith(qApp.mainWidget(),'u')
-	
+    
 def alignLeft(): surroundWith(qApp.mainWidget(),'div','align="left"')
 
 def alignCenter():surroundWith(qApp.mainWidget(),'div','align="center"')
@@ -359,63 +359,61 @@ def alignCenter():surroundWith(qApp.mainWidget(),'div','align="center"')
 def alignRight():surroundWith(qApp.mainWidget(),'div','align="right"')
 
 def insertHR():
-	self = qApp.mainWidget()
-	line, index = self.sourceEditor.getCursorPosition()
-	self.sourceEditor.insertAt("<HR>\n", line, index)
-	self.sourceEditor.setCursorPosition(line+1,0)
+    self = qApp.mainWidget()
+    line, index = self.sourceEditor.getCursorPosition()
+    self.sourceEditor.insertAt("<HR>\n", line, index)
+    self.sourceEditor.setCursorPosition(line+1,0)
 
 def insertUrl():
-	self = qApp.mainWidget()
-	text = unicode(self.sourceEditor.selectedText())
-	urldialog = UrlDialog_Impl(self)
-	urldialog.initValues(text)
-	res = urldialog.exec_loop()
-	if res:
-		urltag = urldialog.urltag()
-		if urltag:
-			self.sourceEditor.removeSelectedText()
-			line, index = self.sourceEditor.getCursorPosition()
-			self.sourceEditor.insertAt('%s' % urltag, line, index)
+    self = qApp.mainWidget()
+    text = unicode(self.sourceEditor.selectedText())
+    urldialog = UrlDialog_Impl(self)
+    urldialog.initValues(text)
+    res = urldialog.exec_loop()
+    urltag = urldialog.urltag()
+    if urltag:
+        self.sourceEditor.removeSelectedText()
+        line, index = self.sourceEditor.getCursorPosition()
+        self.sourceEditor.insertAt(urltag, line, index)
+        self.sourceEditor.setCursorPosition(line,index+len(urltag))
 
 def insertImage():
-	self = qApp.mainWidget()
-	imagedialog = ImageDialog_Impl(self)
-	res = imagedialog.exec_loop()
-	if res:
-		imagetag = imagedialog.imagetag()
-		if imagetag:
-			print "Image tag: %s" % imagetag
-			line, index = self.sourceEditor.getCursorPosition()
-			self.sourceEditor.insertAt('%s' % imagetag, line, index)
-	else:
-		print res
+    self = qApp.mainWidget()
+    imagedialog = ImageForm_Impl(self)
+    res = imagedialog.exec_loop()
+    if res:
+        imagetag = imagedialog.imagetag()
+        if imagetag:
+            line, index = self.sourceEditor.getCursorPosition()
+            self.sourceEditor.insertAt(imagetag, line, index)
+            self.sourceEditor.setCursorPosition(line,index+len(imagetag))
 
 
 def insertBR():
-	self = qApp.mainWidget()
-	line, index = self.sourceEditor.getCursorPosition()
-	self.sourceEditor.insertAt("<BR>\n", line, index)
-	self.sourceEditor.setCursorPosition(line+1,0)
-	
+    self = qApp.mainWidget()
+    line, index = self.sourceEditor.getCursorPosition()
+    self.sourceEditor.insertAt("<BR>\n", line, index)
+    self.sourceEditor.setCursorPosition(line+1,0)
+    
 def incFont():surroundWith(qApp.mainWidget(),'font','size="+1"')
 
 def decFont():surroundWith(qApp.mainWidget(),'font','size="-1"')
 
 def makeUnorderedList():
-	self = qApp.mainWidget()
-	text = unicode(self.sourceEditor.selectedText())
-	self.sourceEditor.removeSelectedText()
-	lines = ["<li>%s</li>"%(line) for line in text.split("\n")]
-	newtext = "<ul>\n%s\n</ul>" % ( "\n".join(lines) )
-	line, index = self.sourceEditor.getCursorPosition()
-	self.sourceEditor.insertAt(newtext, line, index)
-	
+    self = qApp.mainWidget()
+    text = unicode(self.sourceEditor.selectedText())
+    self.sourceEditor.removeSelectedText()
+    lines = ["<li>%s</li>"%(line) for line in text.split("\n")]
+    newtext = "<ul>\n%s\n</ul>" % ( "\n".join(lines) )
+    line, index = self.sourceEditor.getCursorPosition()
+    self.sourceEditor.insertAt(newtext, line, index)
+    
 
 def makeOrderedList():
-	self = qApp.mainWidget()
-	text = unicode(self.sourceEditor.selectedText())
-	self.sourceEditor.removeSelectedText()
-	lines = ["<li>%s</li>"%(line) for line in text.split("\n")]
-	newtext = "<ol>\n%s\n</ol>" % ( "\n".join(lines) )
-	line, index = self.sourceEditor.getCursorPosition()
-	self.sourceEditor.insertAt(newtext, line, index)
+    self = qApp.mainWidget()
+    text = unicode(self.sourceEditor.selectedText())
+    self.sourceEditor.removeSelectedText()
+    lines = ["<li>%s</li>"%(line) for line in text.split("\n")]
+    newtext = "<ol>\n%s\n</ol>" % ( "\n".join(lines) )
+    line, index = self.sourceEditor.getCursorPosition()
+    self.sourceEditor.insertAt(newtext, line, index)
