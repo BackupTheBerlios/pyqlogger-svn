@@ -154,7 +154,7 @@ class MainDialog(QDialog):
     
     def btnSettings_clicked(self):
         wnd = self.forms["Settings"]
-        wnd["Impl"].init(self.settings,self.forms)
+        wnd["Impl"].init(self.settings,self.forms,self.manager)
         if wnd["Class"].exec_loop() == QDialog.Accepted:
             try:
                 self.settings.save()
@@ -237,7 +237,8 @@ class MainDialog(QDialog):
         self.network = Network(self)
         self.network.start()
         
-    def init(self, settings, forms, account, password):
+    def init(self, settings, forms, account, password, manager):
+        self.manager = manager
         self.reload = False
         self.account = account
         self.password = password

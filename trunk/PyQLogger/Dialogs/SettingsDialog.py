@@ -1,6 +1,7 @@
 from PyQLogger.Settings import Settings
 from AccountSettingsDialog import AccountSettingsDialog
-from qt import QListBoxPixmap,QPixmap,QListBoxText,QDialog,QMessageBox
+from qt import QListBoxPixmap,QPixmap,QListBoxText,QDialog,\
+               QMessageBox,QListView,QListViewItem
 
 class SettingsDialog(QDialog):
     def getAccItem(self,acc):
@@ -22,12 +23,26 @@ class SettingsDialog(QDialog):
         else: #if empty, disable controls
             self.btnEditAccount.setEnabled(False)
             self.btnDelAccount.setEnabled(False)
+    
+    def statusPixmap(self, plugin):
+        if plugin.Enabled and plugin.Enabled == 1:
+            return self.btnLoad.iconSet().pixmap()
+        return self.btnUnload.iconSet().pixmap()
         
-    def init(self,settings,forms):
+    def fillPlugins(self):
+        self.lvPlugins.clear()
+        for plug in self.manager.Plugins:
+            li = QListViewItem(self.lvPlugins,str(plug.Name), plug.description())
+            li.setPixmap(0,self.statusPixmap(plug))
+        
+    def init(self,settings,forms,manager):
         self.settings = settings
+        self.manager = manager
         self.forms = forms
-        #add accounts
+        # add accounts
         self.fillList()
+        # add plugins
+        self.fillPlugins()
         # set gui settings
         self.chkKDE.setChecked(bool(settings.UI_Settings.EnableKde))
         self.chkDCOP.setChecked(bool(settings.UI_Settings.EnableDCOP))

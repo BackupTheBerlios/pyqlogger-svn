@@ -90,7 +90,7 @@ class API:
     def setupDCOP(app, wnd):
         pass
     
-    def setEditWidget(self,parent): 
+    def setEditWidget(parent): 
         parent.sh = HTMLSyntax(parent.sourceEditor)
         parent.sourceEditor.setTextFormat(Qt.PlainText)
     

@@ -9,7 +9,8 @@ from PyQLogger.Post import Post
 from EaseXML import XMLObject
 
 class LoginDialog(QDialog):
-    def init(self,settings,forms):
+    def init(self, settings, forms, manager):
+        self.manager = manager
         self.btnLogin.setEnabled(False)
         self.settings = settings
         self.forms = forms
@@ -74,7 +75,7 @@ class LoginDialog(QDialog):
             
     def btnSettings_clicked(self):
         wnd = self.forms["Settings"]
-        wnd["Impl"].init(self.settings,self.forms)
+        wnd["Impl"].init(self.settings,self.forms,self.manager)
         if wnd["Class"].exec_loop() == QDialog.Accepted:
             self.fillList()
             self.settings.save()

@@ -18,6 +18,8 @@
 ## Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 from PyQLogger import UI,qt_ui_loader
 from PyQLogger import Settings
+from PyQLogger.Plugins.Manager import Manager
+
 import sys,os
 
 try:
@@ -95,11 +97,12 @@ def main():
     pixmap = QPixmap( "splash.png" )
     splash = QSplashScreen( pixmap )
     splash.show()
-    #settings.Accounts[0].init()
-    #settings.Accounts[0].Blogs[0].editPost(settings.Accounts[0].Blogs[0].Posts.Data[0])
     splash.message( "Loading forms...",alignflag )
-    qApp.processEvents();
+    qApp.processEvents()
     load_forms(splash,app,settings)
+    splash.message( "Loading plugins...",alignflag )
+    qApp.processEvents()
+    manager = Manager.load(__FORMS__["Main"]["Impl"])
     del splash
     acc = None
     pwd = None
@@ -110,7 +113,7 @@ def main():
     while True:
         if not acc:
             wnd = __FORMS__["Login"]
-            if wnd["Impl"].init(settings,__FORMS__):
+            if wnd["Impl"].init(settings,__FORMS__,manager):
                 if wnd["Class"].exec_loop() == QDialog.Accepted:
                     acc = wnd["Impl"].acc
                     pwd = str(wnd["Impl"].edtPassword.text())       
@@ -119,7 +122,7 @@ def main():
         else:
             wnd = __FORMS__["Main"]
             acc.init()
-            wnd["Impl"].init(settings,__FORMS__,acc,pwd)
+            wnd["Impl"].init(settings,__FORMS__,acc,pwd,manager)
             app.setMainWidget(wnd["Class"])
             wnd["Class"].show()
             #splash.finish(wnd["Class"])
