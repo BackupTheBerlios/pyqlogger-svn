@@ -17,9 +17,7 @@
 ## Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 # -*- coding: utf-8 -*-
 
-import sys
-import os
-import pickle
+import sys, os, pickle, webbrowser
 from qt import *
 from mainform import MainForm
 from SetupWizardForm_Impl import SetupWizardForm_Impl
@@ -43,8 +41,7 @@ class MainForm_Impl(MainForm):
 		self.osd = OSD()
 		self.bg = BackGround()
 		self.workers = BackGround()
-		b = updateCheckWorker(None,self.osd,self)
-		self.workers.add(b)	
+		self.uChecker = updateCheckWorker(self.osd)
 		self.aMenu = QPopupMenu()
 		self.aMenu.insertItem("Delete post",1)
 		self.aMenu.insertItem("Export post",2)
@@ -124,10 +121,11 @@ class MainForm_Impl(MainForm):
 			res = QMessageBox.question(self,"Question","Current post is unsaved. Are you sure you want to exit?",QMessageBox.Yes,QMessageBox.No)
 			if res == QMessageBox.No:
 				return
-		self.close(True)
+		qApp.closeAllWindows()
+
 	
 	def btnPublish_clicked(self):		
-		title = str(self.editPostTitle.text())
+		title = unicode(self.editPostTitle.text())
 		if title:
 			ab = self._getAtomBlog()
 			b = newPostWorker(ab,self.osd,self,"Posting to blog...")
@@ -136,13 +134,13 @@ class MainForm_Impl(MainForm):
 			QMessageBox.warning(self,"Warning","You forgot the post's title!")
 	
 	def btnSavePost_clicked(self):
-		title = str(self.editPostTitle.text())
+		title = unicode(self.editPostTitle.text())
 		if title:
 			i = QListBoxText(self.listSavedPosts,title)
 			item = { 
 				"date":date.today(),
 				"title":title,
-				"content":str(self.sourceEditor.text()),
+				"content":unicode(self.sourceEditor.text()),
 				}	
 			self.SavedPosts[self.settings["selectedblog"]] += [ item ]
 			self.SavedItems [ i ] = item
@@ -170,7 +168,7 @@ class MainForm_Impl(MainForm):
 	
 	def btnPreview_clicked(self):
 		url = self.settings["url"]
-		self._openBrowser(url)
+		webbrowser.open_new(url)
 	
 	def btnReloadFeed_clicked(self):
 		at = self._getAtomBlog()
@@ -179,7 +177,7 @@ class MainForm_Impl(MainForm):
 			self.workers.add(b,self.sender())
 	
 	def comboBlogs_activated(self,a0):
-		self.settings["selectedblog"] = str(a0)
+		self.settings["selectedblog"] = unicode(a0)
 		self.populateLists()
 	
 	def listPublishedPosts_doubleClicked(self,a0):
@@ -258,13 +256,6 @@ class MainForm_Impl(MainForm):
 		else:
 			return self.cached_atomblog
 			
-	def _openBrowser(self,url):
-		if os.sys.platform.startswith("linux"):
-			s = 'kfmclient exec "' + url + "\""
-			os.system(s)
-		else:
-			print "no windows support!" # FIXME: add something!
-
 	def init(self):
 		self.settings = self.ReadSettings(os.path.expanduser("~/.pyqlogger/settings"))
 		self.SavedPosts = self.ReadSettings(os.path.expanduser("~/.pyqlogger/drafts"))

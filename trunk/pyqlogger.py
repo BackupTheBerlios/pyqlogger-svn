@@ -32,11 +32,17 @@ you have installed PyQt for the version of Python that you are running."""
 
 VERSION = '1.2.1'
 
-if __name__ == '__main__':
+def main():
 	a = QApplication(sys.argv)
 	QObject.connect(a,SIGNAL("lastWindowClosed()"),a,SLOT("quit()"))
 	w = MainForm_Impl.MainForm_Impl()
 	if w.init():
 		a.setMainWidget(w)
 		w.show()
-		a.exec_loop()
+		res = a.exec_loop()
+		sys.exit(res)
+
+
+if __name__ == '__main__':
+	main()
+

@@ -19,10 +19,11 @@
 """ Background workers """
 from qt import *
 from threading import *
-import sys,urllib2,re
 from datetime import date
 from time import sleep
 from distutils.version import LooseVersion
+import sys,urllib2,re
+
 
 class BackGround:
 	""" class that provides a timer that checks on background processes,
@@ -44,10 +45,9 @@ class BackGround:
 			else:
 				self.workers[worker].status()
 
-
-	def add(self,worker,sender=None):		
+	def add(self,worker,sender=None):
 		if self.workers.has_key(str(worker)): # only add unique workers!
-			return False		
+			return False
 		worker.THREAD = Thread(args=[worker],target=worker.bg)
 		worker.THREAD.start()
 		if sender:
@@ -141,8 +141,8 @@ class newPostWorker(bgWorker):
 		self.result = False
 		p = self.parent
 		blogId = p.settings["blogs"][p.settings["selectedblog"]]['id']
-		title = str(p.editPostTitle.text())
-		content = str(p.sourceEditor.text())
+		title = unicode(p.editPostTitle.text())
+		content = unicode(p.sourceEditor.text())
 		# are we editing?
 		if p.current_post and p.current_post.has_key('id'): #yes!
 			#yes, edit it
@@ -188,21 +188,23 @@ class newPostWorker(bgWorker):
 		else:
 			self.OSD.error("Couldn't post to blog!")
 
-class updateCheckWorker(bgWorker):
+class updateCheckWorker:
 	""" class that provides new version checking in background """
-	def bg(self,*args):
+	def __init__(self,osd):
 		from pyqlogger import VERSION
-		notified = LooseVersion(VERSION)
-		cur = LooseVersion(VERSION)
-		while 42:			
+		self.OSD = osd
+		self.notified = LooseVersion(VERSION)
+		self.Timer = QTimer()
+		self.Timer.connect(self.Timer, SIGNAL("timeout()"), self.work)
+		self.Timer.start(60*60*1000)	
+		
+	def work(self):
+		try:
 			req = urllib2.urlopen('http://pyqlogger.berlios.de/ver.php')
 			line = req.readline()
 			newver = LooseVersion( line.strip() )
-			if newver > cur and notified != newver:
-				notified = newver
+			if newver > self.notified :
+				self.notified = newver
 				self.OSD.info("New version %s is available at the site!"%(str(newver)))
-			sleep(60*30)
-		
-	def ui(self):
-		# this should never happen
-		pass
+		except:
+			pass

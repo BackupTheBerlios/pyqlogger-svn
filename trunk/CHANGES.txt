@@ -8,7 +8,11 @@ CHANGELOG
 x/10/2004 - 1.3
 
 * Updates changed to server side
-
+- Fixed the hanging of the application after GUI exit
++ Added first draft of Unicode support (post works, fetching does not)
+* Web browser for preview now is opened correctly thru webbrowser.py module
++ In AtomBlog added getPost function
+ 
 5/10/2004 - 1.2.1
 
 + Added new version notification

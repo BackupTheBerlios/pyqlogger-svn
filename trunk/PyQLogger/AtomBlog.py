@@ -126,13 +126,13 @@ class AtomBlog:
 			
 	def _makeBody(self,title,content,created):
 		""" generate body of post entry based on parameters """
-		return """<?xml version="1.0" encoding="UTF-8" ?>
+		return unicode("""<?xml version="1.0" encoding="UTF-8" ?>
 		<entry xmlns="http://purl.org/atom/ns#">
 		<generator url="http://www.reflog.info/">Reflog's Blogger</generator>
 		<title mode="escaped" type="text/html">%s</title>
 		<issued>%s</issued>
 		<content mode="escaped" type="text/html">%s</content>
-		</entry>""" % (escape(title),created,escape(content))
+		</entry>""" % (escape(title),created,escape(content))).encode("utf-8")
 		
 	def newPost(self,blogId,title,content,date=None):
 		""" Make a new post to Blogger, returning it's ID """
@@ -173,5 +173,3 @@ class AtomBlog:
 		conn.request("DELETE", path, "", headers)
 		response = conn.getresponse()
 		return bool(response.status == 410 or response.status == 200)
-
-

@@ -71,7 +71,7 @@ class HTMLSyntax(QSyntaxHighlighter):
 			return end, mode["code"]
 
 	def highlightParagraph (self, text, endStateOfLastPara):
-		t = str(text)
+		t = unicode(text)
 		i = 0
 		if endStateOfLastPara > 0 and endStateOfLastPara <= len(self.modes):		
 			mode = self.modes[endStateOfLastPara-1]
