@@ -1,3 +1,5 @@
+$Id$
+
 This is a list of stuff that we'd like to do at some point:
 * Support for multiple accounts with different blog providers
 * Allow enabling/disabling plugins
