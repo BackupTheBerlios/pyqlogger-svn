@@ -6,7 +6,7 @@
    <XMI.exporterVersion>1.2.90</XMI.exporterVersion>
    <XMI.exporterEncoding>UnicodeUTF8</XMI.exporterEncoding>
   </XMI.documentation>
-  <XMI.model xmi.name="umbrello1nOsZb" href="/tmp/kde-reflog/umbrello1nOsZb.tmp" />
+  <XMI.model xmi.name="umbrelloDEkMpb" href="/tmp/kde-reflog/umbrelloDEkMpb.tmp" />
   <XMI.metamodel xmi.name="UML" href="UML.xml" xmi.version="1.3" />
  </XMI.header>
  <XMI.content>
@@ -70,31 +70,43 @@
     <UML:Attribute comment="date of post's publication (or last update)" visibility="public" xmi.id="82" value="" type="string" name="Created" />
    </UML:Class>
    <UML:Class comment="Base class for all plugins" visibility="public" xmi.id="99" name="Plugin" >
-    <UML:Attribute visibility="public" xmi.id="106" value="" type="string" name="Name" />
-    <UML:Attribute visibility="public" xmi.id="107" value="" type="string" name="Author" />
-    <UML:Attribute visibility="public" xmi.id="110" value="" type="OptionStorage" name="Options" />
+    <UML:Operation comment="Performs loading of the plugin" visibility="public" xmi.id="134" type="void" name="Register" />
+    <UML:Operation comment="Performs unloading of the plugin" visibility="public" xmi.id="141" type="void" name="Unregister" />
+    <UML:Attribute comment="Visible name. Will be used as tooltip, as menu caption or as item in config dialog." visibility="public" xmi.id="106" value="" type="string" name="Name" />
+    <UML:Attribute comment="Who's responsible for this???" visibility="public" xmi.id="107" value="" type="string" name="Author" />
+    <UML:Attribute comment="Option storage class instance" visibility="public" xmi.id="110" value="" type="OptionStorage" name="Options" />
+    <UML:Attribute comment="Byte array of the icon. (used in menu and toolbar)" visibility="public" xmi.id="138" value="" type="QPixmap" name="Icon" />
    </UML:Class>
-   <UML:Class comment="Base class for plugins that provide a control on the toolbar" visibility="public" xmi.id="100" name="ToolbarPlugin" />
-   <UML:Class comment="Base class for plugins that provide a menu item" visibility="public" xmi.id="102" name="MenuPlugin" />
-   <UML:Class comment="Base class for plugins that are activated upon some specific event." visibility="public" xmi.id="103" name="EventPlugin" />
+   <UML:Class comment="Base class for plugins that provide a control on the toolbar" visibility="public" xmi.id="100" name="ToolbarPlugin" >
+    <UML:Operation comment="Should return the widget(control) that will be added to the toolbar" visibility="public" xmi.id="135" type="QWidget" name="getWidget" />
+   </UML:Class>
+   <UML:Class comment="Base class for plugins that provide a menu item" visibility="public" xmi.id="102" name="MenuPlugin" >
+    <UML:Operation comment="Should return item that will be added to the popup menu" visibility="public" xmi.id="136" type="QMenuItem" name="getMenu" />
+   </UML:Class>
+   <UML:Class comment="Base class for plugins that are activated upon some specific event." visibility="public" xmi.id="103" name="EventPlugin" >
+    <UML:Operation comment="Should return a function that would handle this specific event" visibility="public" xmi.id="137" type="string" name="getHandler" />
+   </UML:Class>
    <UML:Class comment="Class for getting/setting/loading/saving and displaying plugin's settings" visibility="public" xmi.id="109" name="OptionStorage" >
-    <UML:Operation visibility="public" xmi.id="112" type="string" name="__getitem__" >
+    <UML:Operation comment="return specific item" visibility="public" xmi.id="112" type="string" name="__getitem__" >
      <UML:Parameter visibility="public" xmi.id="113" value="" type="string" name="param" />
     </UML:Operation>
-    <UML:Operation visibility="public" xmi.id="117" type="void" name="__setitem__" >
+    <UML:Operation comment="set specific item" visibility="public" xmi.id="117" type="void" name="__setitem__" >
      <UML:Parameter visibility="public" xmi.id="118" value="" type="string" name="param" />
      <UML:Parameter visibility="public" xmi.id="119" value="" type="string" name="value" />
     </UML:Operation>
-    <UML:Operation visibility="public" xmi.id="122" type="void" name="load" >
+    <UML:Operation comment="load options from xml string" visibility="public" xmi.id="122" type="void" name="load" >
      <UML:Parameter visibility="public" xmi.id="124" value="" type="string" name="xml" />
     </UML:Operation>
-    <UML:Operation visibility="public" xmi.id="123" type="string" name="save" />
+    <UML:Operation comment="save options to xml" visibility="public" xmi.id="123" type="string" name="save" />
+    <UML:Operation comment="Creates a QFrame with all fields and controls for options" visibility="public" xmi.id="131" type="QFrame" name="createFrame" />
+    <UML:Operation comment="Syncronize the content from the Frame to local settings storage" visibility="public" xmi.id="132" type="void" name="update" />
    </UML:Class>
    <UML:Enumeration stereotype="126" visibility="public" xmi.id="125" name="EventType" >
-    <UML:EnumerationLiteral visibility="public" xmi.id="127" name="PostCreated" />
-    <UML:EnumerationLiteral visibility="public" xmi.id="128" name="BeforePublishing" />
-    <UML:EnumerationLiteral visibility="public" xmi.id="129" name="TextChanged" />
+    <UML:EnumerationLiteral comment="This event is fired when the new post is created. This is the time to apply changes to body/title of the post." visibility="public" xmi.id="127" name="PostCreated" />
+    <UML:EnumerationLiteral comment="This event is fired when the post is about to be published. This is the time for post-spellchecking and etc." visibility="public" xmi.id="128" name="BeforePublishing" />
+    <UML:EnumerationLiteral comment="This event is fired when the text inside the editor control is changed. Could be used for automatic spell checking, or alias expansions..." visibility="public" xmi.id="129" name="TextChanged" />
    </UML:Enumeration>
+   <UML:DataType stereotype="3" visibility="public" xmi.id="139" name="QPixmap" />
    <UML:Association visibility="public" xmi.id="70" >
     <UML:Association.connection>
      <UML:AssociationEndRole visibility="public" aggregation="composite" type="58" />
@@ -119,7 +131,7 @@
   </UML:Model>
  </XMI.content>
  <XMI.extensions xmi.extender="umbrello" >
-  <docsettings viewid="93" documentation="Basic class for post in a blog" uniqueid="129" />
+  <docsettings viewid="93" documentation="Basic class for post in a blog" uniqueid="141" />
   <diagrams>
    <diagram snapgrid="0" showattsig="1" fillcolor="#ffffc0" linewidth="0" zoom="100" showgrid="0" showopsig="1" usefillcolor="1" snapx="10" canvaswidth="808" snapy="10" showatts="1" xmi.id="42" documentation="" type="402" showops="1" showpackage="0" name="Multiple Blogs" localid="30000" showstereotype="0" showscope="1" snapcsgrid="0" font="Bitstream Vera Sans,11,-1,5,50,0,0,0,0,0" linecolor="#ff0000" canvasheight="608" >
     <widgets>
@@ -143,39 +155,45 @@
      </assocwidget>
     </associations>
    </diagram>
-   <diagram snapgrid="0" showattsig="1" fillcolor="#ffffc0" linewidth="0" zoom="100" showgrid="0" showopsig="1" usefillcolor="1" snapx="10" canvaswidth="821" snapy="10" showatts="1" xmi.id="93" documentation="" type="402" showops="1" showpackage="0" name="Plugin System" localid="30000" showstereotype="0" showscope="1" snapcsgrid="0" font="Bitstream Vera Sans,11,-1,5,50,0,0,0,0,0" linecolor="#ff0000" canvasheight="559" >
+   <diagram snapgrid="0" showattsig="1" fillcolor="#ffffc0" linewidth="0" zoom="100" showgrid="0" showopsig="1" usefillcolor="1" snapx="10" canvaswidth="813" snapy="10" showatts="1" xmi.id="93" documentation="" type="402" showops="1" showpackage="0" name="Plugin System" localid="30000" showstereotype="0" showscope="1" snapcsgrid="0" font="Bitstream Vera Sans,11,-1,5,50,0,0,0,0,0" linecolor="#ff0000" canvasheight="559" >
     <widgets>
-     <classwidget usesdiagramfillcolour="0" width="205" showattsigs="601" usesdiagramusefillcolour="0" x="115" linecolour="#ff0000" y="35" showopsigs="601" linewidth="none" usesdiagramlinewidth="1" usesdiagramlinecolour="0" fillcolour="#ffffc0" height="85" usefillcolor="1" showpubliconly="0" showattributes="1" isinstance="0" xmi.id="99" showoperations="1" showpackage="0" showscope="1" showstereotype="0" font="Bitstream Vera Sans,11,-1,5,75,0,0,0,0,0" />
-     <classwidget usesdiagramfillcolour="0" width="119" showattsigs="601" usesdiagramusefillcolour="0" x="52" linecolour="#ff0000" y="229" showopsigs="601" linewidth="none" usesdiagramlinewidth="1" usesdiagramlinecolour="0" fillcolour="#ffffc0" height="37" usefillcolor="1" showpubliconly="0" showattributes="1" isinstance="0" xmi.id="100" showoperations="1" showpackage="0" showscope="1" showstereotype="0" font="Bitstream Vera Sans,11,-1,5,75,0,0,0,0,0" />
-     <classwidget usesdiagramfillcolour="0" width="101" showattsigs="601" usesdiagramusefillcolour="0" x="197" linecolour="#ff0000" y="227" showopsigs="601" linewidth="none" usesdiagramlinewidth="1" usesdiagramlinecolour="0" fillcolour="#ffffc0" height="37" usefillcolor="1" showpubliconly="0" showattributes="1" isinstance="0" xmi.id="102" showoperations="1" showpackage="0" showscope="1" showstereotype="0" font="Bitstream Vera Sans,11,-1,5,75,0,0,0,0,0" />
-     <classwidget usesdiagramfillcolour="0" width="103" showattsigs="601" usesdiagramusefillcolour="0" x="335" linecolour="#ff0000" y="232" showopsigs="601" linewidth="none" usesdiagramlinewidth="1" usesdiagramlinecolour="0" fillcolour="#ffffc0" height="37" usefillcolor="1" showpubliconly="0" showattributes="1" isinstance="0" xmi.id="103" showoperations="1" showpackage="0" showscope="1" showstereotype="0" font="Bitstream Vera Sans,11,-1,5,75,0,0,0,0,0" />
-     <classwidget usesdiagramfillcolour="0" width="419" showattsigs="601" usesdiagramusefillcolour="0" x="374" linecolour="#ff0000" y="27" showopsigs="601" linewidth="none" usesdiagramlinewidth="1" usesdiagramlinecolour="0" fillcolour="#ffffc0" height="104" usefillcolor="1" showpubliconly="0" showattributes="1" isinstance="0" xmi.id="109" showoperations="1" showpackage="0" showscope="1" showstereotype="0" font="Bitstream Vera Sans,11,-1,5,75,0,0,0,0,0" />
+     <classwidget usesdiagramfillcolour="0" width="205" showattsigs="601" usesdiagramusefillcolour="0" x="116" linecolour="#ff0000" y="35" showopsigs="601" linewidth="none" usesdiagramlinewidth="1" usesdiagramlinecolour="0" fillcolour="#ffffc0" height="133" usefillcolor="1" showpubliconly="0" showattributes="1" isinstance="0" xmi.id="99" showoperations="1" showpackage="0" showscope="1" showstereotype="0" font="Bitstream Vera Sans,11,-1,5,75,0,0,0,0,0" />
+     <classwidget usesdiagramfillcolour="0" width="214" showattsigs="601" usesdiagramusefillcolour="0" x="116" linecolour="#ff0000" y="239" showopsigs="601" linewidth="none" usesdiagramlinewidth="1" usesdiagramlinecolour="0" fillcolour="#ffffc0" height="47" usefillcolor="1" showpubliconly="0" showattributes="1" isinstance="0" xmi.id="100" showoperations="1" showpackage="0" showscope="1" showstereotype="0" font="Bitstream Vera Sans,11,-1,5,75,0,0,0,0,0" />
+     <classwidget usesdiagramfillcolour="0" width="225" showattsigs="601" usesdiagramusefillcolour="0" x="20" linecolour="#ff0000" y="296" showopsigs="601" linewidth="none" usesdiagramlinewidth="1" usesdiagramlinecolour="0" fillcolour="#ffffc0" height="47" usefillcolor="1" showpubliconly="0" showattributes="1" isinstance="0" xmi.id="102" showoperations="1" showpackage="0" showscope="1" showstereotype="0" font="Bitstream Vera Sans,11,-1,5,75,0,0,0,0,0" />
+     <classwidget usesdiagramfillcolour="0" width="195" showattsigs="601" usesdiagramusefillcolour="0" x="280" linecolour="#ff0000" y="295" showopsigs="601" linewidth="none" usesdiagramlinewidth="1" usesdiagramlinecolour="0" fillcolour="#ffffc0" height="47" usefillcolor="1" showpubliconly="0" showattributes="1" isinstance="0" xmi.id="103" showoperations="1" showpackage="0" showscope="1" showstereotype="0" font="Bitstream Vera Sans,11,-1,5,75,0,0,0,0,0" />
+     <classwidget usesdiagramfillcolour="0" width="419" showattsigs="601" usesdiagramusefillcolour="0" x="366" linecolour="#ff0000" y="11" showopsigs="601" linewidth="none" usesdiagramlinewidth="1" usesdiagramlinecolour="0" fillcolour="#ffffc0" height="142" usefillcolor="1" showpubliconly="0" showattributes="1" isinstance="0" xmi.id="109" showoperations="1" showpackage="0" showscope="1" showstereotype="0" font="Bitstream Vera Sans,11,-1,5,75,0,0,0,0,0" />
      <enumwidget usesdiagramfillcolour="0" width="129" usesdiagramusefillcolour="0" x="581" linecolour="#ff0000" y="198" linewidth="none" usesdiagramlinewidth="1" usesdiagramlinecolour="0" fillcolour="#ffffc0" height="95" usefillcolor="1" isinstance="0" xmi.id="125" showpackage="0" font="Bitstream Vera Sans,11,-1,5,75,1,0,0,0,0" />
     </widgets>
     <messages/>
     <associations>
-     <assocwidget totalcounta="2" indexa="1" totalcountb="4" indexb="1" widgetbid="99" widgetaid="100" xmi.id="101" >
+     <assocwidget totalcounta="2" indexa="1" totalcountb="4" indexb="2" widgetbid="99" widgetaid="100" xmi.id="101" >
       <linepath>
-       <startpoint startx="111" starty="229" />
-       <endpoint endx="166" endy="120" />
+       <startpoint startx="223" starty="239" />
+       <endpoint endx="218" endy="168" />
       </linepath>
      </assocwidget>
-     <assocwidget totalcounta="2" indexa="1" totalcountb="4" indexb="2" widgetbid="99" widgetaid="102" xmi.id="104" >
+     <assocwidget totalcounta="2" indexa="1" totalcountb="4" indexb="1" widgetbid="99" widgetaid="102" xmi.id="104" >
       <linepath>
-       <startpoint startx="247" starty="227" />
-       <endpoint endx="217" endy="120" />
+       <startpoint startx="132" starty="296" />
+       <endpoint endx="167" endy="168" />
       </linepath>
      </assocwidget>
-     <assocwidget totalcounta="2" indexa="1" totalcountb="4" indexb="3" widgetbid="99" widgetaid="103" xmi.id="105" >
+     <assocwidget totalcounta="3" indexa="1" totalcountb="4" indexb="3" widgetbid="99" widgetaid="103" xmi.id="105" >
       <linepath>
-       <startpoint startx="386" starty="232" />
-       <endpoint endx="268" endy="120" />
+       <startpoint startx="345" starty="295" />
+       <endpoint endx="269" endy="168" />
       </linepath>
      </assocwidget>
      <assocwidget totalcounta="2" indexa="1" totalcountb="2" indexb="1" widgetbid="109" widgetaid="99" xmi.id="111" >
       <linepath>
-       <startpoint startx="320" starty="77" />
-       <endpoint endx="374" endy="79" />
+       <startpoint startx="321" starty="101" />
+       <endpoint endx="366" endy="82" />
+      </linepath>
+     </assocwidget>
+     <assocwidget totalcounta="3" indexa="2" visibilityB="200" totalcountb="2" indexb="1" widgetbid="125" widgetaid="103" roleBdoc="" documentation="" roleAdoc="" type="502" changeabilityA="900" changeabilityB="900" visibilityA="200" >
+      <linepath>
+       <startpoint startx="410" starty="295" />
+       <endpoint endx="581" endy="245" />
       </linepath>
      </assocwidget>
     </associations>
@@ -210,18 +228,27 @@
       <listitem open="0" type="815" id="35" />
       <listitem open="0" type="815" id="28" />
      </listitem>
-     <listitem open="1" type="813" id="103" />
-     <listitem open="1" type="813" id="102" />
+     <listitem open="1" type="813" id="103" >
+      <listitem open="0" type="815" id="137" />
+     </listitem>
+     <listitem open="1" type="813" id="102" >
+      <listitem open="0" type="815" id="136" />
+     </listitem>
      <listitem open="1" type="813" id="109" >
       <listitem open="0" type="815" id="112" />
       <listitem open="0" type="815" id="117" />
+      <listitem open="0" type="815" id="131" />
       <listitem open="0" type="815" id="122" />
       <listitem open="0" type="815" id="123" />
+      <listitem open="0" type="815" id="132" />
      </listitem>
-     <listitem open="0" type="813" id="99" >
+     <listitem open="1" type="813" id="99" >
       <listitem open="0" type="814" id="107" />
+      <listitem open="0" type="814" id="138" />
       <listitem open="0" type="814" id="106" />
       <listitem open="0" type="814" id="110" />
+      <listitem open="0" type="815" id="134" />
+      <listitem open="0" type="815" id="141" />
      </listitem>
      <listitem open="0" type="813" id="78" >
       <listitem open="0" type="814" id="81" />
@@ -230,8 +257,11 @@
       <listitem open="0" type="814" id="80" />
       <listitem open="0" type="815" id="84" />
      </listitem>
-     <listitem open="1" type="813" id="100" />
+     <listitem open="1" type="813" id="100" >
+      <listitem open="0" type="815" id="135" />
+     </listitem>
      <listitem open="0" type="830" id="-1" label="Datatypes" >
+      <listitem open="1" type="829" id="139" />
       <listitem open="1" type="829" id="5" />
       <listitem open="1" type="829" id="4" />
       <listitem open="1" type="829" id="7" />
@@ -999,7 +1029,7 @@
     </classifiercodedocument>
     <classifiercodedocument writeOutCode="true" package="" id="99" parent_class="99" fileExt=".cpp" fileName="plugin" >
      <textblocks>
-      <codeblockwithcomments tag="includes" text="#include &quot;string&quot;&amp;#010;#include &quot;string.h&quot;&amp;#010;#include &quot;optionstorage.h&quot;&amp;#010;" >
+      <codeblockwithcomments tag="includes" text="#include &quot;string&quot;&amp;#010;#include &quot;string.h&quot;&amp;#010;#include &quot;optionstorage.h&quot;&amp;#010;#include &quot;qpixmap.h&quot;&amp;#010;" >
        <header>
         <cppcodedocumentation tag="" writeOutText="false" />
        </header>
@@ -1017,32 +1047,32 @@
        <textblocks>
         <codeaccessormethod accessType="0" parent_id="106" tag="hblock_tag_0" canDelete="false" classfield_id="106" role_id="-1" >
          <header>
-          <cppcodedocumentation tag="" />
+          <cppcodedocumentation tag="" text="Get the value of Name&amp;#010;Visible name. Will be used as tooltip, as menu caption or as item in config dialog.&amp;#010;@return the value of Name" />
          </header>
         </codeaccessormethod>
         <codeaccessormethod accessType="1" parent_id="106" tag="hblock_tag_1" canDelete="false" classfield_id="106" role_id="-1" >
          <header>
-          <cppcodedocumentation tag="" />
+          <cppcodedocumentation tag="" text="Set the value of Name&amp;#010;Visible name. Will be used as tooltip, as menu caption or as item in config dialog.&amp;#010;@param value the value of Name" />
          </header>
         </codeaccessormethod>
         <codeaccessormethod accessType="0" parent_id="107" tag="hblock_tag_2" canDelete="false" classfield_id="107" role_id="-1" >
          <header>
-          <cppcodedocumentation tag="" />
+          <cppcodedocumentation tag="" text="Get the value of Author&amp;#010;Who's responsible for this???&amp;#010;@return the value of Author" />
          </header>
         </codeaccessormethod>
         <codeaccessormethod accessType="1" parent_id="107" tag="hblock_tag_3" canDelete="false" classfield_id="107" role_id="-1" >
          <header>
-          <cppcodedocumentation tag="" />
+          <cppcodedocumentation tag="" text="Set the value of Author&amp;#010;Who's responsible for this???&amp;#010;@param value the value of Author" />
          </header>
         </codeaccessormethod>
         <codeaccessormethod accessType="0" parent_id="110" tag="hblock_tag_4" canDelete="false" classfield_id="110" role_id="-1" >
          <header>
-          <cppcodedocumentation tag="" />
+          <cppcodedocumentation tag="" text="Get the value of Options&amp;#010;Option storage class instance&amp;#010;@return the value of Options" />
          </header>
         </codeaccessormethod>
         <codeaccessormethod accessType="1" parent_id="110" tag="hblock_tag_5" canDelete="false" classfield_id="110" role_id="-1" >
          <header>
-          <cppcodedocumentation tag="" />
+          <cppcodedocumentation tag="" text="Set the value of Options&amp;#010;Option storage class instance&amp;#010;@param value the value of Options" />
          </header>
         </codeaccessormethod>
         <codeaccessormethod accessType="0" parent_id="111" tag="hblock_tag_6" canDelete="false" writeOutText="false" classfield_id="111" role_id="0" >
@@ -1070,16 +1100,36 @@
           <cppcodedocumentation tag="" />
          </header>
         </codeaccessormethod>
+        <codeoperation parent_id="134" tag="operation_134" canDelete="false" role_id="-1" >
+         <header>
+          <cppcodedocumentation tag="" text="Performs loading of the plugin" />
+         </header>
+        </codeoperation>
+        <codeaccessormethod accessType="0" parent_id="138" tag="hblock_tag_11" canDelete="false" classfield_id="138" role_id="-1" >
+         <header>
+          <cppcodedocumentation tag="" text="Get the value of Icon&amp;#010;Byte array of the icon. (used in menu and toolbar)&amp;#010;@return the value of Icon" />
+         </header>
+        </codeaccessormethod>
+        <codeaccessormethod accessType="1" parent_id="138" tag="hblock_tag_12" canDelete="false" classfield_id="138" role_id="-1" >
+         <header>
+          <cppcodedocumentation tag="" text="Set the value of Icon&amp;#010;Byte array of the icon. (used in menu and toolbar)&amp;#010;@param value the value of Icon" />
+         </header>
+        </codeaccessormethod>
+        <codeoperation parent_id="141" tag="operation_141" canDelete="false" role_id="-1" >
+         <header>
+          <cppcodedocumentation tag="" text="Performs unloading of the plugin" />
+         </header>
+        </codeoperation>
        </textblocks>
       </hierarchicalcodeblock>
      </textblocks>
      <header>
-      <codecomment tag="" text="/************************************************************************&amp;#010;  			plugin.cpp - Copyright reflog&amp;#010;&amp;#010;Here you can write a license for your code, some comments or any other&amp;#010;information you want to have in your generated code. To to this simply&amp;#010;configure the &quot;headings&quot; directory in uml to point to a directory&amp;#010;where you have your heading files.&amp;#010;&amp;#010;or you can just replace the contents of this file with your own.&amp;#010;If you want to do this, this file is located at&amp;#010;&amp;#010;/usr/kde/3.3/share/apps/umbrello/headings/heading.cpp&amp;#010;&amp;#010;-->Code Generators searches for heading files based on the file extension&amp;#010;   i.e. it will look for a file name ending in &quot;.h&quot; to include in C++ header&amp;#010;   files, and for a file name ending in &quot;.java&quot; to include in all generated&amp;#010;   java code.&amp;#010;   If you name the file &quot;heading.&lt;extension>&quot;, Code Generator will always&amp;#010;   choose this file even if there are other files with the same extension in the&amp;#010;   directory. If you name the file something else, it must be the only one with that&amp;#010;   extension in the directory to guarantee that Code Generator will choose it.&amp;#010;&amp;#010;you can use variables in your heading files which are replaced at generation&amp;#010;time. possible variables are : author, date, time, filename and filepath.&amp;#010;just write %variable_name%&amp;#010;&amp;#010;This file was generated on Mon Dec 27 2004 at 14:28:29&amp;#010;The original location of this file is &amp;#010;**************************************************************************/&amp;#010;" />
+      <codecomment tag="" text="/************************************************************************&amp;#010;  			plugin.cpp - Copyright reflog&amp;#010;&amp;#010;Here you can write a license for your code, some comments or any other&amp;#010;information you want to have in your generated code. To to this simply&amp;#010;configure the &quot;headings&quot; directory in uml to point to a directory&amp;#010;where you have your heading files.&amp;#010;&amp;#010;or you can just replace the contents of this file with your own.&amp;#010;If you want to do this, this file is located at&amp;#010;&amp;#010;/usr/kde/3.3/share/apps/umbrello/headings/heading.cpp&amp;#010;&amp;#010;-->Code Generators searches for heading files based on the file extension&amp;#010;   i.e. it will look for a file name ending in &quot;.h&quot; to include in C++ header&amp;#010;   files, and for a file name ending in &quot;.java&quot; to include in all generated&amp;#010;   java code.&amp;#010;   If you name the file &quot;heading.&lt;extension>&quot;, Code Generator will always&amp;#010;   choose this file even if there are other files with the same extension in the&amp;#010;   directory. If you name the file something else, it must be the only one with that&amp;#010;   extension in the directory to guarantee that Code Generator will choose it.&amp;#010;&amp;#010;you can use variables in your heading files which are replaced at generation&amp;#010;time. possible variables are : author, date, time, filename and filepath.&amp;#010;just write %variable_name%&amp;#010;&amp;#010;This file was generated on Tue Dec 28 2004 at 15:28:08&amp;#010;The original location of this file is &amp;#010;**************************************************************************/&amp;#010;" />
      </header>
      <classfields>
       <codeclassfield parent_id="106" field_type="0" initialValue="" role_id="-1" writeOutMethods="true" listClassName="" >
        <header>
-        <cppcodedocumentation tag="" />
+        <cppcodedocumentation tag="" text="Visible name. Will be used as tooltip, as menu caption or as item in config dialog." />
        </header>
        <ccfdeclarationcodeblock parent_id="106" tag="" canDelete="false" indentLevel="1" role_id="-1" text="FIX ME;" >
         <header>
@@ -1088,18 +1138,18 @@
        </ccfdeclarationcodeblock>
        <codeaccessormethod accessType="0" parent_id="106" tag="hblock_tag_0" canDelete="false" classfield_id="106" role_id="-1" >
         <header>
-         <cppcodedocumentation tag="" />
+         <cppcodedocumentation tag="" text="Get the value of Name&amp;#010;Visible name. Will be used as tooltip, as menu caption or as item in config dialog.&amp;#010;@return the value of Name" />
         </header>
        </codeaccessormethod>
        <codeaccessormethod accessType="1" parent_id="106" tag="hblock_tag_1" canDelete="false" classfield_id="106" role_id="-1" >
         <header>
-         <cppcodedocumentation tag="" />
+         <cppcodedocumentation tag="" text="Set the value of Name&amp;#010;Visible name. Will be used as tooltip, as menu caption or as item in config dialog.&amp;#010;@param value the value of Name" />
         </header>
        </codeaccessormethod>
       </codeclassfield>
       <codeclassfield parent_id="107" field_type="0" initialValue="" role_id="-1" writeOutMethods="true" listClassName="" >
        <header>
-        <cppcodedocumentation tag="" />
+        <cppcodedocumentation tag="" text="Who's responsible for this???" />
        </header>
        <ccfdeclarationcodeblock parent_id="107" tag="" canDelete="false" indentLevel="1" role_id="-1" text="FIX ME;" >
         <header>
@@ -1108,18 +1158,18 @@
        </ccfdeclarationcodeblock>
        <codeaccessormethod accessType="0" parent_id="107" tag="hblock_tag_2" canDelete="false" classfield_id="107" role_id="-1" >
         <header>
-         <cppcodedocumentation tag="" />
+         <cppcodedocumentation tag="" text="Get the value of Author&amp;#010;Who's responsible for this???&amp;#010;@return the value of Author" />
         </header>
        </codeaccessormethod>
        <codeaccessormethod accessType="1" parent_id="107" tag="hblock_tag_3" canDelete="false" classfield_id="107" role_id="-1" >
         <header>
-         <cppcodedocumentation tag="" />
+         <cppcodedocumentation tag="" text="Set the value of Author&amp;#010;Who's responsible for this???&amp;#010;@param value the value of Author" />
         </header>
        </codeaccessormethod>
       </codeclassfield>
       <codeclassfield parent_id="110" field_type="0" initialValue="" role_id="-1" writeOutMethods="true" listClassName="" >
        <header>
-        <cppcodedocumentation tag="" />
+        <cppcodedocumentation tag="" text="Option storage class instance" />
        </header>
        <ccfdeclarationcodeblock parent_id="110" tag="" canDelete="false" indentLevel="1" role_id="-1" text="FIX ME;" >
         <header>
@@ -1128,12 +1178,12 @@
        </ccfdeclarationcodeblock>
        <codeaccessormethod accessType="0" parent_id="110" tag="hblock_tag_4" canDelete="false" classfield_id="110" role_id="-1" >
         <header>
-         <cppcodedocumentation tag="" />
+         <cppcodedocumentation tag="" text="Get the value of Options&amp;#010;Option storage class instance&amp;#010;@return the value of Options" />
         </header>
        </codeaccessormethod>
        <codeaccessormethod accessType="1" parent_id="110" tag="hblock_tag_5" canDelete="false" classfield_id="110" role_id="-1" >
         <header>
-         <cppcodedocumentation tag="" />
+         <cppcodedocumentation tag="" text="Set the value of Options&amp;#010;Option storage class instance&amp;#010;@param value the value of Options" />
         </header>
        </codeaccessormethod>
       </codeclassfield>
@@ -1172,6 +1222,26 @@
         </header>
        </codeaccessormethod>
       </codeclassfield>
+      <codeclassfield parent_id="138" field_type="0" initialValue="" role_id="-1" writeOutMethods="true" listClassName="" >
+       <header>
+        <cppcodedocumentation tag="" text="Byte array of the icon. (used in menu and toolbar)" />
+       </header>
+       <ccfdeclarationcodeblock parent_id="138" tag="" canDelete="false" indentLevel="1" role_id="-1" text="FIX ME;" >
+        <header>
+         <cppcodedocumentation tag="" indentLevel="1" />
+        </header>
+       </ccfdeclarationcodeblock>
+       <codeaccessormethod accessType="0" parent_id="138" tag="hblock_tag_11" canDelete="false" classfield_id="138" role_id="-1" >
+        <header>
+         <cppcodedocumentation tag="" text="Get the value of Icon&amp;#010;Byte array of the icon. (used in menu and toolbar)&amp;#010;@return the value of Icon" />
+        </header>
+       </codeaccessormethod>
+       <codeaccessormethod accessType="1" parent_id="138" tag="hblock_tag_12" canDelete="false" classfield_id="138" role_id="-1" >
+        <header>
+         <cppcodedocumentation tag="" text="Set the value of Icon&amp;#010;Byte array of the icon. (used in menu and toolbar)&amp;#010;@param value the value of Icon" />
+        </header>
+       </codeaccessormethod>
+      </codeclassfield>
      </classfields>
     </classifiercodedocument>
     <classifiercodedocument writeOutCode="true" package="" id="100" parent_class="100" fileExt=".cpp" fileName="toolbarplugin" >
@@ -1191,11 +1261,17 @@
        <header>
         <cppcodedocumentation tag="" text="Methods" />
        </header>
-       <textblocks/>
+       <textblocks>
+        <codeoperation parent_id="135" tag="operation_135" canDelete="false" role_id="-1" >
+         <header>
+          <cppcodedocumentation tag="" text="Should return the widget(control) that will be added to the toolbar" />
+         </header>
+        </codeoperation>
+       </textblocks>
       </hierarchicalcodeblock>
      </textblocks>
      <header>
-      <codecomment tag="" text="/************************************************************************&amp;#010;  			toolbarplugin.cpp - Copyright reflog&amp;#010;&amp;#010;Here you can write a license for your code, some comments or any other&amp;#010;information you want to have in your generated code. To to this simply&amp;#010;configure the &quot;headings&quot; directory in uml to point to a directory&amp;#010;where you have your heading files.&amp;#010;&amp;#010;or you can just replace the contents of this file with your own.&amp;#010;If you want to do this, this file is located at&amp;#010;&amp;#010;/usr/kde/3.3/share/apps/umbrello/headings/heading.cpp&amp;#010;&amp;#010;-->Code Generators searches for heading files based on the file extension&amp;#010;   i.e. it will look for a file name ending in &quot;.h&quot; to include in C++ header&amp;#010;   files, and for a file name ending in &quot;.java&quot; to include in all generated&amp;#010;   java code.&amp;#010;   If you name the file &quot;heading.&lt;extension>&quot;, Code Generator will always&amp;#010;   choose this file even if there are other files with the same extension in the&amp;#010;   directory. If you name the file something else, it must be the only one with that&amp;#010;   extension in the directory to guarantee that Code Generator will choose it.&amp;#010;&amp;#010;you can use variables in your heading files which are replaced at generation&amp;#010;time. possible variables are : author, date, time, filename and filepath.&amp;#010;just write %variable_name%&amp;#010;&amp;#010;This file was generated on Mon Dec 27 2004 at 14:26:26&amp;#010;The original location of this file is &amp;#010;**************************************************************************/&amp;#010;" />
+      <codecomment tag="" text="/************************************************************************&amp;#010;  			toolbarplugin.cpp - Copyright reflog&amp;#010;&amp;#010;Here you can write a license for your code, some comments or any other&amp;#010;information you want to have in your generated code. To to this simply&amp;#010;configure the &quot;headings&quot; directory in uml to point to a directory&amp;#010;where you have your heading files.&amp;#010;&amp;#010;or you can just replace the contents of this file with your own.&amp;#010;If you want to do this, this file is located at&amp;#010;&amp;#010;/usr/kde/3.3/share/apps/umbrello/headings/heading.cpp&amp;#010;&amp;#010;-->Code Generators searches for heading files based on the file extension&amp;#010;   i.e. it will look for a file name ending in &quot;.h&quot; to include in C++ header&amp;#010;   files, and for a file name ending in &quot;.java&quot; to include in all generated&amp;#010;   java code.&amp;#010;   If you name the file &quot;heading.&lt;extension>&quot;, Code Generator will always&amp;#010;   choose this file even if there are other files with the same extension in the&amp;#010;   directory. If you name the file something else, it must be the only one with that&amp;#010;   extension in the directory to guarantee that Code Generator will choose it.&amp;#010;&amp;#010;you can use variables in your heading files which are replaced at generation&amp;#010;time. possible variables are : author, date, time, filename and filepath.&amp;#010;just write %variable_name%&amp;#010;&amp;#010;This file was generated on Tue Dec 28 2004 at 15:26:09&amp;#010;The original location of this file is &amp;#010;**************************************************************************/&amp;#010;" />
      </header>
      <classfields/>
     </classifiercodedocument>
@@ -1216,17 +1292,23 @@
        <header>
         <cppcodedocumentation tag="" text="Methods" />
        </header>
-       <textblocks/>
+       <textblocks>
+        <codeoperation parent_id="136" tag="operation_136" canDelete="false" role_id="-1" >
+         <header>
+          <cppcodedocumentation tag="" text="Should return item that will be added to the popup menu" />
+         </header>
+        </codeoperation>
+       </textblocks>
       </hierarchicalcodeblock>
      </textblocks>
      <header>
-      <codecomment tag="" text="/************************************************************************&amp;#010;  			menuplugin.cpp - Copyright reflog&amp;#010;&amp;#010;Here you can write a license for your code, some comments or any other&amp;#010;information you want to have in your generated code. To to this simply&amp;#010;configure the &quot;headings&quot; directory in uml to point to a directory&amp;#010;where you have your heading files.&amp;#010;&amp;#010;or you can just replace the contents of this file with your own.&amp;#010;If you want to do this, this file is located at&amp;#010;&amp;#010;/usr/kde/3.3/share/apps/umbrello/headings/heading.cpp&amp;#010;&amp;#010;-->Code Generators searches for heading files based on the file extension&amp;#010;   i.e. it will look for a file name ending in &quot;.h&quot; to include in C++ header&amp;#010;   files, and for a file name ending in &quot;.java&quot; to include in all generated&amp;#010;   java code.&amp;#010;   If you name the file &quot;heading.&lt;extension>&quot;, Code Generator will always&amp;#010;   choose this file even if there are other files with the same extension in the&amp;#010;   directory. If you name the file something else, it must be the only one with that&amp;#010;   extension in the directory to guarantee that Code Generator will choose it.&amp;#010;&amp;#010;you can use variables in your heading files which are replaced at generation&amp;#010;time. possible variables are : author, date, time, filename and filepath.&amp;#010;just write %variable_name%&amp;#010;&amp;#010;This file was generated on Mon Dec 27 2004 at 14:26:27&amp;#010;The original location of this file is &amp;#010;**************************************************************************/&amp;#010;" />
+      <codecomment tag="" text="/************************************************************************&amp;#010;  			menuplugin.cpp - Copyright reflog&amp;#010;&amp;#010;Here you can write a license for your code, some comments or any other&amp;#010;information you want to have in your generated code. To to this simply&amp;#010;configure the &quot;headings&quot; directory in uml to point to a directory&amp;#010;where you have your heading files.&amp;#010;&amp;#010;or you can just replace the contents of this file with your own.&amp;#010;If you want to do this, this file is located at&amp;#010;&amp;#010;/usr/kde/3.3/share/apps/umbrello/headings/heading.cpp&amp;#010;&amp;#010;-->Code Generators searches for heading files based on the file extension&amp;#010;   i.e. it will look for a file name ending in &quot;.h&quot; to include in C++ header&amp;#010;   files, and for a file name ending in &quot;.java&quot; to include in all generated&amp;#010;   java code.&amp;#010;   If you name the file &quot;heading.&lt;extension>&quot;, Code Generator will always&amp;#010;   choose this file even if there are other files with the same extension in the&amp;#010;   directory. If you name the file something else, it must be the only one with that&amp;#010;   extension in the directory to guarantee that Code Generator will choose it.&amp;#010;&amp;#010;you can use variables in your heading files which are replaced at generation&amp;#010;time. possible variables are : author, date, time, filename and filepath.&amp;#010;just write %variable_name%&amp;#010;&amp;#010;This file was generated on Tue Dec 28 2004 at 15:25:52&amp;#010;The original location of this file is &amp;#010;**************************************************************************/&amp;#010;" />
      </header>
      <classfields/>
     </classifiercodedocument>
     <classifiercodedocument writeOutCode="true" package="" id="103" parent_class="103" fileExt=".cpp" fileName="eventplugin" >
      <textblocks>
-      <codeblockwithcomments tag="includes" text="#include &quot;string&quot;&amp;#010;#include &quot;plugin.h&quot;&amp;#010;" >
+      <codeblockwithcomments tag="includes" text="#include &quot;string&quot;&amp;#010;#include &quot;plugin.h&quot;&amp;#010;#include &quot;string.h&quot;&amp;#010;" >
        <header>
         <cppcodedocumentation tag="" writeOutText="false" />
        </header>
@@ -1241,11 +1323,17 @@
        <header>
         <cppcodedocumentation tag="" text="Methods" />
        </header>
-       <textblocks/>
+       <textblocks>
+        <codeoperation parent_id="137" tag="operation_137" canDelete="false" role_id="-1" >
+         <header>
+          <cppcodedocumentation tag="" text="Should return a function that would handle this specific event" />
+         </header>
+        </codeoperation>
+       </textblocks>
       </hierarchicalcodeblock>
      </textblocks>
      <header>
-      <codecomment tag="" text="/************************************************************************&amp;#010;  			eventplugin.cpp - Copyright reflog&amp;#010;&amp;#010;Here you can write a license for your code, some comments or any other&amp;#010;information you want to have in your generated code. To to this simply&amp;#010;configure the &quot;headings&quot; directory in uml to point to a directory&amp;#010;where you have your heading files.&amp;#010;&amp;#010;or you can just replace the contents of this file with your own.&amp;#010;If you want to do this, this file is located at&amp;#010;&amp;#010;/usr/kde/3.3/share/apps/umbrello/headings/heading.cpp&amp;#010;&amp;#010;-->Code Generators searches for heading files based on the file extension&amp;#010;   i.e. it will look for a file name ending in &quot;.h&quot; to include in C++ header&amp;#010;   files, and for a file name ending in &quot;.java&quot; to include in all generated&amp;#010;   java code.&amp;#010;   If you name the file &quot;heading.&lt;extension>&quot;, Code Generator will always&amp;#010;   choose this file even if there are other files with the same extension in the&amp;#010;   directory. If you name the file something else, it must be the only one with that&amp;#010;   extension in the directory to guarantee that Code Generator will choose it.&amp;#010;&amp;#010;you can use variables in your heading files which are replaced at generation&amp;#010;time. possible variables are : author, date, time, filename and filepath.&amp;#010;just write %variable_name%&amp;#010;&amp;#010;This file was generated on Mon Dec 27 2004 at 14:26:28&amp;#010;The original location of this file is &amp;#010;**************************************************************************/&amp;#010;" />
+      <codecomment tag="" text="/************************************************************************&amp;#010;  			eventplugin.cpp - Copyright reflog&amp;#010;&amp;#010;Here you can write a license for your code, some comments or any other&amp;#010;information you want to have in your generated code. To to this simply&amp;#010;configure the &quot;headings&quot; directory in uml to point to a directory&amp;#010;where you have your heading files.&amp;#010;&amp;#010;or you can just replace the contents of this file with your own.&amp;#010;If you want to do this, this file is located at&amp;#010;&amp;#010;/usr/kde/3.3/share/apps/umbrello/headings/heading.cpp&amp;#010;&amp;#010;-->Code Generators searches for heading files based on the file extension&amp;#010;   i.e. it will look for a file name ending in &quot;.h&quot; to include in C++ header&amp;#010;   files, and for a file name ending in &quot;.java&quot; to include in all generated&amp;#010;   java code.&amp;#010;   If you name the file &quot;heading.&lt;extension>&quot;, Code Generator will always&amp;#010;   choose this file even if there are other files with the same extension in the&amp;#010;   directory. If you name the file something else, it must be the only one with that&amp;#010;   extension in the directory to guarantee that Code Generator will choose it.&amp;#010;&amp;#010;you can use variables in your heading files which are replaced at generation&amp;#010;time. possible variables are : author, date, time, filename and filepath.&amp;#010;just write %variable_name%&amp;#010;&amp;#010;This file was generated on Tue Dec 28 2004 at 15:25:17&amp;#010;The original location of this file is &amp;#010;**************************************************************************/&amp;#010;" />
      </header>
      <classfields/>
     </classifiercodedocument>
@@ -1294,29 +1382,39 @@
         </codeaccessormethod>
         <codeoperation parent_id="112" tag="operation_112" canDelete="false" role_id="-1" >
          <header>
-          <cppcodedocumentation tag="" />
+          <cppcodedocumentation tag="" text="return specific item" />
          </header>
         </codeoperation>
         <codeoperation parent_id="117" tag="operation_117" canDelete="false" role_id="-1" >
          <header>
-          <cppcodedocumentation tag="" />
+          <cppcodedocumentation tag="" text="set specific item" />
          </header>
         </codeoperation>
         <codeoperation parent_id="122" tag="operation_122" canDelete="false" role_id="-1" >
          <header>
-          <cppcodedocumentation tag="" />
+          <cppcodedocumentation tag="" text="load options from xml string" />
          </header>
         </codeoperation>
         <codeoperation parent_id="123" tag="operation_123" canDelete="false" role_id="-1" >
          <header>
-          <cppcodedocumentation tag="" />
+          <cppcodedocumentation tag="" text="save options to xml" />
+         </header>
+        </codeoperation>
+        <codeoperation parent_id="131" tag="operation_131" canDelete="false" role_id="-1" >
+         <header>
+          <cppcodedocumentation tag="" text="Creates a QFrame with all fields and controls for options" />
+         </header>
+        </codeoperation>
+        <codeoperation parent_id="132" tag="operation_132" canDelete="false" role_id="-1" >
+         <header>
+          <cppcodedocumentation tag="" text="Syncronize the content from the Frame to local settings storage" />
          </header>
         </codeoperation>
        </textblocks>
       </hierarchicalcodeblock>
      </textblocks>
      <header>
-      <codecomment tag="" text="/************************************************************************&amp;#010;  			optionstorage.cpp - Copyright reflog&amp;#010;&amp;#010;Here you can write a license for your code, some comments or any other&amp;#010;information you want to have in your generated code. To to this simply&amp;#010;configure the &quot;headings&quot; directory in uml to point to a directory&amp;#010;where you have your heading files.&amp;#010;&amp;#010;or you can just replace the contents of this file with your own.&amp;#010;If you want to do this, this file is located at&amp;#010;&amp;#010;/usr/kde/3.3/share/apps/umbrello/headings/heading.cpp&amp;#010;&amp;#010;-->Code Generators searches for heading files based on the file extension&amp;#010;   i.e. it will look for a file name ending in &quot;.h&quot; to include in C++ header&amp;#010;   files, and for a file name ending in &quot;.java&quot; to include in all generated&amp;#010;   java code.&amp;#010;   If you name the file &quot;heading.&lt;extension>&quot;, Code Generator will always&amp;#010;   choose this file even if there are other files with the same extension in the&amp;#010;   directory. If you name the file something else, it must be the only one with that&amp;#010;   extension in the directory to guarantee that Code Generator will choose it.&amp;#010;&amp;#010;you can use variables in your heading files which are replaced at generation&amp;#010;time. possible variables are : author, date, time, filename and filepath.&amp;#010;just write %variable_name%&amp;#010;&amp;#010;This file was generated on Mon Dec 27 2004 at 14:28:30&amp;#010;The original location of this file is &amp;#010;**************************************************************************/&amp;#010;" />
+      <codecomment tag="" text="/************************************************************************&amp;#010;  			optionstorage.cpp - Copyright reflog&amp;#010;&amp;#010;Here you can write a license for your code, some comments or any other&amp;#010;information you want to have in your generated code. To to this simply&amp;#010;configure the &quot;headings&quot; directory in uml to point to a directory&amp;#010;where you have your heading files.&amp;#010;&amp;#010;or you can just replace the contents of this file with your own.&amp;#010;If you want to do this, this file is located at&amp;#010;&amp;#010;/usr/kde/3.3/share/apps/umbrello/headings/heading.cpp&amp;#010;&amp;#010;-->Code Generators searches for heading files based on the file extension&amp;#010;   i.e. it will look for a file name ending in &quot;.h&quot; to include in C++ header&amp;#010;   files, and for a file name ending in &quot;.java&quot; to include in all generated&amp;#010;   java code.&amp;#010;   If you name the file &quot;heading.&lt;extension>&quot;, Code Generator will always&amp;#010;   choose this file even if there are other files with the same extension in the&amp;#010;   directory. If you name the file something else, it must be the only one with that&amp;#010;   extension in the directory to guarantee that Code Generator will choose it.&amp;#010;&amp;#010;you can use variables in your heading files which are replaced at generation&amp;#010;time. possible variables are : author, date, time, filename and filepath.&amp;#010;just write %variable_name%&amp;#010;&amp;#010;This file was generated on Tue Dec 28 2004 at 15:28:48&amp;#010;The original location of this file is &amp;#010;**************************************************************************/&amp;#010;" />
      </header>
      <classfields>
       <codeclassfield parent_id="111" field_type="3" initialValue="" role_id="1" writeOutMethods="true" listClassName="" >
@@ -1356,12 +1454,6 @@
       </codeclassfield>
      </classfields>
     </classifiercodedocument>
-    <codedocument writeOutCode="false" package="" id="Makefile_DOC" fileExt="" fileName="Makefile" >
-     <textblocks/>
-     <header>
-      <codecomment tag="" />
-     </header>
-    </codedocument>
     <classifiercodedocument writeOutCode="true" package="" id="125" parent_class="125" fileExt=".cpp" fileName="eventtype" >
      <textblocks>
       <codeblockwithcomments tag="includes" text="#include &quot;string&quot;&amp;#010;" >
@@ -1383,7 +1475,38 @@
       </hierarchicalcodeblock>
      </textblocks>
      <header>
-      <codecomment tag="" text="/************************************************************************&amp;#010;  			eventtype.cpp - Copyright reflog&amp;#010;&amp;#010;Here you can write a license for your code, some comments or any other&amp;#010;information you want to have in your generated code. To to this simply&amp;#010;configure the &quot;headings&quot; directory in uml to point to a directory&amp;#010;where you have your heading files.&amp;#010;&amp;#010;or you can just replace the contents of this file with your own.&amp;#010;If you want to do this, this file is located at&amp;#010;&amp;#010;/usr/kde/3.3/share/apps/umbrello/headings/heading.cpp&amp;#010;&amp;#010;-->Code Generators searches for heading files based on the file extension&amp;#010;   i.e. it will look for a file name ending in &quot;.h&quot; to include in C++ header&amp;#010;   files, and for a file name ending in &quot;.java&quot; to include in all generated&amp;#010;   java code.&amp;#010;   If you name the file &quot;heading.&lt;extension>&quot;, Code Generator will always&amp;#010;   choose this file even if there are other files with the same extension in the&amp;#010;   directory. If you name the file something else, it must be the only one with that&amp;#010;   extension in the directory to guarantee that Code Generator will choose it.&amp;#010;&amp;#010;you can use variables in your heading files which are replaced at generation&amp;#010;time. possible variables are : author, date, time, filename and filepath.&amp;#010;just write %variable_name%&amp;#010;&amp;#010;This file was generated on Mon Dec 27 2004 at 14:27:28&amp;#010;The original location of this file is &amp;#010;**************************************************************************/&amp;#010;" />
+      <codecomment tag="" text="/************************************************************************&amp;#010;  			eventtype.cpp - Copyright reflog&amp;#010;&amp;#010;Here you can write a license for your code, some comments or any other&amp;#010;information you want to have in your generated code. To to this simply&amp;#010;configure the &quot;headings&quot; directory in uml to point to a directory&amp;#010;where you have your heading files.&amp;#010;&amp;#010;or you can just replace the contents of this file with your own.&amp;#010;If you want to do this, this file is located at&amp;#010;&amp;#010;/usr/kde/3.3/share/apps/umbrello/headings/heading.cpp&amp;#010;&amp;#010;-->Code Generators searches for heading files based on the file extension&amp;#010;   i.e. it will look for a file name ending in &quot;.h&quot; to include in C++ header&amp;#010;   files, and for a file name ending in &quot;.java&quot; to include in all generated&amp;#010;   java code.&amp;#010;   If you name the file &quot;heading.&lt;extension>&quot;, Code Generator will always&amp;#010;   choose this file even if there are other files with the same extension in the&amp;#010;   directory. If you name the file something else, it must be the only one with that&amp;#010;   extension in the directory to guarantee that Code Generator will choose it.&amp;#010;&amp;#010;you can use variables in your heading files which are replaced at generation&amp;#010;time. possible variables are : author, date, time, filename and filepath.&amp;#010;just write %variable_name%&amp;#010;&amp;#010;This file was generated on Tue Dec 28 2004 at 15:30:11&amp;#010;The original location of this file is &amp;#010;**************************************************************************/&amp;#010;" />
+     </header>
+     <classfields/>
+    </classifiercodedocument>
+    <codedocument writeOutCode="false" package="" id="Makefile_DOC" fileExt="" fileName="Makefile" >
+     <textblocks/>
+     <header>
+      <codecomment tag="" />
+     </header>
+    </codedocument>
+    <classifiercodedocument writeOutCode="true" package="" id="139" parent_class="139" fileExt=".cpp" fileName="qpixmap" >
+     <textblocks>
+      <codeblockwithcomments tag="includes" text="#include &quot;string&quot;&amp;#010;" >
+       <header>
+        <cppcodedocumentation tag="" writeOutText="false" />
+       </header>
+      </codeblockwithcomments>
+      <hierarchicalcodeblock tag="constructionMethodsBlock" canDelete="false" >
+       <header>
+        <cppcodedocumentation tag="" text="Constructors/Destructors" />
+       </header>
+       <textblocks/>
+      </hierarchicalcodeblock>
+      <hierarchicalcodeblock tag="otherMethodsBlock" canDelete="false" >
+       <header>
+        <cppcodedocumentation tag="" text="Methods" />
+       </header>
+       <textblocks/>
+      </hierarchicalcodeblock>
+     </textblocks>
+     <header>
+      <codecomment tag="" text="/************************************************************************&amp;#010;  			qpixmap.cpp - Copyright reflog&amp;#010;&amp;#010;Here you can write a license for your code, some comments or any other&amp;#010;information you want to have in your generated code. To to this simply&amp;#010;configure the &quot;headings&quot; directory in uml to point to a directory&amp;#010;where you have your heading files.&amp;#010;&amp;#010;or you can just replace the contents of this file with your own.&amp;#010;If you want to do this, this file is located at&amp;#010;&amp;#010;/usr/kde/3.3/share/apps/umbrello/headings/heading.cpp&amp;#010;&amp;#010;-->Code Generators searches for heading files based on the file extension&amp;#010;   i.e. it will look for a file name ending in &quot;.h&quot; to include in C++ header&amp;#010;   files, and for a file name ending in &quot;.java&quot; to include in all generated&amp;#010;   java code.&amp;#010;   If you name the file &quot;heading.&lt;extension>&quot;, Code Generator will always&amp;#010;   choose this file even if there are other files with the same extension in the&amp;#010;   directory. If you name the file something else, it must be the only one with that&amp;#010;   extension in the directory to guarantee that Code Generator will choose it.&amp;#010;&amp;#010;you can use variables in your heading files which are replaced at generation&amp;#010;time. possible variables are : author, date, time, filename and filepath.&amp;#010;just write %variable_name%&amp;#010;&amp;#010;This file was generated on Tue Dec 28 2004 at 15:23:58&amp;#010;The original location of this file is &amp;#010;**************************************************************************/&amp;#010;" />
      </header>
      <classfields/>
     </classifiercodedocument>
@@ -1897,7 +2020,7 @@
         <cppcodedocumentation tag="" writeOutText="false" />
        </header>
       </codeblockwithcomments>
-      <codeblockwithcomments tag="includes" text="#include &lt;string>&amp;#010;#include &quot;string.h&quot;&amp;#010;#include &quot;optionstorage.h&quot;&amp;#010;" >
+      <codeblockwithcomments tag="includes" text="#include &lt;string>&amp;#010;#include &quot;string.h&quot;&amp;#010;#include &quot;optionstorage.h&quot;&amp;#010;#include &quot;qpixmap.h&quot;&amp;#010;" >
        <header>
         <cppcodedocumentation tag="" writeOutText="false" />
        </header>
@@ -1934,22 +2057,27 @@
              <textblocks>
               <ccfdeclarationcodeblock parent_id="106" tag="tblock_5" canDelete="false" indentLevel="1" role_id="-1" text=" string Name;" >
                <header>
-                <cppcodedocumentation tag="" writeOutText="false" indentLevel="1" />
+                <cppcodedocumentation tag="" indentLevel="1" text="Visible name. Will be used as tooltip, as menu caption or as item in config dialog." />
                </header>
               </ccfdeclarationcodeblock>
               <ccfdeclarationcodeblock parent_id="107" tag="tblock_8" canDelete="false" indentLevel="1" role_id="-1" text=" string Author;" >
                <header>
-                <cppcodedocumentation tag="" writeOutText="false" indentLevel="1" />
+                <cppcodedocumentation tag="" indentLevel="1" text="Who's responsible for this???" />
                </header>
               </ccfdeclarationcodeblock>
               <ccfdeclarationcodeblock parent_id="110" tag="tblock_11" canDelete="false" indentLevel="1" role_id="-1" text=" OptionStorage Options;" >
                <header>
-                <cppcodedocumentation tag="" writeOutText="false" indentLevel="1" />
+                <cppcodedocumentation tag="" indentLevel="1" text="Option storage class instance" />
                </header>
               </ccfdeclarationcodeblock>
               <ccfdeclarationcodeblock parent_id="111" tag="tblock_14" canDelete="false" writeOutText="false" indentLevel="1" role_id="0" text=" OptionStorage ;" >
                <header>
                 <cppcodedocumentation tag="" writeOutText="false" indentLevel="1" />
+               </header>
+              </ccfdeclarationcodeblock>
+              <ccfdeclarationcodeblock parent_id="138" tag="tblock_0" canDelete="false" indentLevel="1" role_id="-1" text=" QPixmap Icon;" >
+               <header>
+                <cppcodedocumentation tag="" indentLevel="1" text="Byte array of the icon. (used in menu and toolbar)" />
                </header>
               </ccfdeclarationcodeblock>
              </textblocks>
@@ -1989,32 +2117,32 @@
                  <textblocks>
                   <codeaccessormethod accessType="0" parent_id="106" tag="hblock_tag_6" canDelete="false" indentLevel="1" classfield_id="106" role_id="-1" >
                    <header>
-                    <cppcodedocumentation tag="" indentLevel="1" />
+                    <cppcodedocumentation tag="" indentLevel="1" text="Get the value of Name&amp;#010;Visible name. Will be used as tooltip, as menu caption or as item in config dialog.&amp;#010;@return the value of Name" />
                    </header>
                   </codeaccessormethod>
                   <codeaccessormethod accessType="1" parent_id="106" tag="hblock_tag_7" canDelete="false" indentLevel="1" classfield_id="106" role_id="-1" >
                    <header>
-                    <cppcodedocumentation tag="" indentLevel="1" />
+                    <cppcodedocumentation tag="" indentLevel="1" text="Set the value of Name&amp;#010;Visible name. Will be used as tooltip, as menu caption or as item in config dialog.&amp;#010;@param value the value of Name" />
                    </header>
                   </codeaccessormethod>
                   <codeaccessormethod accessType="0" parent_id="107" tag="hblock_tag_9" canDelete="false" indentLevel="1" classfield_id="107" role_id="-1" >
                    <header>
-                    <cppcodedocumentation tag="" indentLevel="1" />
+                    <cppcodedocumentation tag="" indentLevel="1" text="Get the value of Author&amp;#010;Who's responsible for this???&amp;#010;@return the value of Author" />
                    </header>
                   </codeaccessormethod>
                   <codeaccessormethod accessType="1" parent_id="107" tag="hblock_tag_10" canDelete="false" indentLevel="1" classfield_id="107" role_id="-1" >
                    <header>
-                    <cppcodedocumentation tag="" indentLevel="1" />
+                    <cppcodedocumentation tag="" indentLevel="1" text="Set the value of Author&amp;#010;Who's responsible for this???&amp;#010;@param value the value of Author" />
                    </header>
                   </codeaccessormethod>
                   <codeaccessormethod accessType="0" parent_id="110" tag="hblock_tag_12" canDelete="false" indentLevel="1" classfield_id="110" role_id="-1" >
                    <header>
-                    <cppcodedocumentation tag="" indentLevel="1" />
+                    <cppcodedocumentation tag="" indentLevel="1" text="Get the value of Options&amp;#010;Option storage class instance&amp;#010;@return the value of Options" />
                    </header>
                   </codeaccessormethod>
                   <codeaccessormethod accessType="1" parent_id="110" tag="hblock_tag_13" canDelete="false" indentLevel="1" classfield_id="110" role_id="-1" >
                    <header>
-                    <cppcodedocumentation tag="" indentLevel="1" />
+                    <cppcodedocumentation tag="" indentLevel="1" text="Set the value of Options&amp;#010;Option storage class instance&amp;#010;@param value the value of Options" />
                    </header>
                   </codeaccessormethod>
                   <codeaccessormethod accessType="0" parent_id="111" tag="hblock_tag_15" canDelete="false" writeOutText="false" indentLevel="1" classfield_id="111" role_id="0" >
@@ -2042,6 +2170,16 @@
                     <cppcodedocumentation tag="" indentLevel="1" />
                    </header>
                   </codeaccessormethod>
+                  <codeaccessormethod accessType="0" parent_id="138" tag="hblock_tag_0" canDelete="false" indentLevel="1" classfield_id="138" role_id="-1" >
+                   <header>
+                    <cppcodedocumentation tag="" indentLevel="1" text="Get the value of Icon&amp;#010;Byte array of the icon. (used in menu and toolbar)&amp;#010;@return the value of Icon" />
+                   </header>
+                  </codeaccessormethod>
+                  <codeaccessormethod accessType="1" parent_id="138" tag="hblock_tag_14" canDelete="false" indentLevel="1" classfield_id="138" role_id="-1" >
+                   <header>
+                    <cppcodedocumentation tag="" indentLevel="1" text="Set the value of Icon&amp;#010;Byte array of the icon. (used in menu and toolbar)&amp;#010;@param value the value of Icon" />
+                   </header>
+                  </codeaccessormethod>
                  </textblocks>
                 </hierarchicalcodeblock>
                </textblocks>
@@ -2050,7 +2188,18 @@
                <header>
                 <cppcodedocumentation tag="" indentLevel="1" text="Operations" />
                </header>
-               <textblocks/>
+               <textblocks>
+                <codeoperation parent_id="134" tag="operation_134" canDelete="false" indentLevel="1" role_id="-1" >
+                 <header>
+                  <cppcodedocumentation tag="" indentLevel="1" text="Performs loading of the plugin" />
+                 </header>
+                </codeoperation>
+                <codeoperation parent_id="141" tag="operation_141" canDelete="false" indentLevel="1" role_id="-1" >
+                 <header>
+                  <cppcodedocumentation tag="" indentLevel="1" text="Performs unloading of the plugin" />
+                 </header>
+                </codeoperation>
+               </textblocks>
               </hierarchicalcodeblock>
              </textblocks>
             </hierarchicalcodeblock>
@@ -2169,66 +2318,66 @@
       </codeblockwithcomments>
      </textblocks>
      <header>
-      <codecomment tag="" text="/************************************************************************&amp;#010;  			plugin.h - Copyright reflog&amp;#010;&amp;#010;Here you can write a license for your code, some comments or any other&amp;#010;information you want to have in your generated code. To to this simply&amp;#010;configure the &quot;headings&quot; directory in uml to point to a directory&amp;#010;where you have your heading files.&amp;#010;&amp;#010;or you can just replace the contents of this file with your own.&amp;#010;If you want to do this, this file is located at&amp;#010;&amp;#010;/usr/kde/3.3/share/apps/umbrello/headings/heading.h&amp;#010;&amp;#010;-->Code Generators searches for heading files based on the file extension&amp;#010;   i.e. it will look for a file name ending in &quot;.h&quot; to include in C++ header&amp;#010;   files, and for a file name ending in &quot;.java&quot; to include in all generated&amp;#010;   java code.&amp;#010;   If you name the file &quot;heading.&lt;extension>&quot;, Code Generator will always&amp;#010;   choose this file even if there are other files with the same extension in the&amp;#010;   directory. If you name the file something else, it must be the only one with that&amp;#010;   extension in the directory to guarantee that Code Generator will choose it.&amp;#010;&amp;#010;you can use variables in your heading files which are replaced at generation&amp;#010;time. possible variables are : author, date, time, filename and filepath.&amp;#010;just write %variable_name%&amp;#010;&amp;#010;This file was generated on Mon Dec 27 2004 at 14:28:29&amp;#010;The original location of this file is &amp;#010;**************************************************************************/&amp;#010;" />
+      <codecomment tag="" text="/************************************************************************&amp;#010;  			plugin.h - Copyright reflog&amp;#010;&amp;#010;Here you can write a license for your code, some comments or any other&amp;#010;information you want to have in your generated code. To to this simply&amp;#010;configure the &quot;headings&quot; directory in uml to point to a directory&amp;#010;where you have your heading files.&amp;#010;&amp;#010;or you can just replace the contents of this file with your own.&amp;#010;If you want to do this, this file is located at&amp;#010;&amp;#010;/usr/kde/3.3/share/apps/umbrello/headings/heading.h&amp;#010;&amp;#010;-->Code Generators searches for heading files based on the file extension&amp;#010;   i.e. it will look for a file name ending in &quot;.h&quot; to include in C++ header&amp;#010;   files, and for a file name ending in &quot;.java&quot; to include in all generated&amp;#010;   java code.&amp;#010;   If you name the file &quot;heading.&lt;extension>&quot;, Code Generator will always&amp;#010;   choose this file even if there are other files with the same extension in the&amp;#010;   directory. If you name the file something else, it must be the only one with that&amp;#010;   extension in the directory to guarantee that Code Generator will choose it.&amp;#010;&amp;#010;you can use variables in your heading files which are replaced at generation&amp;#010;time. possible variables are : author, date, time, filename and filepath.&amp;#010;just write %variable_name%&amp;#010;&amp;#010;This file was generated on Tue Dec 28 2004 at 15:28:08&amp;#010;The original location of this file is &amp;#010;**************************************************************************/&amp;#010;" />
      </header>
      <classfields>
       <codeclassfield parent_id="106" field_type="0" initialValue="" role_id="-1" writeOutMethods="true" listClassName="" >
        <header>
-        <cppcodedocumentation tag="" />
+        <cppcodedocumentation tag="" text="Visible name. Will be used as tooltip, as menu caption or as item in config dialog." />
        </header>
        <ccfdeclarationcodeblock parent_id="106" tag="tblock_5" canDelete="false" indentLevel="1" role_id="-1" text=" string Name;" >
         <header>
-         <cppcodedocumentation tag="" writeOutText="false" indentLevel="1" />
+         <cppcodedocumentation tag="" indentLevel="1" text="Visible name. Will be used as tooltip, as menu caption or as item in config dialog." />
         </header>
        </ccfdeclarationcodeblock>
        <codeaccessormethod accessType="0" parent_id="106" tag="hblock_tag_6" canDelete="false" indentLevel="1" classfield_id="106" role_id="-1" >
         <header>
-         <cppcodedocumentation tag="" indentLevel="1" />
+         <cppcodedocumentation tag="" indentLevel="1" text="Get the value of Name&amp;#010;Visible name. Will be used as tooltip, as menu caption or as item in config dialog.&amp;#010;@return the value of Name" />
         </header>
        </codeaccessormethod>
        <codeaccessormethod accessType="1" parent_id="106" tag="hblock_tag_7" canDelete="false" indentLevel="1" classfield_id="106" role_id="-1" >
         <header>
-         <cppcodedocumentation tag="" indentLevel="1" />
+         <cppcodedocumentation tag="" indentLevel="1" text="Set the value of Name&amp;#010;Visible name. Will be used as tooltip, as menu caption or as item in config dialog.&amp;#010;@param value the value of Name" />
         </header>
        </codeaccessormethod>
       </codeclassfield>
       <codeclassfield parent_id="107" field_type="0" initialValue="" role_id="-1" writeOutMethods="true" listClassName="" >
        <header>
-        <cppcodedocumentation tag="" />
+        <cppcodedocumentation tag="" text="Who's responsible for this???" />
        </header>
        <ccfdeclarationcodeblock parent_id="107" tag="tblock_8" canDelete="false" indentLevel="1" role_id="-1" text=" string Author;" >
         <header>
-         <cppcodedocumentation tag="" writeOutText="false" indentLevel="1" />
+         <cppcodedocumentation tag="" indentLevel="1" text="Who's responsible for this???" />
         </header>
        </ccfdeclarationcodeblock>
        <codeaccessormethod accessType="0" parent_id="107" tag="hblock_tag_9" canDelete="false" indentLevel="1" classfield_id="107" role_id="-1" >
         <header>
-         <cppcodedocumentation tag="" indentLevel="1" />
+         <cppcodedocumentation tag="" indentLevel="1" text="Get the value of Author&amp;#010;Who's responsible for this???&amp;#010;@return the value of Author" />
         </header>
        </codeaccessormethod>
        <codeaccessormethod accessType="1" parent_id="107" tag="hblock_tag_10" canDelete="false" indentLevel="1" classfield_id="107" role_id="-1" >
         <header>
-         <cppcodedocumentation tag="" indentLevel="1" />
+         <cppcodedocumentation tag="" indentLevel="1" text="Set the value of Author&amp;#010;Who's responsible for this???&amp;#010;@param value the value of Author" />
         </header>
        </codeaccessormethod>
       </codeclassfield>
       <codeclassfield parent_id="110" field_type="0" initialValue="" role_id="-1" writeOutMethods="true" listClassName="" >
        <header>
-        <cppcodedocumentation tag="" />
+        <cppcodedocumentation tag="" text="Option storage class instance" />
        </header>
        <ccfdeclarationcodeblock parent_id="110" tag="tblock_11" canDelete="false" indentLevel="1" role_id="-1" text=" OptionStorage Options;" >
         <header>
-         <cppcodedocumentation tag="" writeOutText="false" indentLevel="1" />
+         <cppcodedocumentation tag="" indentLevel="1" text="Option storage class instance" />
         </header>
        </ccfdeclarationcodeblock>
        <codeaccessormethod accessType="0" parent_id="110" tag="hblock_tag_12" canDelete="false" indentLevel="1" classfield_id="110" role_id="-1" >
         <header>
-         <cppcodedocumentation tag="" indentLevel="1" />
+         <cppcodedocumentation tag="" indentLevel="1" text="Get the value of Options&amp;#010;Option storage class instance&amp;#010;@return the value of Options" />
         </header>
        </codeaccessormethod>
        <codeaccessormethod accessType="1" parent_id="110" tag="hblock_tag_13" canDelete="false" indentLevel="1" classfield_id="110" role_id="-1" >
         <header>
-         <cppcodedocumentation tag="" indentLevel="1" />
+         <cppcodedocumentation tag="" indentLevel="1" text="Set the value of Options&amp;#010;Option storage class instance&amp;#010;@param value the value of Options" />
         </header>
        </codeaccessormethod>
       </codeclassfield>
@@ -2264,6 +2413,26 @@
        <codeaccessormethod accessType="4" parent_id="111" tag="hblock_tag_19" canDelete="false" writeOutText="false" indentLevel="1" classfield_id="111" role_id="0" >
         <header>
          <cppcodedocumentation tag="" indentLevel="1" />
+        </header>
+       </codeaccessormethod>
+      </codeclassfield>
+      <codeclassfield parent_id="138" field_type="0" initialValue="" role_id="-1" writeOutMethods="true" listClassName="" >
+       <header>
+        <cppcodedocumentation tag="" text="Byte array of the icon. (used in menu and toolbar)" />
+       </header>
+       <ccfdeclarationcodeblock parent_id="138" tag="tblock_0" canDelete="false" indentLevel="1" role_id="-1" text=" QPixmap Icon;" >
+        <header>
+         <cppcodedocumentation tag="" indentLevel="1" text="Byte array of the icon. (used in menu and toolbar)" />
+        </header>
+       </ccfdeclarationcodeblock>
+       <codeaccessormethod accessType="0" parent_id="138" tag="hblock_tag_0" canDelete="false" indentLevel="1" classfield_id="138" role_id="-1" >
+        <header>
+         <cppcodedocumentation tag="" indentLevel="1" text="Get the value of Icon&amp;#010;Byte array of the icon. (used in menu and toolbar)&amp;#010;@return the value of Icon" />
+        </header>
+       </codeaccessormethod>
+       <codeaccessormethod accessType="1" parent_id="138" tag="hblock_tag_14" canDelete="false" indentLevel="1" classfield_id="138" role_id="-1" >
+        <header>
+         <cppcodedocumentation tag="" indentLevel="1" text="Set the value of Icon&amp;#010;Byte array of the icon. (used in menu and toolbar)&amp;#010;@param value the value of Icon" />
         </header>
        </codeaccessormethod>
       </codeclassfield>
@@ -2352,7 +2521,13 @@
                <header>
                 <cppcodedocumentation tag="" indentLevel="1" text="Operations" />
                </header>
-               <textblocks/>
+               <textblocks>
+                <codeoperation parent_id="135" tag="operation_135" canDelete="false" indentLevel="1" role_id="-1" >
+                 <header>
+                  <cppcodedocumentation tag="" indentLevel="1" text="Should return the widget(control) that will be added to the toolbar" />
+                 </header>
+                </codeoperation>
+               </textblocks>
               </hierarchicalcodeblock>
              </textblocks>
             </hierarchicalcodeblock>
@@ -2471,7 +2646,7 @@
       </codeblockwithcomments>
      </textblocks>
      <header>
-      <codecomment tag="" text="/************************************************************************&amp;#010;  			toolbarplugin.h - Copyright reflog&amp;#010;&amp;#010;Here you can write a license for your code, some comments or any other&amp;#010;information you want to have in your generated code. To to this simply&amp;#010;configure the &quot;headings&quot; directory in uml to point to a directory&amp;#010;where you have your heading files.&amp;#010;&amp;#010;or you can just replace the contents of this file with your own.&amp;#010;If you want to do this, this file is located at&amp;#010;&amp;#010;/usr/kde/3.3/share/apps/umbrello/headings/heading.h&amp;#010;&amp;#010;-->Code Generators searches for heading files based on the file extension&amp;#010;   i.e. it will look for a file name ending in &quot;.h&quot; to include in C++ header&amp;#010;   files, and for a file name ending in &quot;.java&quot; to include in all generated&amp;#010;   java code.&amp;#010;   If you name the file &quot;heading.&lt;extension>&quot;, Code Generator will always&amp;#010;   choose this file even if there are other files with the same extension in the&amp;#010;   directory. If you name the file something else, it must be the only one with that&amp;#010;   extension in the directory to guarantee that Code Generator will choose it.&amp;#010;&amp;#010;you can use variables in your heading files which are replaced at generation&amp;#010;time. possible variables are : author, date, time, filename and filepath.&amp;#010;just write %variable_name%&amp;#010;&amp;#010;This file was generated on Mon Dec 27 2004 at 14:26:26&amp;#010;The original location of this file is &amp;#010;**************************************************************************/&amp;#010;" />
+      <codecomment tag="" text="/************************************************************************&amp;#010;  			toolbarplugin.h - Copyright reflog&amp;#010;&amp;#010;Here you can write a license for your code, some comments or any other&amp;#010;information you want to have in your generated code. To to this simply&amp;#010;configure the &quot;headings&quot; directory in uml to point to a directory&amp;#010;where you have your heading files.&amp;#010;&amp;#010;or you can just replace the contents of this file with your own.&amp;#010;If you want to do this, this file is located at&amp;#010;&amp;#010;/usr/kde/3.3/share/apps/umbrello/headings/heading.h&amp;#010;&amp;#010;-->Code Generators searches for heading files based on the file extension&amp;#010;   i.e. it will look for a file name ending in &quot;.h&quot; to include in C++ header&amp;#010;   files, and for a file name ending in &quot;.java&quot; to include in all generated&amp;#010;   java code.&amp;#010;   If you name the file &quot;heading.&lt;extension>&quot;, Code Generator will always&amp;#010;   choose this file even if there are other files with the same extension in the&amp;#010;   directory. If you name the file something else, it must be the only one with that&amp;#010;   extension in the directory to guarantee that Code Generator will choose it.&amp;#010;&amp;#010;you can use variables in your heading files which are replaced at generation&amp;#010;time. possible variables are : author, date, time, filename and filepath.&amp;#010;just write %variable_name%&amp;#010;&amp;#010;This file was generated on Tue Dec 28 2004 at 15:26:09&amp;#010;The original location of this file is &amp;#010;**************************************************************************/&amp;#010;" />
      </header>
      <classfields/>
     </classifiercodedocument>
@@ -2558,7 +2733,13 @@
                <header>
                 <cppcodedocumentation tag="" indentLevel="1" text="Operations" />
                </header>
-               <textblocks/>
+               <textblocks>
+                <codeoperation parent_id="136" tag="operation_136" canDelete="false" indentLevel="1" role_id="-1" >
+                 <header>
+                  <cppcodedocumentation tag="" indentLevel="1" text="Should return item that will be added to the popup menu" />
+                 </header>
+                </codeoperation>
+               </textblocks>
               </hierarchicalcodeblock>
              </textblocks>
             </hierarchicalcodeblock>
@@ -2677,7 +2858,7 @@
       </codeblockwithcomments>
      </textblocks>
      <header>
-      <codecomment tag="" text="/************************************************************************&amp;#010;  			menuplugin.h - Copyright reflog&amp;#010;&amp;#010;Here you can write a license for your code, some comments or any other&amp;#010;information you want to have in your generated code. To to this simply&amp;#010;configure the &quot;headings&quot; directory in uml to point to a directory&amp;#010;where you have your heading files.&amp;#010;&amp;#010;or you can just replace the contents of this file with your own.&amp;#010;If you want to do this, this file is located at&amp;#010;&amp;#010;/usr/kde/3.3/share/apps/umbrello/headings/heading.h&amp;#010;&amp;#010;-->Code Generators searches for heading files based on the file extension&amp;#010;   i.e. it will look for a file name ending in &quot;.h&quot; to include in C++ header&amp;#010;   files, and for a file name ending in &quot;.java&quot; to include in all generated&amp;#010;   java code.&amp;#010;   If you name the file &quot;heading.&lt;extension>&quot;, Code Generator will always&amp;#010;   choose this file even if there are other files with the same extension in the&amp;#010;   directory. If you name the file something else, it must be the only one with that&amp;#010;   extension in the directory to guarantee that Code Generator will choose it.&amp;#010;&amp;#010;you can use variables in your heading files which are replaced at generation&amp;#010;time. possible variables are : author, date, time, filename and filepath.&amp;#010;just write %variable_name%&amp;#010;&amp;#010;This file was generated on Mon Dec 27 2004 at 14:26:27&amp;#010;The original location of this file is &amp;#010;**************************************************************************/&amp;#010;" />
+      <codecomment tag="" text="/************************************************************************&amp;#010;  			menuplugin.h - Copyright reflog&amp;#010;&amp;#010;Here you can write a license for your code, some comments or any other&amp;#010;information you want to have in your generated code. To to this simply&amp;#010;configure the &quot;headings&quot; directory in uml to point to a directory&amp;#010;where you have your heading files.&amp;#010;&amp;#010;or you can just replace the contents of this file with your own.&amp;#010;If you want to do this, this file is located at&amp;#010;&amp;#010;/usr/kde/3.3/share/apps/umbrello/headings/heading.h&amp;#010;&amp;#010;-->Code Generators searches for heading files based on the file extension&amp;#010;   i.e. it will look for a file name ending in &quot;.h&quot; to include in C++ header&amp;#010;   files, and for a file name ending in &quot;.java&quot; to include in all generated&amp;#010;   java code.&amp;#010;   If you name the file &quot;heading.&lt;extension>&quot;, Code Generator will always&amp;#010;   choose this file even if there are other files with the same extension in the&amp;#010;   directory. If you name the file something else, it must be the only one with that&amp;#010;   extension in the directory to guarantee that Code Generator will choose it.&amp;#010;&amp;#010;you can use variables in your heading files which are replaced at generation&amp;#010;time. possible variables are : author, date, time, filename and filepath.&amp;#010;just write %variable_name%&amp;#010;&amp;#010;This file was generated on Tue Dec 28 2004 at 15:25:52&amp;#010;The original location of this file is &amp;#010;**************************************************************************/&amp;#010;" />
      </header>
      <classfields/>
     </classifiercodedocument>
@@ -2688,7 +2869,7 @@
         <cppcodedocumentation tag="" writeOutText="false" />
        </header>
       </codeblockwithcomments>
-      <codeblockwithcomments tag="includes" text="#include &lt;string>&amp;#010;#include &quot;plugin.h&quot;&amp;#010;" >
+      <codeblockwithcomments tag="includes" text="#include &lt;string>&amp;#010;#include &quot;plugin.h&quot;&amp;#010;#include &quot;string.h&quot;&amp;#010;" >
        <header>
         <cppcodedocumentation tag="" writeOutText="false" />
        </header>
@@ -2764,7 +2945,13 @@
                <header>
                 <cppcodedocumentation tag="" indentLevel="1" text="Operations" />
                </header>
-               <textblocks/>
+               <textblocks>
+                <codeoperation parent_id="137" tag="operation_137" canDelete="false" indentLevel="1" role_id="-1" >
+                 <header>
+                  <cppcodedocumentation tag="" indentLevel="1" text="Should return a function that would handle this specific event" />
+                 </header>
+                </codeoperation>
+               </textblocks>
               </hierarchicalcodeblock>
              </textblocks>
             </hierarchicalcodeblock>
@@ -2883,7 +3070,7 @@
       </codeblockwithcomments>
      </textblocks>
      <header>
-      <codecomment tag="" text="/************************************************************************&amp;#010;  			eventplugin.h - Copyright reflog&amp;#010;&amp;#010;Here you can write a license for your code, some comments or any other&amp;#010;information you want to have in your generated code. To to this simply&amp;#010;configure the &quot;headings&quot; directory in uml to point to a directory&amp;#010;where you have your heading files.&amp;#010;&amp;#010;or you can just replace the contents of this file with your own.&amp;#010;If you want to do this, this file is located at&amp;#010;&amp;#010;/usr/kde/3.3/share/apps/umbrello/headings/heading.h&amp;#010;&amp;#010;-->Code Generators searches for heading files based on the file extension&amp;#010;   i.e. it will look for a file name ending in &quot;.h&quot; to include in C++ header&amp;#010;   files, and for a file name ending in &quot;.java&quot; to include in all generated&amp;#010;   java code.&amp;#010;   If you name the file &quot;heading.&lt;extension>&quot;, Code Generator will always&amp;#010;   choose this file even if there are other files with the same extension in the&amp;#010;   directory. If you name the file something else, it must be the only one with that&amp;#010;   extension in the directory to guarantee that Code Generator will choose it.&amp;#010;&amp;#010;you can use variables in your heading files which are replaced at generation&amp;#010;time. possible variables are : author, date, time, filename and filepath.&amp;#010;just write %variable_name%&amp;#010;&amp;#010;This file was generated on Mon Dec 27 2004 at 14:26:28&amp;#010;The original location of this file is &amp;#010;**************************************************************************/&amp;#010;" />
+      <codecomment tag="" text="/************************************************************************&amp;#010;  			eventplugin.h - Copyright reflog&amp;#010;&amp;#010;Here you can write a license for your code, some comments or any other&amp;#010;information you want to have in your generated code. To to this simply&amp;#010;configure the &quot;headings&quot; directory in uml to point to a directory&amp;#010;where you have your heading files.&amp;#010;&amp;#010;or you can just replace the contents of this file with your own.&amp;#010;If you want to do this, this file is located at&amp;#010;&amp;#010;/usr/kde/3.3/share/apps/umbrello/headings/heading.h&amp;#010;&amp;#010;-->Code Generators searches for heading files based on the file extension&amp;#010;   i.e. it will look for a file name ending in &quot;.h&quot; to include in C++ header&amp;#010;   files, and for a file name ending in &quot;.java&quot; to include in all generated&amp;#010;   java code.&amp;#010;   If you name the file &quot;heading.&lt;extension>&quot;, Code Generator will always&amp;#010;   choose this file even if there are other files with the same extension in the&amp;#010;   directory. If you name the file something else, it must be the only one with that&amp;#010;   extension in the directory to guarantee that Code Generator will choose it.&amp;#010;&amp;#010;you can use variables in your heading files which are replaced at generation&amp;#010;time. possible variables are : author, date, time, filename and filepath.&amp;#010;just write %variable_name%&amp;#010;&amp;#010;This file was generated on Tue Dec 28 2004 at 15:25:17&amp;#010;The original location of this file is &amp;#010;**************************************************************************/&amp;#010;" />
      </header>
      <classfields/>
     </classifiercodedocument>
@@ -3005,22 +3192,32 @@
                <textblocks>
                 <codeoperation parent_id="112" tag="operation_112" canDelete="false" indentLevel="1" role_id="-1" >
                  <header>
-                  <cppcodedocumentation tag="" indentLevel="1" text="&amp;#010;@param param " />
+                  <cppcodedocumentation tag="" indentLevel="1" text="return specific item" />
                  </header>
                 </codeoperation>
                 <codeoperation parent_id="117" tag="operation_117" canDelete="false" indentLevel="1" role_id="-1" >
                  <header>
-                  <cppcodedocumentation tag="" indentLevel="1" text="&amp;#010;@param param &amp;#010;@param value " />
+                  <cppcodedocumentation tag="" indentLevel="1" text="set specific item" />
                  </header>
                 </codeoperation>
                 <codeoperation parent_id="122" tag="operation_122" canDelete="false" indentLevel="1" role_id="-1" >
                  <header>
-                  <cppcodedocumentation tag="" indentLevel="1" text="&amp;#010;@param xml " />
+                  <cppcodedocumentation tag="" indentLevel="1" text="load options from xml string" />
                  </header>
                 </codeoperation>
                 <codeoperation parent_id="123" tag="operation_123" canDelete="false" indentLevel="1" role_id="-1" >
                  <header>
-                  <cppcodedocumentation tag="" indentLevel="1" />
+                  <cppcodedocumentation tag="" indentLevel="1" text="save options to xml" />
+                 </header>
+                </codeoperation>
+                <codeoperation parent_id="131" tag="operation_131" canDelete="false" indentLevel="1" role_id="-1" >
+                 <header>
+                  <cppcodedocumentation tag="" indentLevel="1" text="Creates a QFrame with all fields and controls for options" />
+                 </header>
+                </codeoperation>
+                <codeoperation parent_id="132" tag="operation_132" canDelete="false" indentLevel="1" role_id="-1" >
+                 <header>
+                  <cppcodedocumentation tag="" indentLevel="1" text="Syncronize the content from the Frame to local settings storage" />
                  </header>
                 </codeoperation>
                </textblocks>
@@ -3142,7 +3339,7 @@
       </codeblockwithcomments>
      </textblocks>
      <header>
-      <codecomment tag="" text="/************************************************************************&amp;#010;  			optionstorage.h - Copyright reflog&amp;#010;&amp;#010;Here you can write a license for your code, some comments or any other&amp;#010;information you want to have in your generated code. To to this simply&amp;#010;configure the &quot;headings&quot; directory in uml to point to a directory&amp;#010;where you have your heading files.&amp;#010;&amp;#010;or you can just replace the contents of this file with your own.&amp;#010;If you want to do this, this file is located at&amp;#010;&amp;#010;/usr/kde/3.3/share/apps/umbrello/headings/heading.h&amp;#010;&amp;#010;-->Code Generators searches for heading files based on the file extension&amp;#010;   i.e. it will look for a file name ending in &quot;.h&quot; to include in C++ header&amp;#010;   files, and for a file name ending in &quot;.java&quot; to include in all generated&amp;#010;   java code.&amp;#010;   If you name the file &quot;heading.&lt;extension>&quot;, Code Generator will always&amp;#010;   choose this file even if there are other files with the same extension in the&amp;#010;   directory. If you name the file something else, it must be the only one with that&amp;#010;   extension in the directory to guarantee that Code Generator will choose it.&amp;#010;&amp;#010;you can use variables in your heading files which are replaced at generation&amp;#010;time. possible variables are : author, date, time, filename and filepath.&amp;#010;just write %variable_name%&amp;#010;&amp;#010;This file was generated on Mon Dec 27 2004 at 14:28:30&amp;#010;The original location of this file is &amp;#010;**************************************************************************/&amp;#010;" />
+      <codecomment tag="" text="/************************************************************************&amp;#010;  			optionstorage.h - Copyright reflog&amp;#010;&amp;#010;Here you can write a license for your code, some comments or any other&amp;#010;information you want to have in your generated code. To to this simply&amp;#010;configure the &quot;headings&quot; directory in uml to point to a directory&amp;#010;where you have your heading files.&amp;#010;&amp;#010;or you can just replace the contents of this file with your own.&amp;#010;If you want to do this, this file is located at&amp;#010;&amp;#010;/usr/kde/3.3/share/apps/umbrello/headings/heading.h&amp;#010;&amp;#010;-->Code Generators searches for heading files based on the file extension&amp;#010;   i.e. it will look for a file name ending in &quot;.h&quot; to include in C++ header&amp;#010;   files, and for a file name ending in &quot;.java&quot; to include in all generated&amp;#010;   java code.&amp;#010;   If you name the file &quot;heading.&lt;extension>&quot;, Code Generator will always&amp;#010;   choose this file even if there are other files with the same extension in the&amp;#010;   directory. If you name the file something else, it must be the only one with that&amp;#010;   extension in the directory to guarantee that Code Generator will choose it.&amp;#010;&amp;#010;you can use variables in your heading files which are replaced at generation&amp;#010;time. possible variables are : author, date, time, filename and filepath.&amp;#010;just write %variable_name%&amp;#010;&amp;#010;This file was generated on Tue Dec 28 2004 at 15:28:48&amp;#010;The original location of this file is &amp;#010;**************************************************************************/&amp;#010;" />
      </header>
      <classfields>
       <codeclassfield parent_id="111" field_type="3" initialValue="" role_id="1" writeOutMethods="true" listClassName="" >
@@ -3384,7 +3581,213 @@
       </codeblockwithcomments>
      </textblocks>
      <header>
-      <codecomment tag="" text="/************************************************************************&amp;#010;  			eventtype.h - Copyright reflog&amp;#010;&amp;#010;Here you can write a license for your code, some comments or any other&amp;#010;information you want to have in your generated code. To to this simply&amp;#010;configure the &quot;headings&quot; directory in uml to point to a directory&amp;#010;where you have your heading files.&amp;#010;&amp;#010;or you can just replace the contents of this file with your own.&amp;#010;If you want to do this, this file is located at&amp;#010;&amp;#010;/usr/kde/3.3/share/apps/umbrello/headings/heading.h&amp;#010;&amp;#010;-->Code Generators searches for heading files based on the file extension&amp;#010;   i.e. it will look for a file name ending in &quot;.h&quot; to include in C++ header&amp;#010;   files, and for a file name ending in &quot;.java&quot; to include in all generated&amp;#010;   java code.&amp;#010;   If you name the file &quot;heading.&lt;extension>&quot;, Code Generator will always&amp;#010;   choose this file even if there are other files with the same extension in the&amp;#010;   directory. If you name the file something else, it must be the only one with that&amp;#010;   extension in the directory to guarantee that Code Generator will choose it.&amp;#010;&amp;#010;you can use variables in your heading files which are replaced at generation&amp;#010;time. possible variables are : author, date, time, filename and filepath.&amp;#010;just write %variable_name%&amp;#010;&amp;#010;This file was generated on Mon Dec 27 2004 at 14:27:28&amp;#010;The original location of this file is &amp;#010;**************************************************************************/&amp;#010;" />
+      <codecomment tag="" text="/************************************************************************&amp;#010;  			eventtype.h - Copyright reflog&amp;#010;&amp;#010;Here you can write a license for your code, some comments or any other&amp;#010;information you want to have in your generated code. To to this simply&amp;#010;configure the &quot;headings&quot; directory in uml to point to a directory&amp;#010;where you have your heading files.&amp;#010;&amp;#010;or you can just replace the contents of this file with your own.&amp;#010;If you want to do this, this file is located at&amp;#010;&amp;#010;/usr/kde/3.3/share/apps/umbrello/headings/heading.h&amp;#010;&amp;#010;-->Code Generators searches for heading files based on the file extension&amp;#010;   i.e. it will look for a file name ending in &quot;.h&quot; to include in C++ header&amp;#010;   files, and for a file name ending in &quot;.java&quot; to include in all generated&amp;#010;   java code.&amp;#010;   If you name the file &quot;heading.&lt;extension>&quot;, Code Generator will always&amp;#010;   choose this file even if there are other files with the same extension in the&amp;#010;   directory. If you name the file something else, it must be the only one with that&amp;#010;   extension in the directory to guarantee that Code Generator will choose it.&amp;#010;&amp;#010;you can use variables in your heading files which are replaced at generation&amp;#010;time. possible variables are : author, date, time, filename and filepath.&amp;#010;just write %variable_name%&amp;#010;&amp;#010;This file was generated on Tue Dec 28 2004 at 15:30:11&amp;#010;The original location of this file is &amp;#010;**************************************************************************/&amp;#010;" />
+     </header>
+     <classfields/>
+    </classifiercodedocument>
+    <classifiercodedocument writeOutCode="true" package="" id="cppheader139" parent_class="139" fileExt=".h" fileName="qpixmap" >
+     <textblocks>
+      <codeblockwithcomments tag="hashDefBlock" text="#ifndef QPIXMAP_H&amp;#010;#define QPIXMAP_H" >
+       <header>
+        <cppcodedocumentation tag="" writeOutText="false" />
+       </header>
+      </codeblockwithcomments>
+      <codeblockwithcomments tag="includes" text="#include &lt;string>&amp;#010;" >
+       <header>
+        <cppcodedocumentation tag="" writeOutText="false" />
+       </header>
+      </codeblockwithcomments>
+      <codeblockwithcomments tag="using" writeOutText="false" >
+       <header>
+        <cppcodedocumentation tag="" writeOutText="false" />
+       </header>
+      </codeblockwithcomments>
+      <hierarchicalcodeblock tag="namespace" canDelete="false" >
+       <header>
+        <cppcodedocumentation tag="" writeOutText="false" text="Namespace" />
+       </header>
+       <textblocks>
+        <codeblockwithcomments tag="enums" writeOutText="false" >
+         <header>
+          <cppcodedocumentation tag="" writeOutText="false" />
+         </header>
+        </codeblockwithcomments>
+        <cppheaderclassdeclarationblock parent_id="139" tag="classDeclarationBlock" canDelete="false" role_id="-1" >
+         <header>
+          <cppcodedocumentation tag="" text="Class QPixmap&amp;#010;" />
+         </header>
+         <textblocks>
+          <hierarchicalcodeblock tag="publicBlock" canDelete="false" >
+           <header>
+            <cppcodedocumentation tag="" text="Public stuff" />
+           </header>
+           <textblocks>
+            <hierarchicalcodeblock tag="publicFieldsDecl" canDelete="false" indentLevel="1" >
+             <header>
+              <cppcodedocumentation tag="" indentLevel="1" text="Fields" />
+             </header>
+             <textblocks/>
+            </hierarchicalcodeblock>
+            <hierarchicalcodeblock tag="pubMethodsBlock" canDelete="false" indentLevel="1" >
+             <header>
+              <cppcodedocumentation tag="" indentLevel="1" />
+             </header>
+             <textblocks>
+              <hierarchicalcodeblock tag="constructionMethods" canDelete="false" indentLevel="1" >
+               <header>
+                <cppcodedocumentation tag="" indentLevel="1" text="Constructors" />
+               </header>
+               <textblocks>
+                <codeblockwithcomments tag="emptyconstructor" writeOutText="false" indentLevel="1" text="QPixmap ( ) { }" >
+                 <header>
+                  <cppcodedocumentation tag="" indentLevel="1" text="Empty Constructor" />
+                 </header>
+                </codeblockwithcomments>
+               </textblocks>
+              </hierarchicalcodeblock>
+              <hierarchicalcodeblock tag="accessorMethods" canDelete="false" indentLevel="1" >
+               <header>
+                <cppcodedocumentation tag="" indentLevel="1" text="Accessor Methods" />
+               </header>
+               <textblocks>
+                <hierarchicalcodeblock tag="pubStaticAccessorMethods" canDelete="false" indentLevel="1" >
+                 <header>
+                  <cppcodedocumentation tag="" writeOutText="false" indentLevel="1" />
+                 </header>
+                 <textblocks/>
+                </hierarchicalcodeblock>
+                <hierarchicalcodeblock tag="pubRegularAccessorMethods" canDelete="false" indentLevel="1" >
+                 <header>
+                  <cppcodedocumentation tag="" writeOutText="false" indentLevel="1" />
+                 </header>
+                 <textblocks/>
+                </hierarchicalcodeblock>
+               </textblocks>
+              </hierarchicalcodeblock>
+              <hierarchicalcodeblock tag="operationMethods" canDelete="false" indentLevel="1" >
+               <header>
+                <cppcodedocumentation tag="" indentLevel="1" text="Operations" />
+               </header>
+               <textblocks/>
+              </hierarchicalcodeblock>
+             </textblocks>
+            </hierarchicalcodeblock>
+           </textblocks>
+          </hierarchicalcodeblock>
+          <hierarchicalcodeblock tag="protectedBlock" canDelete="false" >
+           <header>
+            <cppcodedocumentation tag="" text="Protected stuff" />
+           </header>
+           <textblocks>
+            <hierarchicalcodeblock tag="protectedFieldsDecl" canDelete="false" indentLevel="1" >
+             <header>
+              <cppcodedocumentation tag="" indentLevel="1" text="Fields" />
+             </header>
+             <textblocks/>
+            </hierarchicalcodeblock>
+            <hierarchicalcodeblock tag="protMethodsBlock" canDelete="false" indentLevel="1" >
+             <header>
+              <cppcodedocumentation tag="" indentLevel="1" />
+             </header>
+             <textblocks>
+              <hierarchicalcodeblock tag="constructionMethods" canDelete="false" indentLevel="1" >
+               <header>
+                <cppcodedocumentation tag="" indentLevel="1" text="Constructors" />
+               </header>
+               <textblocks/>
+              </hierarchicalcodeblock>
+              <hierarchicalcodeblock tag="accessorMethods" canDelete="false" indentLevel="1" >
+               <header>
+                <cppcodedocumentation tag="" indentLevel="1" text="Accessor Methods" />
+               </header>
+               <textblocks>
+                <hierarchicalcodeblock tag="protStaticAccessorMethods" canDelete="false" indentLevel="1" >
+                 <header>
+                  <cppcodedocumentation tag="" writeOutText="false" indentLevel="1" />
+                 </header>
+                 <textblocks/>
+                </hierarchicalcodeblock>
+                <hierarchicalcodeblock tag="protRegularAccessorMethods" canDelete="false" indentLevel="1" >
+                 <header>
+                  <cppcodedocumentation tag="" writeOutText="false" indentLevel="1" />
+                 </header>
+                 <textblocks/>
+                </hierarchicalcodeblock>
+               </textblocks>
+              </hierarchicalcodeblock>
+              <hierarchicalcodeblock tag="operationMethods" canDelete="false" indentLevel="1" >
+               <header>
+                <cppcodedocumentation tag="" indentLevel="1" text="Operations" />
+               </header>
+               <textblocks/>
+              </hierarchicalcodeblock>
+             </textblocks>
+            </hierarchicalcodeblock>
+           </textblocks>
+          </hierarchicalcodeblock>
+          <hierarchicalcodeblock tag="privateBlock" canDelete="false" >
+           <header>
+            <cppcodedocumentation tag="" text="Private stuff" />
+           </header>
+           <textblocks>
+            <hierarchicalcodeblock tag="privateFieldsDecl" canDelete="false" indentLevel="1" >
+             <header>
+              <cppcodedocumentation tag="" indentLevel="1" text="Fields" />
+             </header>
+             <textblocks/>
+            </hierarchicalcodeblock>
+            <hierarchicalcodeblock tag="privMethodsBlock" canDelete="false" indentLevel="1" >
+             <header>
+              <cppcodedocumentation tag="" indentLevel="1" />
+             </header>
+             <textblocks>
+              <hierarchicalcodeblock tag="constructionMethods" canDelete="false" indentLevel="1" >
+               <header>
+                <cppcodedocumentation tag="" indentLevel="1" text="Constructors" />
+               </header>
+               <textblocks/>
+              </hierarchicalcodeblock>
+              <hierarchicalcodeblock tag="accessorMethods" canDelete="false" indentLevel="1" >
+               <header>
+                <cppcodedocumentation tag="" indentLevel="1" text="Accessor Methods" />
+               </header>
+               <textblocks>
+                <hierarchicalcodeblock tag="privStaticAccessorMethods" canDelete="false" indentLevel="1" >
+                 <header>
+                  <cppcodedocumentation tag="" writeOutText="false" indentLevel="1" />
+                 </header>
+                 <textblocks/>
+                </hierarchicalcodeblock>
+                <hierarchicalcodeblock tag="privRegularAccessorMethods" canDelete="false" indentLevel="1" >
+                 <header>
+                  <cppcodedocumentation tag="" writeOutText="false" indentLevel="1" />
+                 </header>
+                 <textblocks/>
+                </hierarchicalcodeblock>
+               </textblocks>
+              </hierarchicalcodeblock>
+              <hierarchicalcodeblock tag="operationMethods" canDelete="false" indentLevel="1" >
+               <header>
+                <cppcodedocumentation tag="" indentLevel="1" text="Operations" />
+               </header>
+               <textblocks/>
+              </hierarchicalcodeblock>
+             </textblocks>
+            </hierarchicalcodeblock>
+           </textblocks>
+          </hierarchicalcodeblock>
+         </textblocks>
+        </cppheaderclassdeclarationblock>
+       </textblocks>
+      </hierarchicalcodeblock>
+      <codeblockwithcomments tag="hashDefBlockEnd" text="#endif //QPIXMAP_H" >
+       <header>
+        <cppcodedocumentation tag="" writeOutText="false" />
+       </header>
+      </codeblockwithcomments>
+     </textblocks>
+     <header>
+      <codecomment tag="" text="/************************************************************************&amp;#010;  			qpixmap.h - Copyright reflog&amp;#010;&amp;#010;Here you can write a license for your code, some comments or any other&amp;#010;information you want to have in your generated code. To to this simply&amp;#010;configure the &quot;headings&quot; directory in uml to point to a directory&amp;#010;where you have your heading files.&amp;#010;&amp;#010;or you can just replace the contents of this file with your own.&amp;#010;If you want to do this, this file is located at&amp;#010;&amp;#010;/usr/kde/3.3/share/apps/umbrello/headings/heading.h&amp;#010;&amp;#010;-->Code Generators searches for heading files based on the file extension&amp;#010;   i.e. it will look for a file name ending in &quot;.h&quot; to include in C++ header&amp;#010;   files, and for a file name ending in &quot;.java&quot; to include in all generated&amp;#010;   java code.&amp;#010;   If you name the file &quot;heading.&lt;extension>&quot;, Code Generator will always&amp;#010;   choose this file even if there are other files with the same extension in the&amp;#010;   directory. If you name the file something else, it must be the only one with that&amp;#010;   extension in the directory to guarantee that Code Generator will choose it.&amp;#010;&amp;#010;you can use variables in your heading files which are replaced at generation&amp;#010;time. possible variables are : author, date, time, filename and filepath.&amp;#010;just write %variable_name%&amp;#010;&amp;#010;This file was generated on Tue Dec 28 2004 at 15:23:58&amp;#010;The original location of this file is &amp;#010;**************************************************************************/&amp;#010;" />
      </header>
      <classfields/>
     </classifiercodedocument>
