@@ -2,8 +2,6 @@ include PyQLogger/*.py
 include plugins/*.p*
 include MANIFEST.in
 include LICENSE.txt
-include README_PLUGINS.txt
-include CHANGES_PLUGINS.txt
 include README.txt
 include CHANGES.txt
 include __init__.py
