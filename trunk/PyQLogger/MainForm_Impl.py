@@ -18,7 +18,7 @@
 ## Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 # -*- coding: utf-8 -*-
 
-import sys, os, pickle, webbrowser
+import sys, os, pickle, webbrowser, KdeQt
 from qt import *
 from mainform import MainForm
 from SetupWizardForm_Impl import SetupWizardForm_Impl
@@ -40,6 +40,9 @@ class MainForm_Impl(MainForm):
         self.statusFrame.hide()
         self.sh = HTMLSyntax(self.sourceEditor)
         self.sourceEditor.setTextFormat(Qt.PlainText)
+	KdeQt.setPreviewWidget(self)
+	KdeQt.setEditWidget(self)
+																  
         self.current_post = None
         self.cached_password = None
         self.cached_atomblog = None
@@ -125,7 +128,7 @@ class MainForm_Impl(MainForm):
         self.bMenu.popup(a1)
 
     def sourceEditor_textChanged(self):
-        self.sourcePreview.setText(self.sourceEditor.text())
+        KdeQt.setPreview(self,self.sourceEditor.text())
     
     def btnNewPost_clicked(self):
         if self.current_post:
