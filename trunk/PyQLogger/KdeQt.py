@@ -1,11 +1,30 @@
+## This file is part of PyQLogger.
+##
+## Copyright (c) 2004 Eli Yukelzon a.k.a Reflog &
+##                    Xander Soldaat a.k.a. Mightor
+##
+## PyQLogger is free software; you can redistribute it and/or modify
+## it under the terms of the GNU General Public License as published by
+## the Free Software Foundation; either version 2 of the License, or
+## (at your option) any later version.
+##
+## PyQLogger is distributed in the hope that it will be useful,
+## but WITHOUT ANY WARRANTY; without even the implied warranty of
+## MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+## GNU General Public License for more details.
+##
+## You should have received a copy of the GNU General Public License
+## along with PyQLogger; if not, write to the Free Software
+## Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+##
 __revision__ = "$Id: KdeQt.py 75 2004-12-19 14:12:35Z reflog $"
 
 try:
     from kdecore import KApplication, KCmdLineArgs, KAboutData, KIconLoader
-    import sys, os
+    import sys
     from qt import QToolTip
-    from kdeui import KMainWindow,  KSystemTray , KHelpMenu, KAboutApplication
-    from khtml import KHTMLPart, KHTMLView
+    from kdeui import KSystemTray
+    from khtml import KHTMLPart
     from dcopexport import DCOPExObj
 
     def isKde():
@@ -88,44 +107,51 @@ try:
             KApplication.__init__(self)
 
 except ImportError,e:
-    def isKde(): return 0    
-    def setPreviewWidget(parent): pass
-    def setPreview(parent,text): parent.sourcePreview.setText(text)
+    def isKde():
+        return 0    
+    def setPreviewWidget(parent):
+        pass
+    def setPreview(parent, text):
+        parent.sourcePreview.setText(text)
+
     def prepareCommandLine():
         import optparse
         parser = optparse.OptionParser(usage="%prog [options]")
-        parser.add_option("--statusbar","-s",
-	                  action="store_true",
-			  help="Status bar (default = disabled)")
-        (opt,arg) = parser.parse_args()
+        parser.add_option("--statusbar", "-s",
+	                  action = "store_true",
+			  help = "Status bar (default = disabled)")
+        (opt, arg) = parser.parse_args()
         stat = opt.statusbar
         return stat == True
         
-    def setupKDE(app,wnd): pass
+    def setupKDE(app, wnd):
+        pass
+
     from qt import QApplication
     class KQApplication(QApplication):
         def __init__(self, argv, opts):
             QApplication.__init__(self, argv)
 
 try:
-    from qt import SIGNAL,QFont
-    from qtext import QextScintilla,QextScintillaLexerHTML
-    def setMonospaced(e):
+    from qt import SIGNAL, QFont
+    from qtext import QextScintilla, QextScintillaLexerHTML
+
+    def setMonospaced(editor):
         try:
-            rangeLow = range(e.STYLE_DEFAULT)
+            rangeLow = range(editor.STYLE_DEFAULT)
         except AttributeError:
             rangeLow = range(32)
         try:
-            rangeHigh = range(e.STYLE_LASTPREDEFINED + 1,e.STYLE_MAX + 1)
+            rangeHigh = range(editor.STYLE_LASTPREDEFINED + 1, editor.STYLE_MAX + 1)
         except AttributeError:
             rangeHigh = range(40, 128)
         try:
-            f = QFont('Bitstream Vera Sans,11,-1,5,50,0,0,0,0,0')
+            font = QFont('Bitstream Vera Sans,11,-1,5,50,0,0,0,0,0')
         except:
             return # no font. bail.
         for style in rangeLow + rangeHigh:
-            e.SendScintilla(QextScintilla.SCI_STYLESETFONT,style,f.family().latin1())
-            e.SendScintilla(QextScintilla.SCI_STYLESETSIZE,style,f.pointSize())
+            editor.SendScintilla(QextScintilla.SCI_STYLESETFONT, style, font.family().latin1())
+            editor.SendScintilla(QextScintilla.SCI_STYLESETSIZE, style, font.pointSize())
 
 
     def setEditWidget(parent):
@@ -136,8 +162,9 @@ try:
         parent.sourceEditor.setLexer(QextScintillaLexerHTML(parent))
         setMonospaced(parent.sourceEditor)
         parent.Source.layout().addWidget(parent.sourceEditor)
-        parent.connect(parent.sourceEditor,SIGNAL("textChanged()"),parent.sourceEditor_textChanged)
+        parent.connect(parent.sourceEditor, SIGNAL("textChanged()"), parent.sourceEditor_textChanged)
 
-except ImportError ,e:
-    def setEditWidget(parent): pass    
+except ImportError, e:
+    def setEditWidget(parent): 
+        pass
 

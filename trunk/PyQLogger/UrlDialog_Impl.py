@@ -1,4 +1,3 @@
-## $Id$
 ## This file is part of PyQLogger.
 ##
 ## Copyright (c) 2004 Eli Yukelzon a.k.a Reflog &
@@ -17,8 +16,7 @@
 ## You should have received a copy of the GNU General Public License
 ## along with PyQLogger; if not, write to the Free Software
 ## Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-
-from qt import *
+__revision__ = "$Id$"
 from urldialog import UrlDialog
 
 
@@ -27,8 +25,8 @@ class UrlDialog_Impl(UrlDialog):
 
     targetList = {}
 
-    def __init__(self,parent = None,name = None,modal = 0,fl = 0):
-        UrlDialog.__init__(self,parent,name,modal,fl)
+    def __init__(self, parent = None, name = None, modal = 0, fl = 0):
+        UrlDialog.__init__(self, parent, name, modal, fl)
         # Hide these two until we've figured out how
         # to deal with them
         self.parent = parent
@@ -79,7 +77,6 @@ class UrlDialog_Impl(UrlDialog):
     def accept(self):
         if self.checkOpen.isChecked():
             if self.targetList.has_key(unicode(self.comboOpen.currentText())):
-                target = self.targetList[unicode(self.comboOpen.currentText())]
                 self.parent.settings.set("URL Dialog", "target", unicode(self.comboOpen.currentText()))
         else:
             self.parent.settings.remove_option("URL Dialog", "target")

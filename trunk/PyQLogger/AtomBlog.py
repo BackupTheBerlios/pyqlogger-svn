@@ -132,7 +132,8 @@ class AtomBlog:
                 }]
         if res:
             return res[0]
-            
+        return None
+
     def _makeBody(self, title, content, created, cat=None):
         """ generate body of post entry based on parameters """
         if cat:
@@ -162,7 +163,7 @@ class AtomBlog:
         amatch = self.id_re.search(feedparser.parse(resp)['entries'][0]['id'])
         if amatch:
             return amatch.group(1)
-    
+        return None
     
     def editPost (self, blogId, entryId, title, content, date=None):
         """ Edits existing post on Blogger, returns new ID """        
@@ -242,6 +243,5 @@ class MovableTypeClient(GenericAtomClient):
         response = conn.getresponse()
         xml = response.read()
         conn.close()
-        res = []
         return feedparser.parse(xml)['categories']
 

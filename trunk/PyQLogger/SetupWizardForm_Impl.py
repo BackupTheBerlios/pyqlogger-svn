@@ -1,4 +1,3 @@
-## $Id$
 ## This file is part of PyQLogger.
 ## 
 ## Copyright (c) 2004 Eli Yukelzon a.k.a Reflog &
@@ -17,20 +16,19 @@
 ## You should have received a copy of the GNU General Public License
 ## along with PyQLogger; if not, write to the Free Software
 ## Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-# -*- coding: utf-8 -*-
 
-from qt import *
+__revision__ = "$Id$"
+from qt import QMessageBox
 from setupwizardform import SetupWizardForm
-from AtomBlog import *
-import PyQLoggerConfig
+from AtomBlog import MovableTypeClient, BloggerClient, GenericAtomClient
 
 class SetupWizardForm_Impl(SetupWizardForm):
 
-    def __init__(self,parent = None,name = None,modal = 0,fl = 0):
-        SetupWizardForm.__init__(self,parent,name,modal,fl)
+    def __init__(self, parent = None, name = None, modal = 0, fl = 0):
+        SetupWizardForm.__init__(self, parent, name, modal, fl)
         self.frameGeneric.hide()
 
-    def initValues(self,settings):
+    def initValues(self, settings):
         self.settings = settings
         self.blogs = ()
         if self.settings.has_option("main", "login"):
@@ -64,7 +62,7 @@ class SetupWizardForm_Impl(SetupWizardForm):
                         self.comboBlogs.setCurrentItem( counter )
                 counter += 1
                         
-    def editLogin_textChanged(self,widgetName):
+    def editLogin_textChanged(self, widgetName):
         login = str(self.editLogin.text())
         password = str(self.editPassword.text())
         host = str(self.editHost.text())
@@ -76,18 +74,21 @@ class SetupWizardForm_Impl(SetupWizardForm):
         nextButtonEnable = False # control next button (b)
         fetchBlogsEnable = False #control fetch blogs button (b2)
         fetchUrl = False #control fetch url button (b3)
-        if login and password and url and numberblogs and host and endpoint and feedpath and postpath: nextButtonEnable = True
-        if login and password and host and endpoint and feedpath and postpath: fetchBlogsEnable = True
-        if login and password and host and numberblogs and endpoint and feedpath and postpath: fetchUrl = True
+        if login and password and url and numberblogs and host and endpoint and feedpath and postpath: 
+            nextButtonEnable = True
+        if login and password and host and endpoint and feedpath and postpath: 
+            fetchBlogsEnable = True
+        if login and password and host and numberblogs and endpoint and feedpath and postpath: 
+            fetchUrl = True
         self.nextButton().setEnabled( nextButtonEnable )
         self.btnFetchBlogs.setEnabled( fetchBlogsEnable )
         if self.comboProviders.currentItem() == 1:
             self.btnFetchUrl.setEnabled( fetchUrl )
         
-    def comboBlogs_activated(self,widgetName):
+    def comboBlogs_activated(self, widgetName):
         self.editLogin_textChanged(None)
 
-    def comboProviders_activated(self,widgetName):
+    def comboProviders_activated(self, widgetName):
         """ generic/blogger/movable """
         if self.comboProviders.text(0) == widgetName:
             self.frameGeneric.show()
@@ -107,15 +108,14 @@ class SetupWizardForm_Impl(SetupWizardForm):
         self.editPP.setText(postpath)
     
     def btnFetchUrl_clicked(self):
-        bc = BloggerClient(str(self.editHost.text()),str(self.editLogin.text()), str(self.editPassword.text()))
+        bc = BloggerClient(str(self.editHost.text()), str(self.editLogin.text()), str(self.editPassword.text()))
         try:
             url = bc.getHomepage(self.blogs[unicode(self.comboBlogs.currentText())]['id'])
             if url:
                 self.editURL.setText(url)
         except Exception, inst:
             print "btnFetchUrl_clicked: %s" % inst
-            QMessageBox.critical(self,"Error","Couldn't fetch blog's URL!")
-            pass
+            QMessageBox.critical(self, "Error", "Couldn't fetch blog's URL!")
     
     def btnFetchBlogs_clicked(self):
         host = str(self.editHost.text())
@@ -124,8 +124,6 @@ class SetupWizardForm_Impl(SetupWizardForm):
         endpoint = str(self.editEP.text())
         feedpath = str(self.editFP.text())
         postpath = str(self.editPassword.text())
-##        (h,l,p) = (str(self.editHost.text()),str(self.editLogin.text()), str(self.editPassword.text()))
-##        (ep,fp,pp) = (str(self.editEP.text()),str(self.editFP.text()),str(self.editPP.text()))
         if self.comboProviders.currentItem() == 0:
             at = GenericAtomClient(host, login, password, endpoint, feedpath, postpath)
         elif self.comboProviders.currentItem() == 1:
@@ -138,12 +136,12 @@ class SetupWizardForm_Impl(SetupWizardForm):
             for blog in self.blogs.keys():
                 self.comboBlogs.insertItem(blog)
             self.editLogin_textChanged(None)
-        except:
-            QMessageBox.critical(self,"Error","Couldn't fetch list of blogs!")
+        except Exception, inst:
+            print "btnFetchBlogs_clicked: %s" % inst
+            QMessageBox.critical(self, "Error", "Couldn't fetch list of blogs!")
 
 
-    def SetupWizardForm_selected(self,widgetName):
-
+    def SetupWizardForm_selected(self, widgetName):
         if widgetName == "Login Details":
             self.editLogin_textChanged(None)
         if widgetName == "Final":
@@ -160,5 +158,5 @@ class SetupWizardForm_Impl(SetupWizardForm):
             if self.comboProviders.currentItem() == 0:
                 self.settings.set("main", "pp", str(self.editPP.text()))
                 self.settings.set("main", "fp", str(self.editFP.text()))
-                self.settigns.set("main", "ep", str(self.editEP.text()))
+                self.settings.set("main", "ep", str(self.editEP.text()))
             self.finishButton().setEnabled(True)

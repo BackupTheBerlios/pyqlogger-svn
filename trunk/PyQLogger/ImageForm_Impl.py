@@ -18,7 +18,6 @@
 
 __revision__ = "$Id$"
 from qt import QPixmap, QFileDialog, QMessageBox
-from qtnetwork import QHttp, QHttpRequestHeader
 from imageform import ImageForm
 import urllib2, PatchedClientForm, re, os
 
@@ -56,18 +55,23 @@ class ImageForm_Impl(ImageForm):
             return None
         else:  
             if thumb:
-                imagetag += "<a href='%s'><img src='%s'" % (image,thumb)
+                imagetag += "<a href='%s'><img src='%s'" % (image, thumb)
             else:
                 imagetag += '<img src=\'%s\'' % image
-                if width:  imagetag += ' width=\'%d\'' % width
-                if height:  imagetag += ' height=\'%d\'' % height
-        if border:  imagetag += ' border=\'%d\'' % border
-        if title:  imagetag += ' alt=\'%s\'' % title
+                if width:
+                    imagetag += ' width=\'%d\'' % width
+                if height:
+                    imagetag += ' height=\'%d\'' % height
+        if border:  
+            imagetag += ' border=\'%d\'' % border
+        if title:
+            imagetag += ' alt=\'%s\'' % title
         if self.alignList.has_key('%s' % self.comboAlign.currentText()):
             align = self.alignList['%s' % self.comboAlign.currentText()]
             imagetag += ' align=\'%s\'' % align
         imagetag += '>' 
-        if thumb: imagetag += '</a>'
+        if thumb:
+            imagetag += '</a>'
         return imagetag
 
 
@@ -75,13 +79,13 @@ class ImageForm_Impl(ImageForm):
         if str(self.editUrl.text()):
             try:
                 img = urllib2.urlopen(str(self.editUrl.text())).read()
-                p = QPixmap()
-                p.loadFromData(img)
+                pic = QPixmap()
+                pic.loadFromData(img)
                 if not str(self.editWidth.text()):
-                    self.editWidth.setText(str(p.width()))
+                    self.editWidth.setText(str(pic.width()))
                 if not str(self.editHeight.text()):
-                    self.editHeight.setText(str(p.height()))
-                self.previewImage.setPixmap(p)
+                    self.editHeight.setText(str(pic.height()))
+                self.previewImage.setPixmap(pic)
             except:
                 QMessageBox.warning(self, "Warning", "Cannot open the image url!")                
 
@@ -103,80 +107,88 @@ class ImageForm_Impl(ImageForm):
     
     def uploadArk(self, afile):
         try:
-            c = PatchedClientForm.ParseResponse(urllib2.urlopen("http://www.imageark.net"))
-            c[0].referer = 'http://www.imageark.net'
-            c[0].find_control("userfile").add_file(open(afile,"rb"), filename = os.path.basename(afile))
-            req = c[0].click()
+            cform = PatchedClientForm.ParseResponse(urllib2.urlopen("http://www.imageark.net"))
+            cform[0].referer = 'http://www.imageark.net'
+            cform[0].find_control("userfile").add_file(open(afile,"rb"), filename = os.path.basename(afile))
+            req = cform[0].click()
             content = urllib2.urlopen(req).read()
-            m = self.imgre.search(content)
-            if m:
-                return m.group(1)
+            match = self.imgre.search(content)
+            if match:
+                return match.group(1)
         except Exception, e:
             print "Upload exception: " + str(e)
             return None
 
     def uploadShack(self, afile):
         try:
-            c =PatchedClientForm.ParseResponse(urllib2.urlopen("http://imageshack.us/index2.php"))
-            c[0].referer = 'http://imageshack.us/index2.php'
-            c[0].find_control("fileupload").add_file(open(afile,"rb"), filename = os.path.basename(afile))
-            content = urllib2.urlopen(c[0].click()).read()
-            m = self.imgre.search(content)
-            if m:
-                return m.group(1)
+            cform = PatchedClientForm.ParseResponse(urllib2.urlopen("http://imageshack.us/index2.php"))
+            cform[0].referer = 'http://imageshack.us/index2.php'
+            cform[0].find_control("fileupload").add_file(open(afile,"rb"), filename = os.path.basename(afile))
+            content = urllib2.urlopen(cform[0].click()).read()
+            match = self.imgre.search(content)
+            if match:
+                return match.group(1)
         except Exception, e:
             print "Upload exception: " + str(e)
             return None
 
     def __generateThumb(self, filename):
-        if not self.chkThumb.isChecked(): return None
+        if not self.chkThumb.isChecked(): 
+	    return None
         try:            
             p = self.previewImage
             fn = os.tmpnam() + os.path.basename(filename)
             w = p.width()
             h = p.height()
-            if w > 120: w = 120
-            if h > 120: h = 120
+            if w > 120:
+                w = 120
+            if h > 120:
+                h = 120
             # if the image is smaller than the thumb, don't create the thumb
-            if h < 120 and w < 120: return None
-            os.system("convert -geometry %dx%d  %s  %s" % (w,h,filename,fn))
-            if os.path.exists(fn): return fn
+            if h < 120 and w < 120:
+                return None
+            os.system("convert -geometry %dx%d  %s  %s" % (w, h, filename, fn))
+            if os.path.exists(fn):
+                return fn
         except:
-            pass
+            return None
             
     def btnUpload_clicked(self):
-        r = r2 = None
+        res = res2 = None
         thumbfile = self.__generateThumb(str(self.editFile.text()))
         if self.chkShack.isChecked():
-            r = self.uploadShack(str(self.editFile.text()))            
-            if thumbfile and r : 
-                r2 = self.uploadShack(thumbfile)
+            res = self.uploadShack(str(self.editFile.text()))            
+            if thumbfile and res : 
+                res2 = self.uploadShack(thumbfile)
         elif self.chkArk.isChecked():
-            r = self.uploadArk(str(self.editFile.text()))
-            if thumbfile and r : 
-                r2 = self.uploadArk(thumbfile)
+            res = self.uploadArk(str(self.editFile.text()))
+            if thumbfile and res : 
+                res2 = self.uploadArk(thumbfile)
 
-        if thumbfile:  os.unlink(thumbfile)
-        if r: self.editUrl.setText(r)
-        if r2: self.editThumb.setText(r2)
+        if thumbfile:
+            os.unlink(thumbfile)
+        if res:
+            self.editUrl.setText(res)
+            if res2: 
+                self.editThumb.setText(res2)
 
     def __open(self, txt, btn):
-        s = str(QFileDialog.getOpenFileName(None , \
+        filename = str(QFileDialog.getOpenFileName(None , \
             "Images (*.png *.jpg *.gif)", \
             self, \
             "open image file", \
             "Choose a file to open" ))
-        txt.setText(s)
+        txt.setText(filename)
         ok = False
         try:
-            p = QPixmap()
-            if p.loadFromData(open(s,"rb").read()):
+            pic = QPixmap()
+            if pic.loadFromData(open(filename,"rb").read()):
                 ok = True
                 if not str(self.editWidth.text()):
-                    self.editWidth.setText(str(p.width()))
+                    self.editWidth.setText(str(pic.width()))
                 if not str(self.editHeight.text()):
-                    self.editHeight.setText(str(p.height()))
-                self.previewImage.setPixmap(p)
+                    self.editHeight.setText(str(pic.height()))
+                self.previewImage.setPixmap(pic)
                 btn.setEnabled(True)
         except:            
             ok = False

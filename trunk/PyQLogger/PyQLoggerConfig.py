@@ -1,4 +1,3 @@
-## $Id$
 ## This file is part of PyQLogger.
 ## 
 ## Copyright (c) 2004 Eli Yukelzon a.k.a Reflog &
@@ -18,6 +17,7 @@
 ## along with PyQLogger; if not, write to the Free Software
 ## Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 ##
+__revision__ = "$Id$"
 import os
 import pickle
 from ConfigParser import ConfigParser
@@ -28,8 +28,8 @@ class PyQLoggerConfig (ConfigParser):
         ConfigParser.__init__(self, defaults)
     
     def read(self, configfile):
-    # do some checking to see if there's a new style file available
-    # if not, check if there's an old one.
+        # do some checking to see if there's a new style file available
+        # if not, check if there's an old one.
         if not os.path.exists(configfile):
             if os.path.exists(configfile[0:-4]):
                 self.convert_config(configfile)
@@ -40,11 +40,9 @@ class PyQLoggerConfig (ConfigParser):
         """ unpickles the specified file into a hash """
         config_hash = None
         try:
-            fd = open(str(configfile[0:-4]))
-            config_hash = pickle.load(fd)
-            fd.close()
+            config_hash = pickle.load(open(str(configfile[0:-4])))
         except Exception, inst:
-            print inst
+            print "Exception while unpickling: " + str(inst)
             return
     
         for key in config_hash.keys():
@@ -59,23 +57,16 @@ class PyQLoggerConfig (ConfigParser):
             else: 
                 self.add_section("main")
                 if key != "selectedblog":
-                    self.set("main",key, config_hash[key])
-        
+                    self.set("main", key, config_hash[key])
         try:
-            fd = open(str(configfile), "w")
-            self.write(fd)
-            fd.close()
+            self.write(open(str(configfile), "w"))
         except Exception, inst:
-            print inst
-            pass
-        return
+            print "Exception while saving config: " + str(inst)
 
     def get(self, section, option):
         if self.has_section(section):
             if self.has_option(section, option):
                 return ConfigParser.get(self, section, option)
-        else:
-            return None
     
     def add_section(self, section):
         if not self.has_section(section):
@@ -90,14 +81,10 @@ class PyQLoggerConfig (ConfigParser):
             
     def savesettings(self, configfile):
         try:
-            fd = open(configfile, "w")
-            self.write(fd)
-            fd.close()
+            self.write(open(configfile, "w"))
         except Exception, inst:
             print "PyQLoggerConfig.savesettings: %s" % inst
             # We need better error handling here, user needs to be notified
-            pass
-        return
     
     def remove_section(self, section):
         try:

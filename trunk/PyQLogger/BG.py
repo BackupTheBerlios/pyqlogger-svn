@@ -20,7 +20,7 @@
 __revision__ = "$Id$"
 
 """ Background workers """
-from qt import QTimer, SIGNAL
+from qt import QTimer, SIGNAL, QListBoxText
 from threading import Thread
 from datetime import date
 from distutils.version import LooseVersion
