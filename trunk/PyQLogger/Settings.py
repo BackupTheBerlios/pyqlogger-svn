@@ -25,6 +25,7 @@ class UI(XMLObject):
     """ Subclass representing settings related to GUI """
     EnableTray =  IntegerAttribute(default=1,optional=True)
     EnableKde =  IntegerAttribute(default=1,optional=True)
+    EnableDCOP =  IntegerAttribute(default=1,optional=True)
     EnableQScintilla =  IntegerAttribute(default=1,optional=True)
     Notification = IntegerAttribute(default=0)
 

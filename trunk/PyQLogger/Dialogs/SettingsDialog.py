@@ -30,6 +30,9 @@ class SettingsDialog(QDialog):
         self.fillList()
         # set gui settings
         self.chkKDE.setChecked(bool(settings.UI_Settings.EnableKde))
+        self.chkDCOP.setChecked(bool(settings.UI_Settings.EnableDCOP))
+        self.chkTray.setChecked(bool(settings.UI_Settings.EnableTray))
+        self.chkKDE_stateChanged(0)
         self.chkScintilla.setChecked(bool(settings.UI_Settings.EnableQScintilla))
         if settings.UI_Settings.Notification == 0:
             self.rbOSD.setChecked(True)
@@ -66,9 +69,15 @@ class SettingsDialog(QDialog):
         if wnd["Class"].exec_loop() == QDialog.Accepted: #if something changed, reload the title
             self.fillList()        
 
+    def chkKDE_stateChanged(self, ins):
+        self.chkTray.setEnabled(self.chkKDE.isChecked())
+        self.chkDCOP.setEnabled(self.chkKDE.isChecked())
+        
     def accept(self):
         #update gui changes
         self.settings.UI_Settings.EnableKde = int(self.chkKDE.isChecked())
+        self.settings.UI_Settings.EnableTray = int(self.chkTray.isChecked())
+        self.settings.UI_Settings.EnableDCOP = int(self.chkDCOP.isChecked())
         self.settings.UI_Settings.EnableQScintilla = int(self.chkScintilla.isChecked())
         if self.rbOSD.isChecked():
             self.settings.UI_Settings.Notification = 0

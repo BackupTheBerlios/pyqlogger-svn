@@ -16,9 +16,15 @@
 ## You should have received a copy of the GNU General Public License
 ## along with PyQLogger; if not, write to the Free Software
 ## Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-from PyQLogger import KdeQt,qt_ui_loader
+from PyQLogger import UI,qt_ui_loader
 from PyQLogger import Settings
 import sys,os
+
+try:
+    import psyco
+    psyco.profile()
+except:
+    print 'Psyco not found, ignoring it (though it''s highly recommended to install it!'
 
 try:
     from qt import QObject, SIGNAL, SLOT,QSplashScreen, QPixmap, qApp , Qt,QDialog,QMessageBox
@@ -42,7 +48,8 @@ def load_forms(splash,app,settings):
     wnd_c = qt_ui_loader.create( 'UI/maindialog.ui', wnd,None,True )
     wnd.init_ui(settings)
     __FORMS__["Main"] = { "Class": wnd_c , "Impl": wnd }
-    KdeQt.setupKDE(app, __FORMS__["Main"], settings)
+    UI.API.setupTray(app, __FORMS__["Main"])
+    UI.API.setupDCOP(app, __FORMS__["Main"])
     splash.message( "Loading form: Login" ,alignflag)
     qApp.processEvents()
     from PyQLogger.Dialogs import LoginDialog
@@ -80,15 +87,14 @@ def load_forms(splash,app,settings):
 def main():
     if not os.path.exists(os.path.expanduser("~/.pyqlogger")):
         os.mkdir(os.path.expanduser("~/.pyqlogger"))    
-    app =  KdeQt.KQApplication(sys.argv, None)
-    stat = KdeQt.prepareCommandLine()    
+    settings = Settings.Settings.load()
+    UI.prepareModule(settings)
+    app =  UI.API.KQApplication(sys.argv, None)
+    stat = UI.API.prepareCommandLine()    
     #QObject.connect(app, SIGNAL("lastWindowClosed()"), app, SLOT("quit()"))
     pixmap = QPixmap( "splash.png" )
     splash = QSplashScreen( pixmap )
     splash.show()
-    splash.message( "Loading settings..." ,alignflag)
-    qApp.processEvents();
-    settings = Settings.Settings.load()
     #settings.Accounts[0].init()
     #settings.Accounts[0].Blogs[0].editPost(settings.Accounts[0].Blogs[0].Posts.Data[0])
     splash.message( "Loading forms...",alignflag )

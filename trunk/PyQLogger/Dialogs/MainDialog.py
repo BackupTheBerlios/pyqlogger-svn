@@ -25,12 +25,11 @@ from qt import  QHBoxLayout, QPopupMenu, QMessageBox, QFileDialog, \
 import os, pickle, webbrowser
 from PyQLogger.Settings import Settings
 from datetime import date
-#from AtomBlog import MovableTypeClient, BloggerClient, GenericAtomClient,LiveJournalClient
 from PyQLogger.ToolBar import initToolbar
 from PyQLogger.Notifier import Notifier
 from PyQLogger.Post import Post
 from PyQLogger.ToolBarManager import PluginFactory
-from PyQLogger import BG, KdeQt
+from PyQLogger import BG, UI
 from PyQLogger.Network import Network, netOp
 
 class MainDialog(QDialog):
@@ -44,7 +43,7 @@ class MainDialog(QDialog):
 
     def editorTab_currentChanged(self, widget):
         if widget == self.Preview:
-            KdeQt.setPreview(self, self.sourceEditor.text())
+            UI.API.setPreview(self, self.sourceEditor.text())
 
     def pubPopup(self, action):
         if(action == 1):
@@ -124,54 +123,6 @@ class MainDialog(QDialog):
         QDialog.reject(self)
 
 
-    def donePublishPost(self,res):
-        if not res:
-            blog = self.account.Blogs [ self.account.SelectedBlog ]
-            post = blog.Posts.Data [ len(blog) - 1 ] # get last added one
-            i = QListBoxText(post.Title)
-            self.listPublishedPosts.insertItem(i,0)
-            self.PublishedItems [ i ] = post
-            self.current_post = None
-            self.editPostTitle.setText("")
-            self.sourceEditor.setText("")
-            self.notifier.info("Publishing success!")
-        else:
-            self.notifier.error(res)
-        self.btnPublish.setEnabled(True)
-        
-    def startPublishPost(self):        
-        self.btnPublish.setEnabled(False)
-        try:
-            title = unicode(self.editPostTitle.text())
-            content = unicode(self.sourceEditor.text())
-            self.account.Blogs [ self.account.SelectedBlog ].createPost(title,content)
-        except Exception, e:
-            import traceback
-            traceback.print_exc()
-            return str(e)
-            
-    def doneEditPost(self,res):
-        if not res:
-            self.editPostTitle.setText("")
-            self.sourceEditor.setText("")
-            for (k,v) in self.PublishedItems.items():
-                if v == self.current_post:
-                    k.setText(v['title'])
-                    self.listPublishedPosts.updateItem(k)
-            self.notifier.info("Publishing success!")
-            self.current_post = None
-        else:
-            self.notifier.error(res)
-        self.btnPublish.setEnabled(True)
-        
-    def startEditPost(self):
-        self.btnPublish.setEnabled(False)
-        try:
-            self.current_post.Title = unicode(self.editPostTitle.text())
-            self.current_post.Content = unicode(self.sourceEditor.text())
-            self.account.Blogs [ self.account.SelectedBlog ].editPost(self.current_post)
-        except Exception, e:
-            return str(e)
 
 
     def btnPublish_clicked(self):       
@@ -180,9 +131,9 @@ class MainDialog(QDialog):
         if content:
             if title:
                 if self.current_post and self.current_post.ID:
-                    self.network.enqueue(netOp("Editing post...",self.startEditPost,self.doneEditPost))
+                    self.network.enqueue(netOp("Editing post...",BG.startEditPost,BG.doneEditPost))
                 else:
-                    self.network.enqueue(netOp("Publishing post...",self.startPublishPost,self.donePublishPost))
+                    self.network.enqueue(netOp("Publishing post...",BG.startPublishPost,BG.donePublishPost))
             else:
                 QMessageBox.warning(self, "Warning", "You forgot the post's title!")
         else:
@@ -197,31 +148,13 @@ class MainDialog(QDialog):
             self.SavedItems [ listitem ] = item
         else:
             QMessageBox.warning(self, "Warning", "You forgot the post's title!")
-
-    def doneFetchingBlogs(self,res):
-        if not res:
-            self.comboBlogs.clear()
-            for blog in self.account.Blogs:            
-                self.comboBlogs.insertItem(blog.Name)
-            self.comboBlogs.setCurrentItem( self.account.SelectedBlog )
-            self.notifier.info("%d Blogs fetched!" % len(self.account))        
-        else:
-            self.notifier.error(res)
-        self.btnRefreshBlogs.setEnabled(True)
-        
-    def startFetchingBlogs(self):
-        self.btnRefreshBlogs.setEnabled(False)
-        try:
-            self.account.fetchBlogs()
-        except Exception, e:
-            return str(e)
         
     def btnRefreshBlogs_clicked(self):
-        self.network.enqueue(netOp("Fetching blogs...",self.startFetchingBlogs,self.doneFetchingBlogs))
+        self.network.enqueue(netOp("Fetching blogs...",BG.startFetchingBlogs,BG.doneFetchingBlogs))
     
     def btnSettings_clicked(self):
         wnd = self.forms["Settings"]
-        wnd["Impl"].init(self.settings)
+        wnd["Impl"].init(self.settings,self.forms)
         if wnd["Class"].exec_loop() == QDialog.Accepted:
             try:
                 self.settings.save()
@@ -237,24 +170,9 @@ class MainDialog(QDialog):
         else:
             QMessageBox.warning(self, "Warning", "You don't have homepage configured!\nYou can do that in the Setup dialog.")
             
-    def doneFetchingPosts(self,res):
-        if not res:
-            self.populateLists()
-            self.notifier.info("%d posts fetched!" % len( self.account.Blogs[self.account.SelectedBlog] ))
-            self.SaveAll()
-        else:
-            self.notifier.error(res)
-        self.btnFetchPosts.setEnabled(True)
-            
-    def startFetchingPosts(self):
-        self.btnFetchPosts.setEnabled(False)
-        try:
-            self.account.Blogs[self.account.SelectedBlog].reloadPosts()
-        except Exception, e:
-            return str(e)
         
     def btnReloadFeed_clicked(self):
-        self.network.enqueue(netOp("Fetching posts...",self.startFetchingPosts,self.doneFetchingPosts))
+        self.network.enqueue(netOp("Fetching posts...",BG.startFetchingPosts,BG.doneFetchingPosts))
     
     def comboBlogs_activated(self, blogname):
         self.account.SelectedBlog =  self.account.blogById(self.account.blogByName(blogname).ID)
@@ -293,8 +211,8 @@ class MainDialog(QDialog):
             QMessageBox.critical(self, "Error", "Cannot write configuration!")
             
     def init_ui(self, settings):
-        KdeQt.setPreviewWidget(self)
-        KdeQt.setEditWidget(self)
+        UI.API.setPreviewWidget(self)
+        UI.API.setEditWidget(self)
         self.current_post = None
         self.cached_password = None
         self.cached_atomblog = None
@@ -316,7 +234,7 @@ class MainDialog(QDialog):
         self.connect(self.aMenu, SIGNAL("activated(int)"), self.pubPopup)
         self.connect(self.bMenu, SIGNAL("activated(int)"), self.savePopup)
         self.frameCat.hide()
-        self.network = Network(self.notifier)
+        self.network = Network(self)
         self.network.start()
         
     def init(self, settings, forms, account, password):

@@ -335,7 +335,7 @@ class GenericAtomService (BlogService):
         <content mode="escaped" type="text/html">%s</content>
         </entry>""" % (escape(title), created, catstr, escape(content))).encode("utf-8")
         
-    def newPost(self, blogId, title, content, date=None):
+    def newPost(self, blogId, title, content, date=None,other=None):
         """ Make a new post to Blogger, returning it's ID """
         
         (created, headers) = self._makeCommonHeaders(date)    
@@ -352,12 +352,12 @@ class GenericAtomService (BlogService):
             return Post(ID=amatch.group(1),Title=title,Content=content,Created=created)
         return None
     
-    def editPost (self, blogId, entryId, title, content, date=None):
+    def editPost (self, blogId, post ):
         """ Edits existing post on Blogger, returns new ID """        
-        path = self.postpath % (blogId, entryId)
-        (created, headers) = self._makeCommonHeaders(date)    
+        path = self.postpath % (blogId, post.ID)
+        (created, headers) = self._makeCommonHeaders(post.Created)    
         headers["Content-type"] = "application/atom+xml"
-        body = self._makeBody(title, content, created)
+        body = self._makeBody(post.Title, post.Content, created)
         conn = httplib.HTTPConnection(self.host)
         conn.request("PUT", path, body, headers)
         response = conn.getresponse()

@@ -24,225 +24,96 @@ from qt import QTimer, SIGNAL, QListBoxText,QThread,QObject,QString
 from datetime import date
 from distutils.version import LooseVersion
 import sys, urllib2
-from qtnetwork import QHttp
 
-   
-class bgOperation(QObject):
-    def __init__(self,atomBlog,notifier,parent,sender=None):
-        QObject.__init__(self,parent)
-        self.notifier = notifier
-        self.atomBlog = atomBlog
-        self.control = sender
-        self.can_finish = False
-        if sender:
-            self.control.setEnabled(False)        
-        self.http = QHttp(self)
-        self.connect(self.http, SIGNAL( "done(bool)" ), self.httpDone )
-        self.connect(self.http, SIGNAL( "dataSendProgress (int, int)"),self.httpProgress)
-        self.connect(self.http, SIGNAL( "dataReadProgress (int, int)"),self.httpProgress)
-        self.connect(self.http, SIGNAL( "requestFinished (int, bool)"),self.httpRequestFinished)
-        self.connect(self.http, SIGNAL( "requestStarted (int)"),self.httpRequestStarted)
-        self.connect(self.http, SIGNAL( "responseHeaderReceived (const QHttpResponseHeader &)"),self.httpResponse)
-        
-    def httpResponse ( self ,resp ):
-        if hasattr(self,"codes"):
-            if not resp.statusCode() in self.codes:
-                print "Unexpected HTTP Reponse code %d!"%resp.statusCode()
-                self.http.abort()
-            
-    def httpRequestStarted ( self, id ):
-        if id == self.myid:
-            self.notifier.status(self.statusmsg)
-        
-    def httpRequestFinished ( self, id, error ):
-        if error:
-            self.notifier.error(self.errormsg)
-            print "Error occured: " + str(self.http.errorString())
-        else:
-            self.can_finish = id == self.myid
-            
-    def httpDone(self,error):
-        result = unicode(QString(self.http.readAll()))
-        if error:
-            self.notifier.error(self.errormsg)
-            print "Error occured: " + str(self.http.errorString())
-        elif self.can_finish:
-            self.ui(result)
-        self.http.closeConnection()
-        if self.control:
-            self.control.setEnabled(True)
-        
-    def httpProgress(self,completed,total):
-        if id == self.myid:
-            self.notifier.status(self.statusmsg)
+###########  Fetch Blogs ###################
 
-    def begin(self):
-        assert (self.req.isValid())
-        self.http.setHost(self.atomBlog.host)
-        if hasattr(self,"body"):
-            self.myid = self.http.request(self.req,self.body)
-        else:
-            self.myid = self.http.request(self.req)
+def doneFetchingBlogs(self,res):
+    if not res:
+        self.comboBlogs.clear()
+        for blog in self.account.Blogs:            
+            self.comboBlogs.insertItem(blog.Name)
+        self.comboBlogs.setCurrentItem( self.account.SelectedBlog )
+        self.notifier.info("%d Blogs fetched!" % len(self.account))        
+    else:
+        self.notifier.error(res)
+    self.btnRefreshBlogs.setEnabled(True)
     
-class BlogFetcher(bgOperation):
-    """ class for fetching list of blogs in background """
-    statusmsg =  "Fetching list of blogs..."    
-    errormsg =  "Cannot fetch list of blogs!"
-    codes = [ 200 ]
+def startFetchingBlogs(self):
+    self.btnRefreshBlogs.setEnabled(False)
+    try:
+        self.account.fetchBlogs()
+    except Exception, e:
+        return str(e)
 
-    def ui(self,result):
-        if type(self.req) == list:
-            blogs = self.req
-        else:
-            blogs = self.atomBlog.endGetBlogs(result)
-        parent = self.parent()
-        selectedblog = parent.settings.get("main", "selectedblog")
-        parent.settings.addblogs(blogs,selectedblog)
-        parent.comboBlogs.clear()
-        for blogid in parent.settings.get("main", "blogs").split(';'):
-            blogname = parent.settings.getblogName(blogid)
-            parent.comboBlogs.insertItem(unicode(blogname))
-        selectedblogname = parent.settings.getblogName(selectedblog)
-        for i in range(0, parent.comboBlogs.count()):
-            if parent.comboBlogs.text(i) == selectedblogname:
-                parent.comboBlogs.setCurrentItem( i )
-                break
-        self.notifier.info("%d Blogs fetched!" % len(blogs))
-        
-    def __call__(self):
-        self.req = self.atomBlog.startGetBlogs()
-        if type(self.req) == list:
-            self.ui(None)
-        else:
-            self.begin()
 
-class PostFetcher(bgOperation):
-    """ class for fetching list of posts in background """
-    errormsg = "Couldn't fetch posts from blog!"
-    statusmsg = "Fetching posts..."
-    codes = [ 200 ]
-    def __call__(self):
-            blogid = self.parent().settings.get("main", "selectedblog")
-            self.req = self.atomBlog.startGetPosts(blogid)
-            self.begin()
+###########  Fetch Posts ###################
+            
+def startFetchingPosts(self):
+    self.btnFetchPosts.setEnabled(False)
+    try:
+        self.account.Blogs[self.account.SelectedBlog].reloadPosts()
+    except Exception, e:
+        return str(e)
+
+def doneFetchingPosts(self,res):
+    if not res:
+        self.populateLists()
+        self.notifier.info("%d posts fetched!" % len( self.account.Blogs[self.account.SelectedBlog] ))
+        self.SaveAll()
+    else:
+        self.notifier.error(res)
+    self.btnFetchPosts.setEnabled(True)
+
+
+###########  Publish Post ###################
+
+def donePublishPost(self,res):
+    if not res:
+        blog = self.account.Blogs [ self.account.SelectedBlog ]
+        post = blog.Posts.Data [ len(blog) - 1 ] # get last added one
+        i = QListBoxText(post.Title)
+        self.listPublishedPosts.insertItem(i,0)
+        self.PublishedItems [ i ] = post
+        self.current_post = None
+        self.editPostTitle.setText("")
+        self.sourceEditor.setText("")
+        self.notifier.info("Publishing success!")
+    else:
+        self.notifier.error(res)
+    self.btnPublish.setEnabled(True)
     
-    def ui(self,result):
-        posts = self.atomBlog.endGetPosts(result)
-        p = self.parent()
-        p.PublishedItems = {}
-        p.PublishedPosts[p.settings.get("main", "selectedblog")] = posts
-        p.populateLists()
-        self.notifier.info("%d posts fetched!" % len( posts ))
-        p.SaveAll()
-
-
-class PostEraser(bgOperation):
-    """ class for deleting current post in background """
-    errormsg = "Couldn't delete post from blog!"
-    statusmsg = "Deleting post..."
-    codes = [ 410,  200]
-    def __call__(self):
-        p = self.parent()
-        post = p.PublishedItems [ p.listPublishedPosts.selectedItem () ]
-        blogid = p.settings.get("main", "selectedblog")
-        self.req = self.atomBlog.deletePost(blogid, post["id"])
-        self.begin()
+def startPublishPost(self):        
+    self.btnPublish.setEnabled(False)
+    try:
+        title = unicode(self.editPostTitle.text())
+        content = unicode(self.sourceEditor.text())
+        self.account.Blogs [ self.account.SelectedBlog ].createPost(title,content)
+    except Exception, e:
+        import traceback
+        traceback.print_exc()
+        return str(e)
         
-    def ui(self,result):
-        p = self.parent()
-        post = p.PublishedItems [ p.listPublishedPosts.selectedItem () ]
-        del p.PublishedItems [ p.listPublishedPosts.selectedItem () ]
-        p.PublishedPosts[p.settings.get("main", "selectedblog")].remove(post)
-        i = p.listPublishedPosts.currentItem()
-        p.listPublishedPosts.removeItem(i)
-        self.notifier.info("Post deleted!")
+###########  Edit Post ###################
 
-class PostCreator(bgOperation):
-    """ class for posting new blog item (or reposting) in background """
-    statusmsg = "Posting to blog..."
-    errormsg = "Couldn't post to blog..."
-    codes = [ 201 ]
-    def __call__(self):
-        p = self.parent()
-        blogId = p.settings.get("main", "selectedblog")
-        self.title = unicode(p.editPostTitle.text())
-        self.content = unicode(p.sourceEditor.text())
-        (self.req,self.body) = self.atomBlog.startNewPost(int(blogId), self.title, self.content)
-        self.begin()
+def startEditPost(self):
+    self.btnPublish.setEnabled(False)
+    try:
+        self.current_post.Title = unicode(self.editPostTitle.text())
+        self.current_post.Content = unicode(self.sourceEditor.text())
+        self.account.Blogs [ self.account.SelectedBlog ].editPost(self.current_post)
+    except Exception, e:
+        return str(e)
 
-    def ui(self,result):
-        p = self.parent()
-        idx = self.atomBlog.endNewPost(result)
-        if idx:
-                item = {
-                    "id":idx,
-                    "date":date.today(),
-                    "title":self.title,
-                    "content":self.content,
-                    }
-                i = QListBoxText(self.title)
-                p.listPublishedPosts.insertItem(i,0)
-                p.PublishedPosts[p.settings.get("main", "selectedblog")] += [ item ]
-                p.PublishedItems [ i ] = item
-                p.current_post = None
-                p.editPostTitle.setText("")
-                p.sourceEditor.setText("")
-                self.notifier.info("Publishing success!")
-        else:
-                self.notifier.error("Couldn't parse server response!")
-                print "Got bad response from server: " + result
-
-class PostEditor(bgOperation):
-    """ class for posting new blog item (or reposting) in background """
-    errormsg = "Couldn't update post!"
-    statusmsg = "Posting update to blog..."
-    codes  = [ 205 ]
-    def __call__(self):
-        p = self.parent()
-        blogId = p.settings.get("main", "selectedblog")
-        self.title = unicode(p.editPostTitle.text())
-        self.content = unicode(p.sourceEditor.text())
-        (self.req,self.body) = self.atomBlog.startEditPost(blogId,p.current_post['id'], 
-                                                                                  self.title,self.content)
-        self.begin()
-
-    def ui(self,result):
-        p = self.parent()
-        idx = p.PublishedPosts[p.settings.get("main", "selectedblog")].index(p.current_post)
-        p.PublishedPosts[p.settings.get("main", "selectedblog")][idx]['date'] = date.today()
-        p.PublishedPosts[p.settings.get("main", "selectedblog")][idx]["title"] = self.title
-        p.PublishedPosts[p.settings.get("main", "selectedblog")][idx]["content"] = self.content
-        item_to_update = p.PublishedPosts[p.settings.get("main", "selectedblog")][idx] 
-        p.current_post = None
-        p.editPostTitle.setText("")
-        p.sourceEditor.setText("")
-        if item_to_update:
-            for (k,v) in p.PublishedItems.items():
-                if v == item_to_update:
-                    k.setText(v['title'])
-                    p.listPublishedPosts.updateItem(k)
-            self.notifier.info("Publishing success!")
-        else:
-            self.notifier.error("Post id changed???")
-
-
-class updateCheckWorker:
-    """ class that provides new version checking in background """
-    def __init__(self, notifier):
-        from pyqlogger import VERSION
-        self.notifier = notifier
-        self.notified = LooseVersion(VERSION)
-        self.Timer = QTimer()
-        self.Timer.connect(self.Timer, SIGNAL("timeout()"), self.work)
-        self.Timer.start(60*60*1000)    
-        
-    def work(self):
-        try:
-            req = urllib2.urlopen('http://pyqlogger.berlios.de/ver.php')
-            line = req.readline()
-            newver = LooseVersion( line.strip() )
-            if newver > self.notified :
-                self.notified = newver
-                self.notifier.info("New version %s is available at the site!"%(str(newver)))
-        except:
-            pass
+def doneEditPost(self,res):
+    if not res:
+        self.editPostTitle.setText("")
+        self.sourceEditor.setText("")
+        for (k,v) in self.PublishedItems.items():
+            if v == self.current_post:
+                k.setText(v['title'])
+                self.listPublishedPosts.updateItem(k)
+        self.notifier.info("Publishing success!")
+        self.current_post = None
+    else:
+        self.notifier.error(res)
+    self.btnPublish.setEnabled(True)

@@ -8,8 +8,8 @@
         <rect>
             <x>0</x>
             <y>0</y>
-            <width>404</width>
-            <height>344</height>
+            <width>402</width>
+            <height>353</height>
         </rect>
     </property>
     <property name="caption">
@@ -48,7 +48,7 @@
                             <cstring>textLabel1</cstring>
                         </property>
                         <property name="text">
-                            <string>Available Accounts</string>
+                            <string>Available Accounts:</string>
                         </property>
                     </widget>
                     <widget class="QLayoutWidget">
@@ -156,34 +156,89 @@
                         <property name="title">
                             <string>Event Notification Style</string>
                         </property>
-                        <vbox>
+                        <widget class="QRadioButton">
                             <property name="name">
-                                <cstring>unnamed</cstring>
+                                <cstring>rbOSD</cstring>
                             </property>
-                            <widget class="QRadioButton">
-                                <property name="name">
-                                    <cstring>rbStatus</cstring>
-                                </property>
-                                <property name="text">
-                                    <string>Status Bar</string>
-                                </property>
-                            </widget>
-                            <widget class="QRadioButton">
-                                <property name="name">
-                                    <cstring>rbOSD</cstring>
-                                </property>
-                                <property name="text">
-                                    <string>On Screen Display</string>
-                                </property>
-                            </widget>
-                        </vbox>
+                            <property name="geometry">
+                                <rect>
+                                    <x>11</x>
+                                    <y>53</y>
+                                    <width>334</width>
+                                    <height>23</height>
+                                </rect>
+                            </property>
+                            <property name="text">
+                                <string>On Screen Display</string>
+                            </property>
+                        </widget>
+                        <widget class="QRadioButton">
+                            <property name="name">
+                                <cstring>rbStatus</cstring>
+                            </property>
+                            <property name="geometry">
+                                <rect>
+                                    <x>11</x>
+                                    <y>24</y>
+                                    <width>334</width>
+                                    <height>23</height>
+                                </rect>
+                            </property>
+                            <property name="text">
+                                <string>Status Bar</string>
+                            </property>
+                        </widget>
                     </widget>
-                    <widget class="QCheckBox">
+                    <spacer>
                         <property name="name">
-                            <cstring>chkKDE</cstring>
+                            <cstring>spacer17</cstring>
+                        </property>
+                        <property name="orientation">
+                            <enum>Vertical</enum>
+                        </property>
+                        <property name="sizeType">
+                            <enum>Expanding</enum>
+                        </property>
+                        <property name="sizeHint">
+                            <size>
+                                <width>20</width>
+                                <height>141</height>
+                            </size>
+                        </property>
+                    </spacer>
+                </vbox>
+            </widget>
+            <widget class="QWidget">
+                <property name="name">
+                    <cstring>pageAdv</cstring>
+                </property>
+                <attribute name="title">
+                    <string>Advanced</string>
+                </attribute>
+                <vbox>
+                    <property name="name">
+                        <cstring>unnamed</cstring>
+                    </property>
+                    <property name="spacing">
+                        <number>12</number>
+                    </property>
+                    <widget class="QLabel">
+                        <property name="name">
+                            <cstring>textLabel1_2</cstring>
+                        </property>
+                        <property name="sizePolicy">
+                            <sizepolicy>
+                                <hsizetype>5</hsizetype>
+                                <vsizetype>1</vsizetype>
+                                <horstretch>0</horstretch>
+                                <verstretch>0</verstretch>
+                            </sizepolicy>
                         </property>
                         <property name="text">
-                            <string>Enable KDE Support</string>
+                            <string>&lt;b&gt;Please note:&lt;/b&gt; these options control the core of the application and therefor take effect only after restart!</string>
+                        </property>
+                        <property name="scaledContents">
+                            <bool>false</bool>
                         </property>
                     </widget>
                     <widget class="QCheckBox">
@@ -194,15 +249,119 @@
                             <string>Enable QScintilla Support</string>
                         </property>
                     </widget>
+                    <widget class="QCheckBox">
+                        <property name="name">
+                            <cstring>chkKDE</cstring>
+                        </property>
+                        <property name="text">
+                            <string>Enable KDE Support</string>
+                        </property>
+                    </widget>
+                    <widget class="QLayoutWidget">
+                        <property name="name">
+                            <cstring>layout62</cstring>
+                        </property>
+                        <hbox>
+                            <property name="name">
+                                <cstring>unnamed</cstring>
+                            </property>
+                            <spacer>
+                                <property name="name">
+                                    <cstring>spacer13</cstring>
+                                </property>
+                                <property name="orientation">
+                                    <enum>Horizontal</enum>
+                                </property>
+                                <property name="sizeType">
+                                    <enum>Fixed</enum>
+                                </property>
+                                <property name="sizeHint">
+                                    <size>
+                                        <width>30</width>
+                                        <height>20</height>
+                                    </size>
+                                </property>
+                            </spacer>
+                            <widget class="QCheckBox">
+                                <property name="name">
+                                    <cstring>chkTray</cstring>
+                                </property>
+                                <property name="text">
+                                    <string>Enable Systray Icon</string>
+                                </property>
+                            </widget>
+                            <spacer>
+                                <property name="name">
+                                    <cstring>spacer15</cstring>
+                                </property>
+                                <property name="orientation">
+                                    <enum>Horizontal</enum>
+                                </property>
+                                <property name="sizeType">
+                                    <enum>Expanding</enum>
+                                </property>
+                                <property name="sizeHint">
+                                    <size>
+                                        <width>141</width>
+                                        <height>20</height>
+                                    </size>
+                                </property>
+                            </spacer>
+                        </hbox>
+                    </widget>
+                    <widget class="QLayoutWidget">
+                        <property name="name">
+                            <cstring>layout61</cstring>
+                        </property>
+                        <hbox>
+                            <property name="name">
+                                <cstring>unnamed</cstring>
+                            </property>
+                            <spacer>
+                                <property name="name">
+                                    <cstring>spacer13_2</cstring>
+                                </property>
+                                <property name="orientation">
+                                    <enum>Horizontal</enum>
+                                </property>
+                                <property name="sizeType">
+                                    <enum>Fixed</enum>
+                                </property>
+                                <property name="sizeHint">
+                                    <size>
+                                        <width>30</width>
+                                        <height>20</height>
+                                    </size>
+                                </property>
+                            </spacer>
+                            <widget class="QCheckBox">
+                                <property name="name">
+                                    <cstring>chkDCOP</cstring>
+                                </property>
+                                <property name="text">
+                                    <string>Enable DCOP Interface</string>
+                                </property>
+                            </widget>
+                            <spacer>
+                                <property name="name">
+                                    <cstring>spacer16</cstring>
+                                </property>
+                                <property name="orientation">
+                                    <enum>Horizontal</enum>
+                                </property>
+                                <property name="sizeType">
+                                    <enum>Expanding</enum>
+                                </property>
+                                <property name="sizeHint">
+                                    <size>
+                                        <width>130</width>
+                                        <height>20</height>
+                                    </size>
+                                </property>
+                            </spacer>
+                        </hbox>
+                    </widget>
                 </vbox>
-            </widget>
-            <widget class="QWidget">
-                <property name="name">
-                    <cstring>pageAdv</cstring>
-                </property>
-                <attribute name="title">
-                    <string>Advanced</string>
-                </attribute>
             </widget>
             <widget class="QWidget">
                 <property name="name">
@@ -540,6 +699,12 @@
         <receiver>SettingsDialog</receiver>
         <slot>lbAccounts_selected(int)</slot>
     </connection>
+    <connection>
+        <sender>chkKDE</sender>
+        <signal>stateChanged(int)</signal>
+        <receiver>SettingsDialog</receiver>
+        <slot>chkKDE_stateChanged(int)</slot>
+    </connection>
 </connections>
 <slots>
     <slot>btnAddAccount_clicked()</slot>
@@ -551,6 +716,7 @@
     <slot>btnEnablePlug_clicked()</slot>
     <slot>btnDisablePlug_clicked()</slot>
     <slot>lbAccounts_selected(int)</slot>
+    <slot>chkKDE_stateChanged(int)</slot>
 </slots>
 <layoutdefaults spacing="6" margin="11"/>
 </UI>
