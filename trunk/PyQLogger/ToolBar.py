@@ -448,7 +448,8 @@ class InternalToolbarPlugin(InternalPlugin, ToolbarPlugin):
         self.Parent.sourceEditor.insertAt(newtext, line, index)
             
     ToolbarName = 'Tags'    
-    def getWidget(self):        
+    def getWidget(self, parent):
+        self.Parent = parent
         self.on_click = getattr(self, self.Action)
         tabpage = self.Parent.getPage(self.ToolbarName)
         button = QPushButton(tabpage)
@@ -467,32 +468,32 @@ class InternalToolbarPlugin(InternalPlugin, ToolbarPlugin):
         button.hide()
         return button
         
-def createButtonPlugin(parent, manager, tip, callback, icon):
+def createButtonPlugin(manager, tip, callback, icon):
     
     a = classobj(tip.replace(" ","_")+"Plugin",
                  (InternalToolbarPlugin,), {
                  "Icon":icon, "Name":tip, 
-                 "Parent":parent, "Action":callback
+                 "Action":callback
                 })
     return a
 
-def initToolbar(parent, manager):
+def initToolbar(manager):
     return [
-    createButtonPlugin(parent, manager, "Paragraph", "makePara", tbP_image),
-    createButtonPlugin(parent, manager, "Bold", "makeBold", tbBold_image),
-    createButtonPlugin(parent, manager, "Italic", "makeItalic", tbItalic_image),
-    createButtonPlugin(parent, manager, "Underscore", "makeUnderscore", tbUnder_image),
-    createButtonPlugin(parent, manager, "Left align", "alignLeft", tbLeft_image),
-    createButtonPlugin(parent, manager, "Right align", "alignRight", tbRight_image),
-    createButtonPlugin(parent, manager, "Center align", "alignCenter", tbCenter_image),
-    createButtonPlugin(parent, manager, "HR", "insertHR", tbHr_image),
-    createButtonPlugin(parent, manager, "URL", "insertUrl", tbUrl_image),
-    createButtonPlugin(parent, manager, "Image", "insertImage", tbImg_image),
-    createButtonPlugin(parent, manager, "BR", "insertBR", tbBr_image),
-    createButtonPlugin(parent, manager, "Plus", "incFont", tbFontPlus_image),
-    createButtonPlugin(parent, manager, "Minus", "decFont", tbFontMinus_image),
-    createButtonPlugin(parent, manager, "UL", "makeUnorderedList", tbUl_image),
-    createButtonPlugin(parent, manager, "OL", "makeOrderedList", tbOl_image)
+    createButtonPlugin(manager, "Paragraph", "makePara", tbP_image),
+    createButtonPlugin(manager, "Bold", "makeBold", tbBold_image),
+    createButtonPlugin(manager, "Italic", "makeItalic", tbItalic_image),
+    createButtonPlugin(manager, "Underscore", "makeUnderscore", tbUnder_image),
+    createButtonPlugin(manager, "Left align", "alignLeft", tbLeft_image),
+    createButtonPlugin(manager, "Right align", "alignRight", tbRight_image),
+    createButtonPlugin(manager, "Center align", "alignCenter", tbCenter_image),
+    createButtonPlugin(manager, "HR", "insertHR", tbHr_image),
+    createButtonPlugin(manager, "URL", "insertUrl", tbUrl_image),
+    createButtonPlugin(manager, "Image", "insertImage", tbImg_image),
+    createButtonPlugin(manager, "BR", "insertBR", tbBr_image),
+    createButtonPlugin(manager, "Plus", "incFont", tbFontPlus_image),
+    createButtonPlugin(manager, "Minus", "decFont", tbFontMinus_image),
+    createButtonPlugin(manager, "UL", "makeUnorderedList", tbUl_image),
+    createButtonPlugin(manager, "OL", "makeOrderedList", tbOl_image)
     ]
 
     

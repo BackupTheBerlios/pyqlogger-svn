@@ -17,37 +17,41 @@
 ## along with PyQLogger; if not, write to the Free Software
 ## Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-import ToolBarManager
-class Smiley_Plugin(ToolBarManager.ToolbarPlugin):
+class SmileyPlugin(ToolbarPlugin, QObject):
+    Name = "Smiley Add"
     def on_click(self):
         if self.frame.isHidden(): 
-	    pos = self.parent.sender().cursor().pos()-self.parent.pos()
+	    pos = self.button.pos()#self.parent.sender().cursor().pos()-self.parent.pos()
 	    self.frame.move(pos)
 	    self.frame.show()
+	    self.frame.raiseW()
 	else: 
 	    self.frame.hide()
+
+    def defaultOptions(self):
+        return [ Option(Type="String",Name="Theme file",Value="smiley.theme") ]
 
     def on_smile_click(self):
         self.frame.hide()
         for sm in self.smiles:
 	    if sm["button"] != self.parent.sender(): continue
-            self = qApp.mainWidget()
-	    line, index = self.sourceEditor.getCursorPosition()
+	    line, index = self.parent.sourceEditor.getCursorPosition()
 	    ku = """<img src="%s" alt="%s" width="%d" height="%d" >"""%(sm["url"],sm["variants"][0],sm["pixmap"].width(),sm["pixmap"].height())
-	    self.sourceEditor.insertAt(ku, line, index)
-	    self.sourceEditor.setCursorPosition(line,index+len(ku))
-	    self.sourceEditor.setFocus()
-	    return
+	    self.parent.sourceEditor.insertAt(ku, line, index)
+	    self.parent.sourceEditor.setCursorPosition(line,index+len(ku))
+	    self.parent.sourceEditor.setFocus()
 	
-    def getWidget(self):
+    def getWidget(self, parent):
+        self.parent = parent
         page = self.parent.getPage("Plugins")
         import os,pickle
 	try:
-            self.smiles = pickle.load(open(os.path.expanduser("~/.pyqlogger/plugins/")+"smiley.theme"))
-	except:
+            self.smiles = pickle.load(open(os.path.expanduser("~/.pyqlogger/")+self.Data.Options[0].Value))
+	except Exception, e:
+	    print e
 	    return    
         button = QPushButton("smile!",page)
-	self.frame = QFrame(self.parent)
+	self.frame = QFrame(self.parent.editorTab)
 	self.frame.setFrameShape(QFrame.StyledPanel)
 	self.frame.setFrameShadow(QFrame.Raised)
 	self.frame.hide()
@@ -73,8 +77,11 @@ class Smiley_Plugin(ToolBarManager.ToolbarPlugin):
 	    self.frame.resize(self.frame.minimumSizeHint())
             button.setPixmap(self.smiles[0]["pixmap"])	    
 	QToolTip.add(button,"Show list of available smileys")
-	w = 32
-	h = 32
+	w = 38
+	h = 38
 	button.setMaximumSize(QSize(w,h))
         self.parent.connect(button,SIGNAL("clicked()"),self.on_click)
-        button.show()
+        button.hide()
+	self.button = button
+	return button
+

@@ -18,11 +18,9 @@
 ## Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 
-import ToolBarManager
-from qt import QMessageBox
-
-class Listeningto_Plugin(ToolBarManager.ToolbarPlugin):
+class ListeningtoPlugin(ToolbarPlugin):
     tooltip = "Insert currently playing song artist and title"
+    Name = "Listening to..."
     xmms = None
 
     image = \
@@ -221,7 +219,8 @@ class Listeningto_Plugin(ToolBarManager.ToolbarPlugin):
             self.parent.trUtf8("Error"),
             self.parent.trUtf8("""No songs loaded in playlist."""))            
 
-    def getWidget(self):
+    def getWidget(self, parent):
+        self.parent = parent
         page = self.parent.getPage("Plugins")
         button = QPushButton(page)
         bi = QPixmap()
@@ -239,5 +238,7 @@ class Listeningto_Plugin(ToolBarManager.ToolbarPlugin):
         button.setMaximumSize(QSize(w,h))
         QToolTip.add(button,self.tooltip)
         self.parent.connect(button,SIGNAL("clicked()"),self.on_click)
-        button.show()
+        button.hide()
         self.button = button
+	return button
+

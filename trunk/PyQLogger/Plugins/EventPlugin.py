@@ -42,8 +42,8 @@ class EventPlugin (Plugin):
 
   EventType = None # integer code
   
-  def execute(self):
-    """    Should execure the action for this specific event    """
+  def handle(self, parent, data):
+    """    Should execute the action for this specific event    """
     pass
 
   def description(self):

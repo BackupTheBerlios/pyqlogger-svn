@@ -18,8 +18,10 @@
 
 from Account import Account
 from Blog import Blog
-from EaseXML import  XMLObject,TextNode,ListNode, IntegerAttribute,ItemNode,ChoiceNode
+from EaseXML import XMLObject, TextNode, ListNode, \
+                    IntegerAttribute, ItemNode, ChoiceNode
 import os
+__revision__ = "$Id:  $"
 
 class UISettings(XMLObject):
     """ Subclass representing settings related to GUI """
@@ -44,7 +46,7 @@ class Settings(XMLObject):
     AutoLogin = TextNode(optional=True)     # which account to autologin
     Speller   = ItemNode("SpellerSettings") # speller settings
     
-    def accountByName(self,name):
+    def accountByName(self, name):
         """ searches the list of accouns, and returns one by it's .Name """
         for a in self.Accounts:
             if a.Name == name:
@@ -53,21 +55,21 @@ class Settings(XMLObject):
 
     def load():
         """ static method to create new settings class from xml file """
-        file = os.path.expanduser("~")+"/.pyqlogger/settings.xml"
-        if os.path.exists(file):
+        fname = os.path.expanduser("~")+"/.pyqlogger/settings.xml"
+        if os.path.exists(fname):
             try:
-                return XMLObject.instanceFromXml(open(file).read())
+                return XMLObject.instanceFromXml(open(fname).read())
             except Exception, e:
-                print "Couldn't read settings. Either empty of borken! (%s)"%(str(e))
-        return Settings(UI=UISettings(),Speller=SpellerSettings())
+                print "Couldn't read settings. Either empty of borken! (%s)"% e
+        return Settings(UI=UISettings(), Speller=SpellerSettings())
             
     load = staticmethod(load)
     
     def save(self):
         """ write settings back to xml file """
         try:
-            file = os.path.expanduser("~")+"/.pyqlogger/settings.xml"
-            open(file,"w").write(str(self))
+            fname = os.path.expanduser("~")+"/.pyqlogger/settings.xml"
+            open(fname,"w").write(str(self))
         except Exception, e:
-            print "Cannot write configuration! (%s)"%(str(e))
+            print "Cannot write configuration! (%s)" % (str(e))
             

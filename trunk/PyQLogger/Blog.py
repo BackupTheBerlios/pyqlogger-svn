@@ -16,15 +16,17 @@
 ## You should have received a copy of the GNU General Public License
 ## along with PyQLogger; if not, write to the Free Software
 ## Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+__revision__ = "$Id:  $"
 
 from Post import Post
-from EaseXML import  XMLObject,TextNode,ListNode,StringAttribute,ItemNode
+from EaseXML import XMLObject, ListNode, \
+                    StringAttribute, ItemNode
 
 class Drafts(XMLObject):
-    Data = ListNode('Post',main=True)
+    Data = ListNode('Post', main=True)
     
 class Posts(XMLObject):
-    Data = ListNode('Post',main=True)
+    Data = ListNode('Post', main=True)
 
 class Blog(XMLObject):
     """
@@ -36,7 +38,7 @@ class Blog(XMLObject):
     ID = StringAttribute() #Internal blog id
     Posts = ItemNode('Posts') #List of posts in the blog
     Drafts = ItemNode('Drafts') #List of drafts in the blog
-    def __postById(self,postNr):
+    def __postById(self, postNr):
         for post in Posts.Data:
             if post.ID == postNr:
                 return post
@@ -49,19 +51,20 @@ class Blog(XMLObject):
     
     def editPost(self, post ):
         """   change post's content     """
-        self.Service.editPost ( self.ID , post )
+        self.Service.editPost ( self.ID, post )
     
     def createPost(self, title, content, **other):
         """  create new post    """
-        p = self.Service.newPost ( self.ID , title, content, None, other)
-        self.Posts.Data += [ p ]
+        post = self.Service.newPost ( self.ID , title, content, None, other)
+        self.Posts.Data += [ post ]
     
     def reloadPosts(self):
         """   fetch the list of posts in a blog   """
         posts = self.Service.getPosts(self.ID)
-        for p in posts:
-            if not [ bb for bb in self.Posts.Data if bb.ID == p.ID ]: # it's new! add it
-                self.Posts.Data += [ p ]
+        for post in posts:
+            here = [ bb for bb in self.Posts.Data if bb.ID == post.ID ]
+            if not here: # it's new! add it
+                self.Posts.Data += [ post ]
     
     def __len__(self):
         """   return the amount of posts in a blog     """

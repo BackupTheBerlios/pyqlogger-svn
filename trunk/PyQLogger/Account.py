@@ -18,10 +18,12 @@
 ## Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 #from BloggerService import *
-from EaseXML import  XMLObject,TextNode,IntegerAttribute,ListNode,StringAttribute
+from EaseXML import XMLObject, TextNode, IntegerAttribute, ListNode,\
+                    StringAttribute
 from Blog import Blog
 from Services import *
 from Services import BlogServices
+__revision__ = "$Id:  $"
 
 class Account(XMLObject):
     """
@@ -35,15 +37,15 @@ class Account(XMLObject):
     Service = StringAttribute() #What Blogging API Is used
     Blogs = ListNode('Blog')
     
-    def serviceByName(self,name):
+    def serviceByName(self, name):
         assert  name , "Name cannot be empty"
         for b in BlogServices:            
-            (s_module,s_class) = b.split('.')
+            (s_module, s_class) = b.split('.')
             if name == s_class:
-                return getattr(globals()[s_module],s_class)
+                return getattr(globals()[s_module], s_class)
         raise Exception("Invalid Blog Service name : "+name)
         
-    def blogByName(self,name):
+    def blogByName(self, name):
         """ searches the list of accouns, and returns one by it's .Name """
         assert  name , "Name cannot be empty"
         for a in self.Blogs:
@@ -52,7 +54,7 @@ class Account(XMLObject):
         raise Exception("Invalid Blog name: "+name)
 
   
-    def blogById(self,blogId):
+    def blogById(self, blogId):
         assert  blogId , "Id cannot be empty"
         cnt = 0
         for blog in self.Blogs:
@@ -62,9 +64,10 @@ class Account(XMLObject):
         raise Exception("Invalid blog number %s !"%blogId)
 
     def init(self):
-        self.BlogService = self.serviceByName(self.Service)(self.Host,self.Username,self.Password)
-        for b in self.Blogs: # dunno, maybe there is a better way? FIXME!
-            b.Service = self.BlogService
+        svc = self.serviceByName(self.Service)
+        self.BlogService = svc(self.Host, self.Username, self.Password)
+        for blog in self.Blogs: 
+            blog.Service = self.BlogService
 
     def login(self):
         """
@@ -80,9 +83,10 @@ class Account(XMLObject):
         get the list of blogs for this account
         """
         blogs = self.BlogService.getBlogs() # fetch blogs from server        
-        for b in blogs:
-            if not [ bb for bb in self.Blogs if bb.Name == b.Name ]: # it's new! add it
-                self.Blogs += [ b ]
+        for blog in blogs:
+            here = [ bb for bb in self.Blogs if bb.Name == blog.Name ]
+            if not here :
+                self.Blogs += [ blog ]
     
     def __len__(self):
         """

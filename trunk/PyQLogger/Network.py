@@ -2,8 +2,10 @@ from qt import *
 import sys
 from Queue import Queue
 
-def netOp(status,code,callback):
-    return { "Status":status,"Code":code, "Callback":callback } 
+__revision__ = "$Id:  $"
+
+def netOp(status, code, callback):
+    return { "Status":status, "Code":code, "Callback":callback } 
 
 class Network(QThread):
     def __init__(self,parent):
@@ -19,4 +21,4 @@ class Network(QThread):
             op = self.Operations.get()
             self.parent.notifier.status(op["Status"])
             res = op["Code"](self.parent)
-            op["Callback"](self.parent,res)
+            op["Callback"](self.parent, res)

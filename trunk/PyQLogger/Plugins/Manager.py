@@ -23,6 +23,7 @@ from ToolbarPlugin import ToolbarPlugin
 from MenuPlugin import MenuPlugin
 from ServiceGUIPlugin import ServiceGUIPlugin
 from PyQLogger.ToolBar import initToolbar
+from qt import *
 
 def import_plugin_classes():
     globals()["Plugin"] = Plugin
@@ -42,6 +43,7 @@ def importClasses(folders):
     If possible - import into the list of plugin classes
     """
     import_plugin_classes()
+    
     PluginClasses = []
     for mask in [ os.path.join(path, '*.p') for path in folders ]:
         for filename in glob(mask):
@@ -76,7 +78,7 @@ class Manager(XMLObject):
         so only add the new ones
         """
         self.parent = parent
-        PluginClasses += initToolbar(parent, self)
+        PluginClasses += initToolbar(self)
         changed = False
         for plug in PluginClasses:
             exists = [ p for p in self.PluginData if p.Class == plug.__name__ ]
@@ -89,24 +91,31 @@ class Manager(XMLObject):
                     inst.Data.Enabled = 1
                 self.PluginData += [ inst.Data ]
             else: # use existing data
-                inst.Data = exists[0]                
+                inst.Data = exists[0]
+            print "Adding (%s) plugin"%inst.Name
             self.Plugins += [ inst ] # add to the list            
             self.Plugin2Data [ inst ] = inst.Data # link for lookup
         if changed:
             self.save()
             
     def fillToolbar(self):
-        """ Fills the provided panel with plugins of ToolbarPlugin type """
+        """ Fills the panel with plugins of ToolbarPlugin type """
         for plug in self.Plugins:
             if issubclass(plug.__class__,ToolbarPlugin) and plug.Data.Enabled == 1 :
-                plug.getWidget().show()
+                widget = plug.getWidget(self.parent)
+                if widget:
+                    widget.show()
+                else:
+                    print "Failed to initialize plugin: "+plug.Name
     
-    def handleEvent(self, eventType):
+    def handleEvent(self, eventType, data):
         """ For supplied event, execute all plugins handling it """
         for plug in self.Plugins:
             if issubclass(plug.__class__, EventPlugin) and plug.Data.Enabled == 1 \
                and plug.EventType == eventType:
-                plug.getHandler()
+                if plug.handle(self.parent, data):
+                    return True
+        return False
         
     def fillMenu(self):
         """ Fills the editor menu with plugins of MenuPlugin type """
@@ -116,7 +125,9 @@ class Manager(XMLObject):
         
     def load(parent):
         """ Create a fresh copy of initialized Manager class """
-        l = importClasses(["/home/reflog/.pyqlogger/plugins","/usr/share/pyqlogger/plugins"])
+        paths = ["/home/reflog/.pyqlogger/plugins","/usr/share/pyqlogger/plugins"]
+        l = importClasses(paths)
+        sys.path += paths
         file = os.path.expanduser("~")+"/.pyqlogger/plugins.xml"
         if os.path.exists(file):
             try:

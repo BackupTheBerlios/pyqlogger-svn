@@ -163,7 +163,7 @@ class MainDialog(QDialog):
 
     def btnSettings_clicked(self):
         wnd = self.forms["Settings"]
-        wnd["Impl"].init(self.settings, self.forms, self.manager, self.templates)
+        wnd["Impl"].init(self.settings, self.forms, self.manager)
         if wnd["Class"].exec_loop() == QDialog.Accepted:
             try:
                 self.settings.save()
@@ -219,18 +219,7 @@ class MainDialog(QDialog):
             print "SaveAll: %s" % inst
             QMessageBox.critical(self, "Error", "Cannot write configuration!")
             
-    def usersel(self, name, idx):
-        for tpl in self.templates.List:
-            if tpl.Name == name:
-                self.sourceEditor.insert( tpl.Content )
-                break
 
-    def showUserList(self):
-        words = [tpl.Name for tpl in self.templates.List ]
-        if words:
-            words.sort()
-            #self.sourceEditor.SendScintilla(self.sourceEditor.SCI_AUTOCSETSEPARATOR,"|","|")
-            self.sourceEditor.SendScintilla(self.sourceEditor.SCI_USERLISTSHOW, 1, str(" ".join(words)))
 
     def init_ui(self, settings):
         UI.API.setPreviewWidget(self)
@@ -253,9 +242,7 @@ class MainDialog(QDialog):
         self.bMenu.insertItem("Export post", 2)        
         self.connect(self.aMenu, SIGNAL("activated(int)"), self.pubPopup)
         self.connect(self.bMenu, SIGNAL("activated(int)"), self.savePopup)
-        self.connect(self.sourceEditor, PYSIGNAL("aboutToShowMenu"), self.showMenu)
-        self.connect(self.sourceEditor, PYSIGNAL("aboutToShowUserlist"), self.showUserList)
-        self.connect(self.sourceEditor, SIGNAL("SCN_USERLISTSELECTION(const char *, int)"), self.usersel)
+        self.connect(self.sourceEditor, PYSIGNAL("aboutToShowMenu"), self.showMenu)                
         self.frameCat.hide()
         self.network = Network(self)
         self.network.start()
@@ -301,14 +288,14 @@ class MainDialog(QDialog):
         self.editMenu.popup(gpos)
         
     
-    def init(self, settings, forms, account, password, manager, templates):
-        self.templates = templates
+    def init(self, settings, forms, account, password, manager):
         self.manager = manager
         self.reload = False
         self.account = account
         self.password = password
         self.settings = settings        
         self.forms = forms
+        self.sourceEditor.manager = manager
         manager.fillToolbar()
         if settings.Speller.Enabled:
             try:

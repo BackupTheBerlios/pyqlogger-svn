@@ -20,14 +20,15 @@
 __revision__ = "$Id$"
 
 """ Background workers """
-from qt import QTimer, SIGNAL, QListBoxText,QThread,QObject,QString
+from qt import QTimer, SIGNAL, QListBoxText, QThread, \
+               QObject, QString
 from datetime import date
 from distutils.version import LooseVersion
 import sys, urllib2
 
 ###########  Fetch Blogs ###################
 
-def doneFetchingBlogs(self,res):
+def doneFetchingBlogs(self, res):
     if not res:
         self.comboBlogs.clear()
         for blog in self.account.Blogs:            
@@ -55,10 +56,11 @@ def startFetchingPosts(self):
     except Exception, e:
         return str(e)
 
-def doneFetchingPosts(self,res):
+def doneFetchingPosts(self, res):
     if not res:
         self.populateLists()
-        self.notifier.info("%d posts fetched!" % len( self.account.Blogs[self.account.SelectedBlog] ))
+        blogs = self.account.Blogs[self.account.SelectedBlog]
+        self.notifier.info("%d posts fetched!" % len( blogs ))
         self.SaveAll()
     else:
         self.notifier.error(res)
@@ -67,7 +69,7 @@ def doneFetchingPosts(self,res):
 
 ###########  Publish Post ###################
 
-def donePublishPost(self,res):
+def donePublishPost(self, res):
     if not res:
         blog = self.account.Blogs [ self.account.SelectedBlog ]
         post = blog.Posts.Data [ len(blog) - 1 ] # get last added one
@@ -87,7 +89,7 @@ def startPublishPost(self):
     try:
         title = unicode(self.editPostTitle.text())
         content = unicode(self.sourceEditor.text())
-        self.account.Blogs [ self.account.SelectedBlog ].createPost(title,content)
+        self.account.Blogs[self.account.SelectedBlog].createPost(title, content)
     except Exception, e:
         import traceback
         traceback.print_exc()
@@ -100,18 +102,18 @@ def startEditPost(self):
     try:
         self.current_post.Title = unicode(self.editPostTitle.text())
         self.current_post.Content = unicode(self.sourceEditor.text())
-        self.account.Blogs [ self.account.SelectedBlog ].editPost(self.current_post)
+        self.account.Blogs[self.account.SelectedBlog].editPost(self.current_post)
     except Exception, e:
         return str(e)
 
-def doneEditPost(self,res):
+def doneEditPost(self, res):
     if not res:
         self.editPostTitle.setText("")
         self.sourceEditor.setText("")
-        for (k,v) in self.PublishedItems.items():
-            if v == self.current_post:
-                k.setText(v['title'])
-                self.listPublishedPosts.updateItem(k)
+        for (item, post) in self.PublishedItems.items():
+            if post == self.current_post:
+                item.setText(post.Title)
+                self.listPublishedPosts.triggerUpdate(False)
         self.notifier.info("Publishing success!")
         self.current_post = None
     else:

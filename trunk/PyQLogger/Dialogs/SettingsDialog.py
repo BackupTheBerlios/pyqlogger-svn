@@ -1,5 +1,4 @@
 from PyQLogger.Settings import Settings
-from PyQLogger.Templates import Template
 from PyQLogger.Plugins.Plugin import InternalPlugin
 from AccountSettingsDialog import AccountSettingsDialog
 from qt import QListBoxPixmap,QPixmap,QListBoxText,QDialog,\
@@ -93,7 +92,7 @@ class SettingsDialog(QDialog):
     def btnConfigPlug_clicked(self):
         wnd = self.forms["PluginSettings"]
         pl = self.li2pl [ self.lvPlugins.selectedItem() ]
-        wnd["Impl"].init(self.manager,pl)
+        wnd["Impl"].init(self.manager, pl, self.forms )
         wnd["Class"].exec_loop()
         
         
@@ -111,74 +110,17 @@ class SettingsDialog(QDialog):
         self.fillPlugins()
         
 
-########## templates related #############
-
-    def lbTemplates_selected(self, index):
-        self.btnDelTpl.setEnabled(self.lbAccounts.currentItem() != -1)
-        self.btnEditTpl.setEnabled(self.lbAccounts.currentItem() != -1)
-
-    def showTemplateDialog(self, name="", content=""):
-        wnd = self.forms["TemplateSettings"]
-        wnd["Impl"].edtName.setText(name)
-        wnd["Impl"].edtContent.setText(content)
-        if wnd["Class"].exec_loop() == QDialog.Accepted:
-            return Template(Name=unicode(wnd["Impl"].edtName.text()),\
-                            Content=unicode(wnd["Impl"].edtContent.text()))
-        
-    def fillTemplates(self):
-        self.lbTemplates.clear()
-        for tpl in self.templates.List:
-            QListBoxText(self.lbTemplates, tpl.Name)
-        if self.templates.List:
-            self.lbTemplates.setCurrentItem(0)
-            self.lbTemplates_selected(0)
-        else:
-            self.btnDelTpl.setEnabled(False)
-            self.btnEditTpl.setEnabled(False)
-        
-            
-    def btnAddTpl_clicked(self):
-        it = self.showTemplateDialog()
-        if  it:
-            self.templates.List += [ it ]
-            self.fillTemplates()
-            self.templates.save()
-    
-    def btnEditTpl_clicked(self):
-        item =  [ i for i in self.templates.List if str(self.lbTemplates.currentText()) == i.Name ]
-        item = item[0]
-        it = self.showTemplateDialog(item.Name,item.Content)
-        if it:
-            item.Name = it.Name
-            item.Content = it.Content
-            self.fillTemplates()
-            self.templates.save()
-    
-    def btnDelTpl_clicked(self):
-        res = QMessageBox.warning(None,
-            self.trUtf8("Confirmation"),
-            self.trUtf8("""Are you absolutely sure that you want to erase <b>all</b> data inside this account (i.e. all the blogs and posts)?"""),
-            self.trUtf8("&Yes"),
-            self.trUtf8("&No"),
-            None,
-            0, -1)
-        if res == 0:
-            acc = self.settings.accountByName(str(self.lbAccounts.currentText()))
-            del self.settings.Accounts[self.settings.Accounts.index(acc)]
-            self.settings.save()
-            self.fillTemplates()  
 
 ########## general #############        
         
-    def init(self, settings, forms, manager, templates):
+    def init(self, settings, forms, manager):
         self.settings = settings
         self.manager = manager
-        self.templates = templates
         self.forms = forms
         
         self.fillList()     # add accounts        
         self.fillPlugins()  # add plugins
-        self.fillTemplates()# add templates
+        #self.fillTemplates()# add templates
         
         # set gui settings
         self.chkKDE.setChecked(bool(settings.UI.EnableKde))

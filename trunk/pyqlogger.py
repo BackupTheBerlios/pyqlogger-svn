@@ -18,7 +18,6 @@
 ## Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 from PyQLogger import UI,qt_ui_loader
 from PyQLogger import Settings
-from PyQLogger.Templates import Templates
 from PyQLogger.Plugins.Manager import Manager
 
 import sys,os
@@ -113,9 +112,6 @@ def main():
     splash.message( "Loading plugins...",alignflag )
     qApp.processEvents()
     manager = Manager.load(__FORMS__["Main"]["Impl"])
-    splash.message( "Loading templates...",alignflag )
-    qApp.processEvents()
-    templates = Templates.load()
     del splash
     acc = None
     pwd = None
@@ -136,7 +132,7 @@ def main():
             wnd = __FORMS__["Main"]
             acc.init()
             wnd["Impl"].init(settings,__FORMS__, acc, pwd,\
-                             manager, templates)
+                             manager)
             app.setMainWidget(wnd["Class"])
             wnd["Class"].show()
             #splash.finish(wnd["Class"])

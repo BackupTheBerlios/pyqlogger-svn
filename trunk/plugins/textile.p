@@ -16,10 +16,8 @@
 ## You should have received a copy of the GNU General Public License
 ## along with PyQLogger; if not, write to the Free Software
 ## Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-
-import ToolBarManager
-
-class Textile_Plugin(ToolBarManager.ToolbarPlugin):
+class TextilePlugin(ToolbarPlugin):
+        Name  = "Textile"
 	image = \
 		"\x89\x50\x4e\x47\x0d\x0a\x1a\x0a\x00\x00\x00\x0d" \
 		"\x49\x48\x44\x52\x00\x00\x00\x10\x00\x00\x00\x10" \
@@ -91,8 +89,9 @@ class Textile_Plugin(ToolBarManager.ToolbarPlugin):
 		if res:
 			self.parent.sourceEditor.insertAt(res, line, index)	
 
-	def getWidget(self):
-		page = self.parent.getPage("Plugins")
+	def getWidget(self, parent):
+	        self.parent = parent
+		page = parent.getPage("Plugins")
 		button = QPushButton(page)
 		bi = QPixmap()
 		bi.loadFromData(self.image,"PNG")
@@ -101,6 +100,7 @@ class Textile_Plugin(ToolBarManager.ToolbarPlugin):
 		w = 32
 		h = 32
 		button.setMaximumSize(QSize(w,h))
-		self.parent.connect(button,SIGNAL("clicked()"),self.on_click)
-		button.show()
+		parent.connect(button,SIGNAL("clicked()"),self.on_click)
+		button.hide()
+		return button
 

@@ -24,7 +24,7 @@ class ToolbarPlugin (Plugin):
 
   ToolbarName = "Plugins" # on what toolbar to create the widget
   
-  def getWidget(self):
+  def getWidget(self, parent):
     """    Should return the widget(control) that will be added to the toolbar    """
     pass
 

@@ -63,10 +63,9 @@ icon = \
     "\x8a\x95\xb5\x00\x00\x00\x00\x49\x45\x4e\x44\xae" \
     "\x42\x60\x82"
 
-from qt import QApplication,Qt,SIGNAL, QFont,PYSIGNAL
+from qt import QApplication, Qt, SIGNAL, QFont, PYSIGNAL
 from qtext import QextScintilla, QextScintillaLexerHTML
-from SyntaxHighlight import HTMLSyntax    
-
+from PyQLogger.Plugins.EventPlugin import EventType
 # define default functions
 try:
     class API:
@@ -76,9 +75,10 @@ try:
     
         class MyQextScintilla(QextScintilla):
             def keyPressEvent( self, evt ):
-                if evt.key() == Qt.Key_J and  (evt.state() & Qt.ControlButton):
-                    self.emit(PYSIGNAL('aboutToShowUserlist'), (evt,))
-                else:
+                res = False
+                if hasattr(self, "manager"):
+                    res = self.manager.handleEvent( EventType.TEXTCHANGED , evt )
+                if not res:
                     QextScintilla.keyPressEvent( self, evt )
     
             def contextMenuEvent(self, evt):

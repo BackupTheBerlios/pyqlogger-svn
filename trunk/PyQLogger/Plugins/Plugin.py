@@ -17,14 +17,14 @@
 ## along with PyQLogger; if not, write to the Free Software
 ## Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-from EaseXML import XMLObject,ItemNode,TextNode,RawNode,ListNode,IntegerAttribute
-from qt import QPixmap
+from EaseXML import XMLObject, ItemNode, TextNode, RawNode, \
+                    ListNode,IntegerAttribute
 
 
 class Option(XMLObject):
-  Type = TextNode() # one of : 'Integer','String','Boolean','List'
+  Type = TextNode() # one of : 'Integer','String','Boolean','List', 'DoubleList'
   Name = TextNode()
-  Value = TextNode(default='',optional=True)
+  Value = RawNode(default='',optional=True)
 
 class PluginData(XMLObject):
   # Indication of plugin's status (0 - disable, 1 - enable)
@@ -56,4 +56,5 @@ class Plugin:
   
 class InternalPlugin (Plugin):
   """ Subclass to mark the plugin as internal (invisible to settings) """
-  pass
+  def description(self):
+    return "Internal plugin"
