@@ -22,6 +22,7 @@ from qt import QMessageBox
 
 class Listeningto_Plugin(ToolBarManager.ToolbarPlugin):
     tooltip = "Insert currently playing song artist and title"
+    xmms = None
 
     image = \
         "\x89\x50\x4e\x47\x0d\x0a\x1a\x0a\x00\x00\x00\x0d" \
@@ -162,7 +163,9 @@ class Listeningto_Plugin(ToolBarManager.ToolbarPlugin):
         if(idx == 1):
             try:
                 import xmms.control
-                if xmms.is_running(): return True
+                if xmms.is_running():
+		    self.xmms = xmms.control 
+		    return True
             except:
                 pass
             return False
@@ -176,8 +179,8 @@ class Listeningto_Plugin(ToolBarManager.ToolbarPlugin):
     def getTitle(self,idx):
         import commands
         if(idx == 1):
-            current_index = xmms.control.get_playlist_pos()
-            current_title = xmms.control.get_playlist_title(current_index)                
+            current_index = self.xmms.get_playlist_pos()
+            current_title = self.xmms.get_playlist_title(current_index)                
             return current_title
         elif(idx == 2):
             return commands.getoutput('dcop noatun Noatun title')
