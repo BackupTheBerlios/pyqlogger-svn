@@ -47,6 +47,7 @@ class Settings(XMLObject):
     AutoLogin = TextNode(optional=True)     # which account to autologin
     Speller   = ItemNode("SpellerSettings") # speller settings
     StyleSheet = TextNode(optional=True)    # file with css
+    DebugLevel = IntegerAttribute(default=10) # level of logging 10,20,30
     
     def accountByName(self, name):
         """ searches the list of accouns, and returns one by it's .Name """

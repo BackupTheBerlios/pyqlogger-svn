@@ -8,8 +8,8 @@
         <rect>
             <x>0</x>
             <y>0</y>
-            <width>426</width>
-            <height>388</height>
+            <width>427</width>
+            <height>406</height>
         </rect>
     </property>
     <property name="caption">
@@ -37,7 +37,7 @@
                     <cstring>pageAccounts</cstring>
                 </property>
                 <attribute name="title">
-                    <string>Accounts</string>
+                    <string>Accou&amp;nts</string>
                 </attribute>
                 <vbox>
                     <property name="name">
@@ -85,7 +85,7 @@
                                                     <cstring>btnAddAccount</cstring>
                                                 </property>
                                                 <property name="text">
-                                                    <string>Add</string>
+                                                    <string>&amp;Add</string>
                                                 </property>
                                                 <property name="iconSet">
                                                     <iconset>image0</iconset>
@@ -107,7 +107,7 @@
                                                     <cstring>btnDelAccount</cstring>
                                                 </property>
                                                 <property name="text">
-                                                    <string>Delete</string>
+                                                    <string>&amp;Delete</string>
                                                 </property>
                                                 <property name="iconSet">
                                                     <iconset>image2</iconset>
@@ -143,7 +143,7 @@
                     <cstring>pageUI</cstring>
                 </property>
                 <attribute name="title">
-                    <string>User Interface</string>
+                    <string>&amp;User Interface</string>
                 </attribute>
                 <vbox>
                     <property name="name">
@@ -342,7 +342,7 @@
                     <cstring>pageAdv</cstring>
                 </property>
                 <attribute name="title">
-                    <string>Advanced</string>
+                    <string>Ad&amp;vanced</string>
                 </attribute>
                 <vbox>
                     <property name="name">
@@ -381,7 +381,7 @@
                             <cstring>chkKDE</cstring>
                         </property>
                         <property name="text">
-                            <string>Enable KDE Support</string>
+                            <string>En&amp;able KDE Support</string>
                         </property>
                     </widget>
                     <widget class="QLayoutWidget">
@@ -414,7 +414,7 @@
                                     <cstring>chkTray</cstring>
                                 </property>
                                 <property name="text">
-                                    <string>Enable Systray Icon</string>
+                                    <string>Ena&amp;ble Systray Icon</string>
                                 </property>
                             </widget>
                             <spacer>
@@ -466,7 +466,7 @@
                                     <cstring>chkDCOP</cstring>
                                 </property>
                                 <property name="text">
-                                    <string>Enable DCOP Interface</string>
+                                    <string>Enable &amp;DCOP Interface</string>
                                 </property>
                             </widget>
                             <spacer>
@@ -488,6 +488,55 @@
                             </spacer>
                         </hbox>
                     </widget>
+                    <widget class="QButtonGroup">
+                        <property name="name">
+                            <cstring>buttonGroup2</cstring>
+                        </property>
+                        <property name="title">
+                            <string>Loggin Level:</string>
+                        </property>
+                        <vbox>
+                            <property name="name">
+                                <cstring>unnamed</cstring>
+                            </property>
+                            <widget class="QRadioButton">
+                                <property name="name">
+                                    <cstring>rbDebugLow</cstring>
+                                </property>
+                                <property name="text">
+                                    <string>Low</string>
+                                </property>
+                                <property name="accel">
+                                    <string></string>
+                                </property>
+                                <property name="checked">
+                                    <bool>true</bool>
+                                </property>
+                            </widget>
+                            <widget class="QRadioButton">
+                                <property name="name">
+                                    <cstring>rbDebugNormal</cstring>
+                                </property>
+                                <property name="text">
+                                    <string>Normal</string>
+                                </property>
+                                <property name="accel">
+                                    <string></string>
+                                </property>
+                            </widget>
+                            <widget class="QRadioButton">
+                                <property name="name">
+                                    <cstring>rbDebugHigh</cstring>
+                                </property>
+                                <property name="text">
+                                    <string>High (for developers)</string>
+                                </property>
+                                <property name="accel">
+                                    <string></string>
+                                </property>
+                            </widget>
+                        </vbox>
+                    </widget>
                 </vbox>
             </widget>
             <widget class="QWidget">
@@ -495,7 +544,7 @@
                     <cstring>pagePlugins</cstring>
                 </property>
                 <attribute name="title">
-                    <string>Plugins</string>
+                    <string>Plu&amp;gins</string>
                 </attribute>
                 <vbox>
                     <property name="name">
@@ -680,7 +729,7 @@
                         <cstring>buttonOk</cstring>
                     </property>
                     <property name="text">
-                        <string>&amp;OK</string>
+                        <string>O&amp;K</string>
                     </property>
                     <property name="autoDefault">
                         <bool>true</bool>

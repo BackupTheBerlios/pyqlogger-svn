@@ -312,7 +312,7 @@ class MainDialog(QMainWindow):
         self.sourceEditor = UI.MyQextScintilla(self.Source, self)
         self.Source.layout().addWidget(self.sourceEditor)
         logLayout = QHBoxLayout(None,0,6,"logLayout")
-        self.log = Logger("Default")
+        self.log = Logger("Default", settings.DebugLevel)
         self.logFrame.hide()
         self.btnLogger = LoggerWidget(self.leftFrame, self.log, self)
         logLayout.addWidget(self.btnLogger)
